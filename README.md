@@ -1,3 +1,5 @@
+http://hassaku.github.io/blog/
+
 # Write
 
 ```
