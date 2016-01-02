@@ -1,3 +1,9 @@
-baseurl = "http://replace-this-with-your-hugo-site.com/"
-languageCode = "en-us"
-title = "My New Hugo Site"
+baseurl = "https://github.com/hassaku"
+languageCode = "ja"
+title = "hassaku's blog"
+
+[Params]
+subtitle = "just note"
+github = "https://github.com/hassaku"
+profile = "/images/profile.png"
+copyright = "Written by hassaku"
