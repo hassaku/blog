@@ -1,9 +1,12 @@
+baseurl = "http://hassaku.github.io/blog/"
 theme = "angels-ladder"
 languageCode = "ja"
 title = "hassaku's blog"
+canonifyurls = "true"
+publishdir = "pages"
 
-[Params]
-subtitle = "just note"
-github = "https://github.com/hassaku"
-profile = "/images/profile.png"
-copyright = "Written by hassaku"
+[params]
+  subtitle = "just note"
+  github = "https://github.com/hassaku"
+  profile = "/images/profile.png"
+  copyright = "Written by hassaku"
