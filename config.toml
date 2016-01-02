@@ -1,4 +1,4 @@
-baseurl = "https://github.com/hassaku"
+theme = "angels-ladder"
 languageCode = "ja"
 title = "hassaku's blog"
 
