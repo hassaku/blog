@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://github.com/hassaku/</loc>
+    <loc>/</loc>
     <lastmod>2016-01-02T12:47:34+09:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://github.com/hassaku/post/first_post/</loc>
+    <loc>/post/first_post/</loc>
     <lastmod>2016-01-02T12:47:34+09:00</lastmod>
   </url>
   
