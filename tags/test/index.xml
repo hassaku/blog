@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Test on hassaku&#39;s blog</title>
+    <link>http://localhost:1313/blog/tags/test/</link>
+    <description>Recent content in Test on hassaku&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sat, 02 Jan 2016 12:47:34 +0900</lastBuildDate>
+    <atom:link href="http://localhost:1313/blog/tags/test/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>2016年の小さい目標</title>
+      <link>http://localhost:1313/blog/post/first_post/</link>
+      <pubDate>Sat, 02 Jan 2016 12:47:34 +0900</pubDate>
+      
+      <guid>http://localhost:1313/blog/post/first_post/</guid>
+      <description>&lt;p&gt;今更ながらブログでもはじめてみようかとhugoとgithub pagesで構築した。
+年々劣化しているような気がする書く能力の維持を、2016年の目標としたい（もうすでに文章がおかしい&amp;hellip;）。&lt;/p&gt;
+
+&lt;p&gt;なにか作って、ある程度形になれば &lt;a href=&#34;http://hassaku.github.io/portfolio/&#34;&gt;http://hassaku.github.io/portfolio/&lt;/a&gt; などにまとめていったりしているものの、
+生活スタイルも変わったりする中で、結構やりかけの内容もたくさんある。&lt;/p&gt;
+
+&lt;p&gt;そういったパラパラしたものをブログに残しつつ、仕上げるためのモチベーション維持に繋がったら大成功ということで。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
