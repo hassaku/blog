@@ -5,6 +5,8 @@ title = "hassaku's blog"
 canonifyurls = "true"
 publishdir = "pages"
 disqusShortname = "hassakusblog"
+[taxonomies]
+tag = "tags"
 
 [params]
   subtitle = "just note"

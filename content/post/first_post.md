@@ -2,6 +2,7 @@
 date = "2016-01-02T12:47:34+09:00"
 draft = false
 title = "2016年の小さい目標"
+tags = [ "Diary" ]
 +++
 
 今更ながらブログでもはじめてみようかとhugoとgithub pagesで構築した。
