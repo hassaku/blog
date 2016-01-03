@@ -16,12 +16,17 @@
       
       <guid>http://hassaku.github.io/blog/post/first_post/</guid>
       <description>&lt;p&gt;今更ながらブログでもはじめてみようかとhugoとgithub pagesで構築した。
-年々劣化しているような気がする書く能力の維持を、2016年の目標としたい（もうすでに文章がおかしい&amp;hellip;）。&lt;/p&gt;
+構築するのはとても簡単で&lt;/p&gt;
 
-&lt;p&gt;なにか作って、ある程度形になれば &lt;a href=&#34;http://hassaku.github.io/portfolio/&#34;&gt;http://hassaku.github.io/portfolio/&lt;/a&gt; などにまとめていったりしているものの、
-生活スタイルも変わったりする中で、結構やりかけの内容もたくさんある。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ brew install hugo
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;そういったパラパラしたものをブログに残しつつ、仕上げるためのモチベーション維持に繋がったら大成功ということで。&lt;/p&gt;
+&lt;p&gt;したあと、 &lt;a href=&#34;https://github.com/hassaku/blog&#34;&gt;https://github.com/hassaku/blog&lt;/a&gt; のSetupに書いてある手順に従えばよい（公式の方法とはちょっと違うかも）。&lt;/p&gt;
+
+&lt;p&gt;さて、ブログの目的は、年々退化しているように感じる書く能力を少しでも維持すること。（すでに文章が怪しい&amp;hellip;)
+なにか作って、ある程度形になれば &lt;a href=&#34;http://hassaku.github.io/portfolio/&#34;&gt;http://hassaku.github.io/portfolio/&lt;/a&gt; などにまとめていったりしているものの、
+生活スタイルも変わったりする中で、結構やりかけの内容もたくさんある。
+そういったパラパラしたものをブログに残しつつ、仕上げるためのモチベーション維持に繋げられれば良い。&lt;/p&gt;
 </description>
     </item>
     
