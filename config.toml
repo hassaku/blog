@@ -4,6 +4,7 @@ languageCode = "ja"
 title = "hassaku's blog"
 canonifyurls = "true"
 publishdir = "pages"
+disqusShortname = "hassakusblog"
 
 [params]
   subtitle = "just note"
