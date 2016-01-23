@@ -9,7 +9,7 @@ disqusShortname = "hassakusblog"
 tag = "tags"
 
 [params]
-  subtitle = "just note"
+  subtitle = "no reason"
   github = "https://github.com/hassaku"
   profile = "/images/profile.png"
   copyright = "Written by hassaku"
