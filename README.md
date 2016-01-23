@@ -1,4 +1,5 @@
 http://hassaku.github.io/blog/
+http://blog.hassaku-labs.com/
 
 # Write
 
