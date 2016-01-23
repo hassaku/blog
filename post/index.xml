@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on hassaku&#39;s blog</title>
-    <link>http://hassaku.github.io/blog/post/</link>
+    <link>http://blog.hassaku-labs.com/post/</link>
     <description>Recent content in Posts on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 24 Jan 2016 02:26:21 +0900</lastBuildDate>
-    <atom:link href="http://hassaku.github.io/blog/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://blog.hassaku-labs.com/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>対話システムを作りたい！【準備編１】</title>
-      <link>http://hassaku.github.io/blog/post/dialogue_system1/</link>
+      <link>http://blog.hassaku-labs.com/post/dialogue_system1/</link>
       <pubDate>Sun, 24 Jan 2016 02:26:21 +0900</pubDate>
       
-      <guid>http://hassaku.github.io/blog/post/dialogue_system1/</guid>
+      <guid>http://blog.hassaku-labs.com/post/dialogue_system1/</guid>
       <description>
 
 &lt;p&gt;2016年はVRとか流行りそうで、仮想空間での生活を妄想してしまう今日このごろ。
@@ -189,16 +189,16 @@ In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=
 
 &lt;p&gt;この時点でも色々作って遊べますね。例えば、以前作った絵文字サジェスト用hubotでは、キーワードに近しい、絵文字キーワードを引っ張ってきて候補を表示してました。Githubとかだと、標準でも絵文字キーワードを入力すると、続きをサジェストしてくれるものの、そもそものキーワードが思いつかなかったりするので、そういうときに便利です :)&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://hassaku.github.io/blog/images/post/dialogue_system1/word2emoji.jpg&#34; alt=&#34;word2emoji.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/dialogue_system1/word2emoji.jpg&#34; alt=&#34;word2emoji.jpg&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>2016年の小さい目標</title>
-      <link>http://hassaku.github.io/blog/post/first_post/</link>
+      <link>http://blog.hassaku-labs.com/post/first_post/</link>
       <pubDate>Sat, 02 Jan 2016 12:47:34 +0900</pubDate>
       
-      <guid>http://hassaku.github.io/blog/post/first_post/</guid>
+      <guid>http://blog.hassaku-labs.com/post/first_post/</guid>
       <description>&lt;p&gt;今更ながらブログでもはじめてみようかとhugoとgithub pagesで構築した。
 構築するのはとても簡単で&lt;/p&gt;
 
