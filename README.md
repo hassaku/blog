@@ -1,4 +1,3 @@
-http://hassaku.github.io/blog/
 http://blog.hassaku-labs.com/
 
 # Write
@@ -50,6 +49,7 @@ $ git push -u origin master
 $ git checkout -b gh-pages
 $ rm -rf *
 $ git rm -rf .
+$ echo blog.hassaku-labs.com > CNAME
 $ git commit -m "Init GitHub Pages branch."
 $ git push origin gh-pages
 
