@@ -6,8 +6,24 @@
     <description>Recent content in Posts on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 24 Jan 2016 02:26:21 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 28 Feb 2016 00:35:40 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>exception-slackerというライブラリをPyPIに登録しました</title>
+      <link>http://blog.hassaku-labs.com/post/exception_slacker/</link>
+      <pubDate>Sun, 28 Feb 2016 00:35:40 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>対話システムを作りたい！【準備編１】</title>
