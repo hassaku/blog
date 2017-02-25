@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    学習済みword2vecモデルを調べてみた | hassaku&#39;s blog
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.hassaku-labs.com/post/pretrained-word2vec/"/>
+
+  
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/responsive.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/highlight_monokai.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/theme.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/custom.css">
+  
+  
+  <link href="http://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="http://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
+
+  
+  <script type="text/javascript">var switchTo5x=true;</script>
+  <script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+  <script type="text/javascript">stLight.options({publisher: "2b9fffc6-b3fe-4988-a0ef-4f9dcce98eaa", doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
+        <h2>no reason</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          <li><a href="https://github.com/hassaku" target="_blank">GitHub</a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>学習済みword2vecモデルを調べてみた</h1>
+      <div class="meta">
+        Feb 26, 2017 &nbsp;
+        
+          #<a href="http://blog.hassaku-labs.com/tags/nlp">NLP</a>&nbsp;
+        
+          #<a href="http://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">対話システム</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>日本語の自然言語処理で分散表現を使おうと思った場合、まず頭に浮かぶのはword2vecだと思います。
+特に分散表現自体の精度とかには興味がなく、それを使った対話システムを作りたいだけだったりするのであれば、
+データクレンジングや学習には結構時間もかかるので、学習済みの公開モデルを使わせていただくのが手っ取り早そうです。</p>
+
+<p>(単語ベクトルの準備に手間取り、モチベーション低下に繋がる悪い例：<a href="http://blog.hassaku-labs.com/post/dialogue_system1/">対話システムを作りたい！【準備編１】</a>)</p>
+
+<p>調べてみると、よく出来ていそうな公開モデルを２つ見つけたので、その利用方法と気になるベクトル次元数と単語数を調べてみました。
+なお、どちらもWikipedia日本語版を学習元にしているようです。</p>
+
+<p>word2vecを使うには、以下のバージョンのgensimを利用します。</p>
+
+<pre><code>$ pip freeze | grep gensim
+gensim==1.0.0
+</code></pre>
+
+<h2 id="白ヤギコーポレーションのモデル:e37dac6f2b05ab116e13b711e87f0489">白ヤギコーポレーションのモデル</h2>
+
+<p><a href="http://aial.shiroyagi.co.jp/2017/02/japanese-word2vec-model-builder/">word2vecの学習済み日本語モデルを公開します</a></p>
+
+<pre><code>&gt;&gt;&gt; from gensim.models import word2vec
+&gt;&gt;&gt; model = word2vec.Word2Vec.load('./shiroyagi/word2vec.gensim.model')
+&gt;&gt;&gt; model[u'ニュース'].shape
+(50,)
+&gt;&gt;&gt; model.corpus_count
+1046708
+</code></pre>
+
+<h2 id="東北大学-乾-岡崎研究室のモデル:e37dac6f2b05ab116e13b711e87f0489">東北大学 乾・岡崎研究室のモデル</h2>
+
+<p><a href="http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/">日本語 Wikipedia エンティティベクトル</a></p>
+
+<pre><code>&gt;&gt;&gt; from gensim.models import KeyedVectors
+&gt;&gt;&gt; model = KeyedVectors.load_word2vec_format('./tohoku_entity_vector/entity_vector.model.bin', binary=True)
+&gt;&gt;&gt; model[u'ニュース'].shape
+(200,)
+&gt;&gt;&gt; len(model.vocab)
+1005367
+</code></pre>
+
+<h4 id="gensimが1-0-0未満の場合-ただしシロヤギさんのモデルは1-0-0以上が必要のようです:e37dac6f2b05ab116e13b711e87f0489">gensimが1.0.0未満の場合（ただしシロヤギさんのモデルは1.0.0以上が必要のようです）</h4>
+
+<pre><code>&gt;&gt;&gt; from gensim.models import word2vec
+&gt;&gt;&gt; model = word2vec.Word2Vec.load_word2vec_format('./tohoku_entity_vector/entity_vector.model.bin', binary=True)
+</code></pre>
+
+<h2 id="まとめ:e37dac6f2b05ab116e13b711e87f0489">まとめ</h2>
+
+<p>同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
+ベクトルの次元数については、白ヤギさんのモデルの方が小さく、動作は軽そうです。
+一方で、東北大学のモデルの方が、単語の表現力は高そうなので、色々検証レベルでは色々と無難な気がします。
+実はもう少し高次元での処理をしたいので、更にこれをスパース（出来れば２値ベクトル）に変換するようなこと
+（こういうやつ <a href="http://www.manaalfaruqui.com/papers/acl15-overcomplete.pdf">Sparse Overcomplete Word Vector Representations</a> ）
+をやりたいのですが、それはまた次回にでも。。</p>
+
+      
+      
+      <div id="share-this" class="col span_10">
+        <span class='st_twitter_large' displayText='Tweet'></span>
+        <span class='st_facebook_large' displayText='Facebook'></span>
+        <span class='st_googleplus_large' displayText='Google +'></span>
+        <span class='st_pocket_large' displayText='Pocket'></span>
+        <span class='st_sharethis_large' displayText='ShareThis'></span>
+        <span class='st_email_large' displayText='Email'></span>  
+      </div>
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'hassakusblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+  
+  <nav class="pagination">
+    
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/exception_slacker/" rel="prev">exception-slackerというライブラリをPyPIに登録した</a></span>
+    
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      <img src="http://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
+      Written by hassaku
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="http://blog.hassaku-labs.com/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-31136981-6', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+

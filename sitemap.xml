@@ -3,8 +3,13 @@
   
   <url>
     <loc>http://blog.hassaku-labs.com/</loc>
-    <lastmod>2016-02-28T00:35:40+09:00</lastmod>
+    <lastmod>2017-02-26T02:27:30+09:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.hassaku-labs.com/post/pretrained-word2vec/</loc>
+    <lastmod>2017-02-26T02:27:30+09:00</lastmod>
   </url>
   
   <url>

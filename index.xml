@@ -6,11 +6,75 @@
     <description>Recent content on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 28 Feb 2016 00:35:40 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 26 Feb 2017 02:27:30 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>exception-slackerというライブラリをPyPIに登録しました</title>
+      <title>学習済みword2vecモデルを調べてみた</title>
+      <link>http://blog.hassaku-labs.com/post/pretrained-word2vec/</link>
+      <pubDate>Sun, 26 Feb 2017 02:27:30 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/pretrained-word2vec/</guid>
+      <description>
+
+&lt;p&gt;日本語の自然言語処理で分散表現を使おうと思った場合、まず頭に浮かぶのはword2vecだと思います。
+特に分散表現自体の精度とかには興味がなく、それを使った対話システムを作りたいだけだったりするのであれば、
+データクレンジングや学習には結構時間もかかるので、学習済みの公開モデルを使わせていただくのが手っ取り早そうです。&lt;/p&gt;
+
+&lt;p&gt;(単語ベクトルの準備に手間取り、モチベーション低下に繋がる悪い例：&lt;a href=&#34;http://blog.hassaku-labs.com/post/dialogue_system1/&#34;&gt;対話システムを作りたい！【準備編１】&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;調べてみると、よく出来ていそうな公開モデルを２つ見つけたので、その利用方法と気になるベクトル次元数と単語数を調べてみました。
+なお、どちらもWikipedia日本語版を学習元にしているようです。&lt;/p&gt;
+
+&lt;p&gt;word2vecを使うには、以下のバージョンのgensimを利用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pip freeze | grep gensim
+gensim==1.0.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;白ヤギコーポレーションのモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;白ヤギコーポレーションのモデル&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://aial.shiroyagi.co.jp/2017/02/japanese-word2vec-model-builder/&#34;&gt;word2vecの学習済み日本語モデルを公開します&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec
+&amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load(&#39;./shiroyagi/word2vec.gensim.model&#39;)
+&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
+(50,)
+&amp;gt;&amp;gt;&amp;gt; model.corpus_count
+1046708
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;東北大学-乾-岡崎研究室のモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;東北大学 乾・岡崎研究室のモデル&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/&#34;&gt;日本語 Wikipedia エンティティベクトル&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors
+&amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
+&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
+(200,)
+&amp;gt;&amp;gt;&amp;gt; len(model.vocab)
+1005367
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;gensimが1-0-0未満の場合-ただしシロヤギさんのモデルは1-0-0以上が必要のようです:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;gensimが1.0.0未満の場合（ただしシロヤギさんのモデルは1.0.0以上が必要のようです）&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec
+&amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;まとめ:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
+ベクトルの次元数については、白ヤギさんのモデルの方が小さく、動作は軽そうです。
+一方で、東北大学のモデルの方が、単語の表現力は高そうなので、色々検証レベルでは色々と無難な気がします。
+実はもう少し高次元での処理をしたいので、更にこれをスパース（出来れば２値ベクトル）に変換するようなこと
+（こういうやつ &lt;a href=&#34;http://www.manaalfaruqui.com/papers/acl15-overcomplete.pdf&#34;&gt;Sparse Overcomplete Word Vector Representations&lt;/a&gt; ）
+をやりたいのですが、それはまた次回にでも。。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>exception-slackerというライブラリをPyPIに登録した</title>
       <link>http://blog.hassaku-labs.com/post/exception_slacker/</link>
       <pubDate>Sun, 28 Feb 2016 00:35:40 +0900</pubDate>
       
