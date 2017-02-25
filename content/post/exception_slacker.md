@@ -3,7 +3,7 @@ date = "2016-02-28T00:35:40+09:00"
 description = ""
 draft = false
 tags = ['python']
-title = "exception-slackerというライブラリをPyPIに登録しました"
+title = "exception-slackerというライブラリをPyPIに登録した"
 
 +++
 
