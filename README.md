@@ -25,7 +25,8 @@ $ hugo -d pages    # published into pages directory
 $ cd pages
 $ git branch
 * gh-pages
-$ git commit
+$ git add XXXXXX
+$ git commit -a
 $ git push origin gh-pages
 ```
 
