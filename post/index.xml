@@ -6,8 +6,169 @@
     <description>Recent content in Posts on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 26 Feb 2017 02:27:30 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 04 Mar 2017 04:08:51 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>hyperoptでパラメータサーチ</title>
+      <link>http://blog.hassaku-labs.com/post/hyperopt/</link>
+      <pubDate>Sat, 04 Mar 2017 04:08:51 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/hyperopt/</guid>
+      <description>
+
+&lt;p&gt;機械学習におけるモデルのハイパーパラメータ探索は、その後のモデル評価を正当に行うことにも繋がる、重要な作業です。
+近年ではRandom SearchやGrid Search、GA等の各種最適化手法よりも、色々と優れた手法が提案されているらしく、
+手軽に使えるようなライブラリも整備されています。
+パラメータ探索技術というと、応用範囲が広く、効果が見えやすいため、手軽に使えて効率的な手法があれば、積極的に使っていきたいところです。
+その中でもhyperoptというライブラリが、kaggleとかでよく使われているという話を見かけて、試しに使ってみました。&lt;/p&gt;
+
+&lt;p&gt;中身については、色々Blogや論文が見つかるのですが、
+Bayesian Optimization -&amp;gt; Sequential Model-based Algorithm Configuration (SMAC) -&amp;gt; Tree-structured Parzen Estimator (TPE)
+のように進化してきたTPEという手法が使われているようです。
+Bayesian Optimizationのアプローチは、直感的にも効率良さそうなので、その進化系なら期待できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://hyperopt.github.io/hyperopt/&#34;&gt;Hyperopt&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;簡単な使い方:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;簡単な使い方&lt;/h2&gt;
+
+&lt;p&gt;以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+from hyperopt import fmin, tpe, hp, Trials
+
+# パラメータの探索範囲。指定方法は離散値や連続値などに応じて色々ある。
+# https://github.com/hyperopt/hyperopt/wiki/FMin#21-parameter-expressions
+hyperopt_parameters = { &#39;x&#39;: hp.uniform(&#39;x&#39;, -30, 30) }
+
+# 最小化したい目的関数。正解との誤差とか。
+def objective(args):
+    return np.sin(args[&#39;x&#39;]) / args[&#39;x&#39;]
+
+# 探索中の進行状況を記録
+trials = Trials()
+
+# パラメータサーチの実行
+best = fmin(objective,  hyperopt_parameters, algo=tpe.suggest, max_evals=300, trials=trials)
+
+# 目的関数を最小にするパラメータ
+print best
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;パラメータサーチの様子を表示:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;# 上記コードの続き
+
+x_hisotry = np.ravel([t[&#39;misc&#39;][&#39;vals&#39;][&#39;x&#39;] for t in trials.trials])
+objective_history = trials.losses()
+
+fig = plt.figure(figsize=(16, 8))
+cm = plt.get_cmap(&#39;jet&#39;)
+
+PLOT_NUM = 5
+
+for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
+    cmap_cycle = [cm(1. * h/ (hist_num - 1)) for h in range(int(hist_num) - 1)]
+
+    ax = plt.subplot(2, PLOT_NUM, i + 1)
+    ax.set_color_cycle(cmap_cycle)
+    ax.plot(np.arange(-30, 30, 0.1), function(np.arange(-30, 30, 0.1)), alpha=0.2)
+    for j in range(int(hist_num)  - 1):
+        ax.plot(x_hisotry[j], objective_history[j], &#39;.&#39;)
+    ax.set_title(&#39;times: {times}&#39;.format(times=int(hist_num)))
+    ax.set_ylim([np.min(objective_history) - 0.1, np.max(objective_history) + 0.1])
+    ax.set_xlim([-30, 30])
+    if i == 0:
+        ax.set_ylabel(&#39;y&#39;)
+
+    plt.subplot(2, PLOT_NUM, PLOT_NUM + i + 1)
+    plt.hist(x_hisotry[:hist_num], bins=50)
+    if i == 0:
+        plt.ylabel(&#39;histogram of x&#39;)
+    plt.xlabel(&#39;x&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/hyperopt/hyperopt.png&#34; alt=&#34;hyperopt&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;右に進むに連れて、パラメータ探索が進んでいく様子を表しています。
+上段の図が、目的関数と探索点の描画です。x=0の点が求めたいパラメータとなります。
+下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
+目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>インスタンスを表す文字列を分かりやすくする</title>
+      <link>http://blog.hassaku-labs.com/post/class-repr/</link>
+      <pubDate>Sat, 04 Mar 2017 04:07:38 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/class-repr/</guid>
+      <description>
+
+&lt;p&gt;ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
+標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。&lt;/p&gt;
+
+&lt;p&gt;そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
+分かりやすくなって便利だったりします。&lt;/p&gt;
+
+&lt;h2 id=&#34;reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義しない場合&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+mc = MyClass()
+print(mc)  # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義する場合&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+  def __repr__(self):
+    return &amp;quot;, &amp;quot;.join(&amp;quot;%s: %s&amp;quot; % item for item in vars(self).items())
+
+mc = MyClass()
+print(mc)  # =&amp;gt; attr2: 456, attr1: 123
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ちょっとしたTipsでした。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</title>
+      <link>http://blog.hassaku-labs.com/post/run-applet/</link>
+      <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/run-applet/</guid>
+      <description>&lt;p&gt;昔作って公開していたJAVAアプレットを発掘したものの、
+ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。
+例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、
+安定して動作させることが出来ました。
+公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ wget --no-parent -r &amp;quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&amp;quot;
+$ cd XXXX
+$ appletviewer XXXX/main.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Javaアプレット、一時期はまってたなぁ&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>学習済みword2vecモデルを調べてみた</title>
@@ -62,6 +223,23 @@ gensim==1.0.0
 &amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;h2 id=&#34;追記-facebookの学習済みfasttextモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;（追記）Facebookの学習済みFastTextモデル&lt;/h2&gt;
+
+&lt;p&gt;後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。
+ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。
+もしかすると、ボキャブラリ数に関しては、容量の観点から、不要な用語を除去するなど、うまくデータクレンジングされた結果なのかもしれません。
+利用時には要調査です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md&#34;&gt;Pre-trained word vectors&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors
+&amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./wiki.ja.vec&#39;)  # binは読み込めないらしい
+&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
+(300,)
+&amp;gt;&amp;gt;&amp;gt; len(model.vocab)
+580000
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h2 id=&#34;まとめ:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
@@ -74,25 +252,9 @@ gensim==1.0.0
     </item>
     
     <item>
-      <title>exception-slackerというライブラリをPyPIに登録した</title>
-      <link>http://blog.hassaku-labs.com/post/exception_slacker/</link>
-      <pubDate>Sun, 28 Feb 2016 00:35:40 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>対話システムを作りたい！【準備編１】</title>
       <link>http://blog.hassaku-labs.com/post/dialogue_system1/</link>
-      <pubDate>Sun, 24 Jan 2016 02:26:21 +0900</pubDate>
+      <pubDate>Fri, 01 Apr 2016 02:26:21 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/dialogue_system1/</guid>
       <description>
@@ -132,7 +294,7 @@ $ brew install mecab-ipadic
 
 &lt;p&gt;最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git 
+&lt;pre&gt;&lt;code&gt;$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
 $ cd mecab-ipadic-neologd/
 $ ./bin/install-mecab-ipadic-neologd -n   # 辞書updateも同じコマンド
 $ echo `mecab-config --dicdir`&amp;quot;/mecab-ipadic-neologd&amp;quot;  # 実行時指定のパスを調べる
@@ -147,9 +309,9 @@ In [1]: import MeCab
 In [2]: mecab_org = MeCab.Tagger(&amp;quot;-Owakati&amp;quot;)
 In [3]: mecab_new = MeCab.Tagger(&amp;quot;-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd&amp;quot;)
 In [4]: print mecab_org.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
-電力 自由 化 が はじまる 
+電力 自由 化 が はじまる
 In [5]: print mecab_new.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
-電力自由化 が はじまる 
+電力自由化 が はじまる
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;なんとなく最近ニュースとかで出てくるような単語を分かち書き出来ている（気がします）。&lt;/p&gt;
@@ -160,7 +322,7 @@ In [5]: print mecab_new.parse(&amp;quot;電力自由化がはじまる&amp;quot;
 
 &lt;h3 id=&#34;htmlタグとかを取っ払って文章だけに変換:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;HTMLタグとかを取っ払って文章だけに変換&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code&gt;$ echo &#39;gem &amp;quot;wp2txt&amp;quot;&#39; &amp;gt;&amp;gt; Gemfile 
+&lt;pre&gt;&lt;code&gt;$ echo &#39;gem &amp;quot;wp2txt&amp;quot;&#39; &amp;gt;&amp;gt; Gemfile
 $ bundle
 $ bundle exec wp2txt --input-file jawiki-latest-pages-articles.xml.bz
 $ ls wp2txt/  # 変換結果
@@ -189,7 +351,7 @@ $ cat wp2txt/jawiki-latest-pages-articles-* &amp;gt; corpus.txt # 変換結果�
 
 &lt;p&gt;しないとword2vecのときに、文字コードについて怒られたので&amp;hellip;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ iconv -c -t UTF-8 &amp;lt; corpus_wakati.txt &amp;gt; corpus_wakati_utf-8.txt 
+&lt;pre&gt;&lt;code&gt;$ iconv -c -t UTF-8 &amp;lt; corpus_wakati.txt &amp;gt; corpus_wakati_utf-8.txt
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;学習:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;学習&lt;/h3&gt;
@@ -250,7 +412,7 @@ In [4]: vector.max()
 
 &lt;p&gt;処理結果のベクトルから単語を復元する手段も確認しておきます。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;In [5]: vector[0:10] = 0.0  # 適当に変更  
+&lt;pre&gt;&lt;code&gt;In [5]: vector[0:10] = 0.0  # 適当に変更
 In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=[vector], topn=3)]:
             print cname
 サッカー
@@ -274,9 +436,25 @@ In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=
     </item>
     
     <item>
+      <title>exception-slackerというライブラリをPyPIに登録した</title>
+      <link>http://blog.hassaku-labs.com/post/exception_slacker/</link>
+      <pubDate>Fri, 01 Apr 2016 00:35:40 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>2016年の小さい目標</title>
       <link>http://blog.hassaku-labs.com/post/first_post/</link>
-      <pubDate>Sat, 02 Jan 2016 12:47:34 +0900</pubDate>
+      <pubDate>Fri, 01 Jan 2016 12:47:34 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/first_post/</guid>
       <description>&lt;p&gt;今更ながらブログでもはじめてみようかとhugoとgithub pagesで構築した。

@@ -64,7 +64,7 @@
     <div class="article-header">
       <h1>対話システムを作りたい！【準備編１】</h1>
       <div class="meta">
-        Jan 24, 2016 &nbsp;
+        Apr 1, 2016 &nbsp;
         
           #<a href="http://blog.hassaku-labs.com/tags/nlp">NLP</a>&nbsp;
         
@@ -110,7 +110,7 @@ $ brew install mecab-ipadic
 
 <p>最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。</p>
 
-<pre><code>$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git 
+<pre><code>$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
 $ cd mecab-ipadic-neologd/
 $ ./bin/install-mecab-ipadic-neologd -n   # 辞書updateも同じコマンド
 $ echo `mecab-config --dicdir`&quot;/mecab-ipadic-neologd&quot;  # 実行時指定のパスを調べる
@@ -125,9 +125,9 @@ In [1]: import MeCab
 In [2]: mecab_org = MeCab.Tagger(&quot;-Owakati&quot;)
 In [3]: mecab_new = MeCab.Tagger(&quot;-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd&quot;)
 In [4]: print mecab_org.parse(&quot;電力自由化がはじまる&quot;)
-電力 自由 化 が はじまる 
+電力 自由 化 が はじまる
 In [5]: print mecab_new.parse(&quot;電力自由化がはじまる&quot;)
-電力自由化 が はじまる 
+電力自由化 が はじまる
 </code></pre>
 
 <p>なんとなく最近ニュースとかで出てくるような単語を分かち書き出来ている（気がします）。</p>
@@ -138,7 +138,7 @@ In [5]: print mecab_new.parse(&quot;電力自由化がはじまる&quot;)
 
 <h3 id="htmlタグとかを取っ払って文章だけに変換:9f533d3f859ab3c9a17cb0f76df4e5f1">HTMLタグとかを取っ払って文章だけに変換</h3>
 
-<pre><code>$ echo 'gem &quot;wp2txt&quot;' &gt;&gt; Gemfile 
+<pre><code>$ echo 'gem &quot;wp2txt&quot;' &gt;&gt; Gemfile
 $ bundle
 $ bundle exec wp2txt --input-file jawiki-latest-pages-articles.xml.bz
 $ ls wp2txt/  # 変換結果
@@ -167,7 +167,7 @@ $ cat wp2txt/jawiki-latest-pages-articles-* &gt; corpus.txt # 変換結果を一
 
 <p>しないとword2vecのときに、文字コードについて怒られたので&hellip;</p>
 
-<pre><code>$ iconv -c -t UTF-8 &lt; corpus_wakati.txt &gt; corpus_wakati_utf-8.txt 
+<pre><code>$ iconv -c -t UTF-8 &lt; corpus_wakati.txt &gt; corpus_wakati_utf-8.txt
 </code></pre>
 
 <h3 id="学習:9f533d3f859ab3c9a17cb0f76df4e5f1">学習</h3>
@@ -228,7 +228,7 @@ In [4]: vector.max()
 
 <p>処理結果のベクトルから単語を復元する手段も確認しておきます。</p>
 
-<pre><code>In [5]: vector[0:10] = 0.0  # 適当に変更  
+<pre><code>In [5]: vector[0:10] = 0.0  # 適当に変更
 In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=[vector], topn=3)]:
             print cname
 サッカー
@@ -280,10 +280,10 @@ In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/first_post/" rel="prev">2016年の小さい目標</a></span>
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/exception_slacker/" rel="prev">exception-slackerというライブラリをPyPIに登録した</a></span>
     
     
-      <span class="next"><a href="http://blog.hassaku-labs.com/post/exception_slacker/" rel="next">exception-slackerというライブラリをPyPIに登録した</a> &rarr;</span>
+      <span class="next"><a href="http://blog.hassaku-labs.com/post/pretrained-word2vec/" rel="next">学習済みword2vecモデルを調べてみた</a> &rarr;</span>
     
   </nav>
 

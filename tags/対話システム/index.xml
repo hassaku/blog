@@ -62,6 +62,23 @@ gensim==1.0.0
 &amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;h2 id=&#34;追記-facebookの学習済みfasttextモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;（追記）Facebookの学習済みFastTextモデル&lt;/h2&gt;
+
+&lt;p&gt;後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。
+ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。
+もしかすると、ボキャブラリ数に関しては、容量の観点から、不要な用語を除去するなど、うまくデータクレンジングされた結果なのかもしれません。
+利用時には要調査です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md&#34;&gt;Pre-trained word vectors&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors
+&amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./wiki.ja.vec&#39;)  # binは読み込めないらしい
+&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
+(300,)
+&amp;gt;&amp;gt;&amp;gt; len(model.vocab)
+580000
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h2 id=&#34;まとめ:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
@@ -76,7 +93,7 @@ gensim==1.0.0
     <item>
       <title>対話システムを作りたい！【準備編１】</title>
       <link>http://blog.hassaku-labs.com/post/dialogue_system1/</link>
-      <pubDate>Sun, 24 Jan 2016 02:26:21 +0900</pubDate>
+      <pubDate>Fri, 01 Apr 2016 02:26:21 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/dialogue_system1/</guid>
       <description>
@@ -116,7 +133,7 @@ $ brew install mecab-ipadic
 
 &lt;p&gt;最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git 
+&lt;pre&gt;&lt;code&gt;$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
 $ cd mecab-ipadic-neologd/
 $ ./bin/install-mecab-ipadic-neologd -n   # 辞書updateも同じコマンド
 $ echo `mecab-config --dicdir`&amp;quot;/mecab-ipadic-neologd&amp;quot;  # 実行時指定のパスを調べる
@@ -131,9 +148,9 @@ In [1]: import MeCab
 In [2]: mecab_org = MeCab.Tagger(&amp;quot;-Owakati&amp;quot;)
 In [3]: mecab_new = MeCab.Tagger(&amp;quot;-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd&amp;quot;)
 In [4]: print mecab_org.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
-電力 自由 化 が はじまる 
+電力 自由 化 が はじまる
 In [5]: print mecab_new.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
-電力自由化 が はじまる 
+電力自由化 が はじまる
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;なんとなく最近ニュースとかで出てくるような単語を分かち書き出来ている（気がします）。&lt;/p&gt;
@@ -144,7 +161,7 @@ In [5]: print mecab_new.parse(&amp;quot;電力自由化がはじまる&amp;quot;
 
 &lt;h3 id=&#34;htmlタグとかを取っ払って文章だけに変換:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;HTMLタグとかを取っ払って文章だけに変換&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code&gt;$ echo &#39;gem &amp;quot;wp2txt&amp;quot;&#39; &amp;gt;&amp;gt; Gemfile 
+&lt;pre&gt;&lt;code&gt;$ echo &#39;gem &amp;quot;wp2txt&amp;quot;&#39; &amp;gt;&amp;gt; Gemfile
 $ bundle
 $ bundle exec wp2txt --input-file jawiki-latest-pages-articles.xml.bz
 $ ls wp2txt/  # 変換結果
@@ -173,7 +190,7 @@ $ cat wp2txt/jawiki-latest-pages-articles-* &amp;gt; corpus.txt # 変換結果�
 
 &lt;p&gt;しないとword2vecのときに、文字コードについて怒られたので&amp;hellip;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ iconv -c -t UTF-8 &amp;lt; corpus_wakati.txt &amp;gt; corpus_wakati_utf-8.txt 
+&lt;pre&gt;&lt;code&gt;$ iconv -c -t UTF-8 &amp;lt; corpus_wakati.txt &amp;gt; corpus_wakati_utf-8.txt
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&#34;学習:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;学習&lt;/h3&gt;
@@ -234,7 +251,7 @@ In [4]: vector.max()
 
 &lt;p&gt;処理結果のベクトルから単語を復元する手段も確認しておきます。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;In [5]: vector[0:10] = 0.0  # 適当に変更  
+&lt;pre&gt;&lt;code&gt;In [5]: vector[0:10] = 0.0  # 適当に変更
 In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=[vector], topn=3)]:
             print cname
 サッカー

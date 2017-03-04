@@ -6,7 +6,7 @@
   
   <meta charset="UTF-8">
   <title>
-    exception-slackerというライブラリをPyPIに登録した | hassaku&#39;s blog
+    インスタンスを表す文字列を分かりやすくする | hassaku&#39;s blog
   </title>
 
 
@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.hassaku-labs.com/post/exception_slacker/"/>
+  <link rel="canonical" href="http://blog.hassaku-labs.com/post/class-repr/"/>
 
   
   <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
@@ -62,22 +62,49 @@
   
   <main id="single" role="main">
     <div class="article-header">
-      <h1>exception-slackerというライブラリをPyPIに登録した</h1>
+      <h1>インスタンスを表す文字列を分かりやすくする</h1>
       <div class="meta">
-        Apr 1, 2016 &nbsp;
+        Mar 4, 2017 &nbsp;
         
           #<a href="http://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
         
       </div>
     </div>
     <article>
-      <p><a href="https://github.com/hassaku/exception-slacker">https://github.com/hassaku/exception-slacker</a></p>
+      
 
-<p>importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。</p>
+<p>ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
+標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。</p>
 
-<p><img src="http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png" alt="exception_slacker" /></p>
+<p>そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
+分かりやすくなって便利だったりします。</p>
 
-<p>時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。</p>
+<h2 id="reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e">reprを定義しない場合</h2>
+
+<pre><code>class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+mc = MyClass()
+print(mc)  # =&gt; &lt;__main__.MyClass object at 0xXXXXXXXXXX&gt;
+</code></pre>
+
+<h2 id="reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e">reprを定義する場合</h2>
+
+<pre><code>class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+  def __repr__(self):
+    return &quot;, &quot;.join(&quot;%s: %s&quot; % item for item in vars(self).items())
+
+mc = MyClass()
+print(mc)  # =&gt; attr2: 456, attr1: 123
+</code></pre>
+
+<p>ちょっとしたTipsでした。</p>
 
       
       
@@ -110,10 +137,10 @@
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/first_post/" rel="prev">2016年の小さい目標</a></span>
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/run-applet/" rel="prev">ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</a></span>
     
     
-      <span class="next"><a href="http://blog.hassaku-labs.com/post/dialogue_system1/" rel="next">対話システムを作りたい！【準備編１】</a> &rarr;</span>
+      <span class="next"><a href="http://blog.hassaku-labs.com/post/hyperopt/" rel="next">hyperoptでパラメータサーチ</a> &rarr;</span>
     
   </nav>
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Python on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/python/</link>
-    <description>Recent content in Python on hassaku&#39;s blog</description>
+    <title>Machine Learning on hassaku&#39;s blog</title>
+    <link>http://blog.hassaku-labs.com/tags/machine-learning/</link>
+    <description>Recent content in Machine Learning on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sat, 04 Mar 2017 04:08:51 +0900</lastBuildDate>
-    <atom:link href="http://blog.hassaku-labs.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://blog.hassaku-labs.com/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>hyperoptでパラメータサーチ</title>
@@ -101,65 +101,6 @@ for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
 上段の図が、目的関数と探索点の描画です。x=0の点が求めたいパラメータとなります。
 下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
 目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>インスタンスを表す文字列を分かりやすくする</title>
-      <link>http://blog.hassaku-labs.com/post/class-repr/</link>
-      <pubDate>Sat, 04 Mar 2017 04:07:38 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/class-repr/</guid>
-      <description>
-
-&lt;p&gt;ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
-標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。&lt;/p&gt;
-
-&lt;p&gt;そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
-分かりやすくなって便利だったりします。&lt;/p&gt;
-
-&lt;h2 id=&#34;reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義しない場合&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyClass(object):
-  def __init__(self):
-    self.attr1 = 123
-    self.attr2 = 456
-
-mc = MyClass()
-print(mc)  # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義する場合&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyClass(object):
-  def __init__(self):
-    self.attr1 = 123
-    self.attr2 = 456
-
-  def __repr__(self):
-    return &amp;quot;, &amp;quot;.join(&amp;quot;%s: %s&amp;quot; % item for item in vars(self).items())
-
-mc = MyClass()
-print(mc)  # =&amp;gt; attr2: 456, attr1: 123
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;ちょっとしたTipsでした。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>exception-slackerというライブラリをPyPIに登録した</title>
-      <link>http://blog.hassaku-labs.com/post/exception_slacker/</link>
-      <pubDate>Fri, 01 Apr 2016 00:35:40 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
 </description>
     </item>
     

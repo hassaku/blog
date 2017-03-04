@@ -120,6 +120,23 @@ gensim==1.0.0
 &gt;&gt;&gt; model = word2vec.Word2Vec.load_word2vec_format('./tohoku_entity_vector/entity_vector.model.bin', binary=True)
 </code></pre>
 
+<h2 id="追記-facebookの学習済みfasttextモデル:e37dac6f2b05ab116e13b711e87f0489">（追記）Facebookの学習済みFastTextモデル</h2>
+
+<p>後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。
+ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。
+もしかすると、ボキャブラリ数に関しては、容量の観点から、不要な用語を除去するなど、うまくデータクレンジングされた結果なのかもしれません。
+利用時には要調査です。</p>
+
+<p><a href="https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md">Pre-trained word vectors</a></p>
+
+<pre><code>&gt;&gt;&gt; from gensim.models import KeyedVectors
+&gt;&gt;&gt; model = KeyedVectors.load_word2vec_format('./wiki.ja.vec')  # binは読み込めないらしい
+&gt;&gt;&gt; model[u'ニュース'].shape
+(300,)
+&gt;&gt;&gt; len(model.vocab)
+580000
+</code></pre>
+
 <h2 id="まとめ:e37dac6f2b05ab116e13b711e87f0489">まとめ</h2>
 
 <p>同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
@@ -160,8 +177,10 @@ gensim==1.0.0
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/exception_slacker/" rel="prev">exception-slackerというライブラリをPyPIに登録した</a></span>
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/dialogue_system1/" rel="prev">対話システムを作りたい！【準備編１】</a></span>
     
+    
+      <span class="next"><a href="http://blog.hassaku-labs.com/post/run-applet/" rel="next">ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</a> &rarr;</span>
     
   </nav>
 

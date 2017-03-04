@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    hyperoptでパラメータサーチ | hassaku&#39;s blog
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.hassaku-labs.com/post/hyperopt/"/>
+
+  
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/responsive.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/highlight_monokai.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/theme.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/custom.css">
+  
+  
+  <link href="http://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="http://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
+
+  
+  <script type="text/javascript">var switchTo5x=true;</script>
+  <script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+  <script type="text/javascript">stLight.options({publisher: "2b9fffc6-b3fe-4988-a0ef-4f9dcce98eaa", doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
+        <h2>no reason</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          <li><a href="https://github.com/hassaku" target="_blank">GitHub</a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>hyperoptでパラメータサーチ</h1>
+      <div class="meta">
+        Mar 4, 2017 &nbsp;
+        
+          #<a href="http://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
+        
+          #<a href="http://blog.hassaku-labs.com/tags/machine-learning">machine learning</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>機械学習におけるモデルのハイパーパラメータ探索は、その後のモデル評価を正当に行うことにも繋がる、重要な作業です。
+近年ではRandom SearchやGrid Search、GA等の各種最適化手法よりも、色々と優れた手法が提案されているらしく、
+手軽に使えるようなライブラリも整備されています。
+パラメータ探索技術というと、応用範囲が広く、効果が見えやすいため、手軽に使えて効率的な手法があれば、積極的に使っていきたいところです。
+その中でもhyperoptというライブラリが、kaggleとかでよく使われているという話を見かけて、試しに使ってみました。</p>
+
+<p>中身については、色々Blogや論文が見つかるのですが、
+Bayesian Optimization -&gt; Sequential Model-based Algorithm Configuration (SMAC) -&gt; Tree-structured Parzen Estimator (TPE)
+のように進化してきたTPEという手法が使われているようです。
+Bayesian Optimizationのアプローチは、直感的にも効率良さそうなので、その進化系なら期待できます。</p>
+
+<p><a href="http://hyperopt.github.io/hyperopt/">Hyperopt</a></p>
+
+<h2 id="簡単な使い方:3ef796ded5fdc2a18d77f9e19d0b06e3">簡単な使い方</h2>
+
+<p>以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。</p>
+
+<pre><code>#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+from hyperopt import fmin, tpe, hp, Trials
+
+# パラメータの探索範囲。指定方法は離散値や連続値などに応じて色々ある。
+# https://github.com/hyperopt/hyperopt/wiki/FMin#21-parameter-expressions
+hyperopt_parameters = { 'x': hp.uniform('x', -30, 30) }
+
+# 最小化したい目的関数。正解との誤差とか。
+def objective(args):
+    return np.sin(args['x']) / args['x']
+
+# 探索中の進行状況を記録
+trials = Trials()
+
+# パラメータサーチの実行
+best = fmin(objective,  hyperopt_parameters, algo=tpe.suggest, max_evals=300, trials=trials)
+
+# 目的関数を最小にするパラメータ
+print best
+</code></pre>
+
+<h2 id="パラメータサーチの様子を表示:3ef796ded5fdc2a18d77f9e19d0b06e3">パラメータサーチの様子を表示</h2>
+
+<pre><code># 上記コードの続き
+
+x_hisotry = np.ravel([t['misc']['vals']['x'] for t in trials.trials])
+objective_history = trials.losses()
+
+fig = plt.figure(figsize=(16, 8))
+cm = plt.get_cmap('jet')
+
+PLOT_NUM = 5
+
+for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
+    cmap_cycle = [cm(1. * h/ (hist_num - 1)) for h in range(int(hist_num) - 1)]
+
+    ax = plt.subplot(2, PLOT_NUM, i + 1)
+    ax.set_color_cycle(cmap_cycle)
+    ax.plot(np.arange(-30, 30, 0.1), function(np.arange(-30, 30, 0.1)), alpha=0.2)
+    for j in range(int(hist_num)  - 1):
+        ax.plot(x_hisotry[j], objective_history[j], '.')
+    ax.set_title('times: {times}'.format(times=int(hist_num)))
+    ax.set_ylim([np.min(objective_history) - 0.1, np.max(objective_history) + 0.1])
+    ax.set_xlim([-30, 30])
+    if i == 0:
+        ax.set_ylabel('y')
+
+    plt.subplot(2, PLOT_NUM, PLOT_NUM + i + 1)
+    plt.hist(x_hisotry[:hist_num], bins=50)
+    if i == 0:
+        plt.ylabel('histogram of x')
+    plt.xlabel('x')
+</code></pre>
+
+<p><img src="http://blog.hassaku-labs.com/images/post/hyperopt/hyperopt.png" alt="hyperopt" /></p>
+
+<p>右に進むに連れて、パラメータ探索が進んでいく様子を表しています。
+上段の図が、目的関数と探索点の描画です。x=0の点が求めたいパラメータとなります。
+下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
+目標のパラメータ付近を効率的に探索している様子が分かります。</p>
+
+      
+      
+      <div id="share-this" class="col span_10">
+        <span class='st_twitter_large' displayText='Tweet'></span>
+        <span class='st_facebook_large' displayText='Facebook'></span>
+        <span class='st_googleplus_large' displayText='Google +'></span>
+        <span class='st_pocket_large' displayText='Pocket'></span>
+        <span class='st_sharethis_large' displayText='ShareThis'></span>
+        <span class='st_email_large' displayText='Email'></span>  
+      </div>
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'hassakusblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+  
+  <nav class="pagination">
+    
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/class-repr/" rel="prev">インスタンスを表す文字列を分かりやすくする</a></span>
+    
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      <img src="http://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
+      Written by hassaku
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="http://blog.hassaku-labs.com/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-31136981-6', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+

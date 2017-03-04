@@ -6,7 +6,7 @@
   
   <meta charset="UTF-8">
   <title>
-    exception-slackerというライブラリをPyPIに登録した | hassaku&#39;s blog
+    ブラウザで動作出来なくなったJavaアプレットをローカルで動かす | hassaku&#39;s blog
   </title>
 
 
@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.hassaku-labs.com/post/exception_slacker/"/>
+  <link rel="canonical" href="http://blog.hassaku-labs.com/post/run-applet/"/>
 
   
   <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
@@ -62,22 +62,31 @@
   
   <main id="single" role="main">
     <div class="article-header">
-      <h1>exception-slackerというライブラリをPyPIに登録した</h1>
+      <h1>ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</h1>
       <div class="meta">
-        Apr 1, 2016 &nbsp;
+        Feb 26, 2017 &nbsp;
         
-          #<a href="http://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
+          #<a href="http://blog.hassaku-labs.com/tags/java">Java</a>&nbsp;
+        
+          #<a href="http://blog.hassaku-labs.com/tags/mac">Mac</a>&nbsp;
         
       </div>
     </div>
     <article>
-      <p><a href="https://github.com/hassaku/exception-slacker">https://github.com/hassaku/exception-slacker</a></p>
+      <p>昔作って公開していたJAVAアプレットを発掘したものの、
+ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。
+例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&hellip;</p>
 
-<p>importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。</p>
+<p>いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、
+安定して動作させることが出来ました。
+公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。</p>
 
-<p><img src="http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png" alt="exception_slacker" /></p>
+<pre><code>$ wget --no-parent -r &quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&quot;
+$ cd XXXX
+$ appletviewer XXXX/main.html
+</code></pre>
 
-<p>時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。</p>
+<p>Javaアプレット、一時期はまってたなぁ&hellip;</p>
 
       
       
@@ -110,10 +119,10 @@
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/first_post/" rel="prev">2016年の小さい目標</a></span>
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/pretrained-word2vec/" rel="prev">学習済みword2vecモデルを調べてみた</a></span>
     
     
-      <span class="next"><a href="http://blog.hassaku-labs.com/post/dialogue_system1/" rel="next">対話システムを作りたい！【準備編１】</a> &rarr;</span>
+      <span class="next"><a href="http://blog.hassaku-labs.com/post/class-repr/" rel="next">インスタンスを表す文字列を分かりやすくする</a> &rarr;</span>
     
   </nav>
 

@@ -3,8 +3,23 @@
   
   <url>
     <loc>http://blog.hassaku-labs.com/</loc>
-    <lastmod>2017-02-26T02:27:30+09:00</lastmod>
+    <lastmod>2017-03-04T04:08:51+09:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.hassaku-labs.com/post/hyperopt/</loc>
+    <lastmod>2017-03-04T04:08:51+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.hassaku-labs.com/post/class-repr/</loc>
+    <lastmod>2017-03-04T04:07:38+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.hassaku-labs.com/post/run-applet/</loc>
+    <lastmod>2017-02-26T03:56:14+09:00</lastmod>
   </url>
   
   <url>
@@ -13,18 +28,18 @@
   </url>
   
   <url>
-    <loc>http://blog.hassaku-labs.com/post/exception_slacker/</loc>
-    <lastmod>2016-02-28T00:35:40+09:00</lastmod>
+    <loc>http://blog.hassaku-labs.com/post/dialogue_system1/</loc>
+    <lastmod>2016-04-01T02:26:21+09:00</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.hassaku-labs.com/post/dialogue_system1/</loc>
-    <lastmod>2016-01-24T02:26:21+09:00</lastmod>
+    <loc>http://blog.hassaku-labs.com/post/exception_slacker/</loc>
+    <lastmod>2016-04-01T00:35:40+09:00</lastmod>
   </url>
   
   <url>
     <loc>http://blog.hassaku-labs.com/post/first_post/</loc>
-    <lastmod>2016-01-02T12:47:34+09:00</lastmod>
+    <lastmod>2016-01-01T12:47:34+09:00</lastmod>
   </url>
   
 </urlset>
