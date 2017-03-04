@@ -1,5 +1,5 @@
 +++
-date = "2016-01-24T02:26:21+09:00"
+date = "2016-04-01T02:26:21+09:00"
 draft = false
 title = "対話システムを作りたい！【準備編１】"
 tags = ["NLP", "対話システム"]
@@ -41,7 +41,7 @@ $ brew install mecab-ipadic
 最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。
 
 ```
-$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git 
+$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
 $ cd mecab-ipadic-neologd/
 $ ./bin/install-mecab-ipadic-neologd -n   # 辞書updateも同じコマンド
 $ echo `mecab-config --dicdir`"/mecab-ipadic-neologd"  # 実行時指定のパスを調べる
@@ -57,9 +57,9 @@ In [1]: import MeCab
 In [2]: mecab_org = MeCab.Tagger("-Owakati")
 In [3]: mecab_new = MeCab.Tagger("-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
 In [4]: print mecab_org.parse("電力自由化がはじまる")
-電力 自由 化 が はじまる 
+電力 自由 化 が はじまる
 In [5]: print mecab_new.parse("電力自由化がはじまる")
-電力自由化 が はじまる 
+電力自由化 が はじまる
 ```
 
 なんとなく最近ニュースとかで出てくるような単語を分かち書き出来ている（気がします）。
@@ -71,7 +71,7 @@ In [5]: print mecab_new.parse("電力自由化がはじまる")
 ### HTMLタグとかを取っ払って文章だけに変換
 
 ```
-$ echo 'gem "wp2txt"' >> Gemfile 
+$ echo 'gem "wp2txt"' >> Gemfile
 $ bundle
 $ bundle exec wp2txt --input-file jawiki-latest-pages-articles.xml.bz
 $ ls wp2txt/  # 変換結果
@@ -103,7 +103,7 @@ $ pip install gensim
 しないとword2vecのときに、文字コードについて怒られたので...
 
 ```
-$ iconv -c -t UTF-8 < corpus_wakati.txt > corpus_wakati_utf-8.txt 
+$ iconv -c -t UTF-8 < corpus_wakati.txt > corpus_wakati_utf-8.txt
 ```
 
 ### 学習
@@ -169,7 +169,7 @@ In [4]: vector.max()
 処理結果のベクトルから単語を復元する手段も確認しておきます。
 
 ```
-In [5]: vector[0:10] = 0.0  # 適当に変更  
+In [5]: vector[0:10] = 0.0  # 適当に変更
 In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=[vector], topn=3)]:
             print cname
 サッカー

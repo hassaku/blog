@@ -58,6 +58,26 @@ gensim==1.0.0
 >>> model = word2vec.Word2Vec.load_word2vec_format('./tohoku_entity_vector/entity_vector.model.bin', binary=True)
 ```
 
+
+## （追記）Facebookの学習済みFastTextモデル
+
+後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。
+ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。
+もしかすると、ボキャブラリ数に関しては、容量の観点から、不要な用語を除去するなど、うまくデータクレンジングされた結果なのかもしれません。
+利用時には要調査です。
+
+[Pre-trained word vectors]
+(https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md)
+
+```
+>>> from gensim.models import KeyedVectors
+>>> model = KeyedVectors.load_word2vec_format('./wiki.ja.vec')  # binは読み込めないらしい
+>>> model[u'ニュース'].shape
+(300,)
+>>> len(model.vocab)
+580000
+```
+
 ## まとめ
 
 同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
