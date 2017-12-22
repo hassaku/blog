@@ -451,26 +451,5 @@ In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=
 </description>
     </item>
     
-    <item>
-      <title>2016年の小さい目標</title>
-      <link>http://blog.hassaku-labs.com/post/first_post/</link>
-      <pubDate>Fri, 01 Jan 2016 12:47:34 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/first_post/</guid>
-      <description>&lt;p&gt;今更ながらブログでもはじめてみようかとhugoとgithub pagesで構築した。
-構築するのはとても簡単で&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ brew install hugo
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;したあと、 &lt;a href=&#34;https://github.com/hassaku/blog&#34;&gt;https://github.com/hassaku/blog&lt;/a&gt; のSetupに書いてある手順に従えばよい（公式の方法とはちょっと違うかも）。&lt;/p&gt;
-
-&lt;p&gt;さて、ブログの目的は、年々退化しているように感じる書く能力を少しでも維持すること。（すでに文章が怪しい&amp;hellip;)
-なにか作って、ある程度形になれば &lt;a href=&#34;http://hassaku.github.io/portfolio/&#34;&gt;http://hassaku.github.io/portfolio/&lt;/a&gt; などにまとめていったりしているものの、
-生活スタイルも変わったりする中で、結構やりかけの内容もたくさんある。
-そういったパラパラしたものをブログに残しつつ、仕上げるためのモチベーション維持に繋げられれば良い。&lt;/p&gt;
-</description>
-    </item>
-    
   </channel>
 </rss>
