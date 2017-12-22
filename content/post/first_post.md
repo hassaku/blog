@@ -1,6 +1,6 @@
 +++
 date = "2016-01-01T12:47:34+09:00"
-draft = false
+draft = true
 title = "2016年の小さい目標"
 tags = [ "Diary" ]
 +++
