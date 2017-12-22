@@ -16,6 +16,7 @@ $ git branch
 * master
 $ git commit
 $ git push origin master
+$ git stash # if necessary
 $ hugo -d pages    # published into pages directory
 ```
 
