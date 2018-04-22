@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Java on hassaku&#39;s blog</title>
-    <link>http://localhost:1313/tags/java/</link>
+    <link>http://blog.hassaku-labs.com/tags/java/</link>
     <description>Recent content in Java on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 26 Feb 2017 03:56:14 +0900</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://blog.hassaku-labs.com/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</title>
-      <link>http://localhost:1313/post/run-applet/</link>
+      <link>http://blog.hassaku-labs.com/post/run-applet/</link>
       <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
       
-      <guid>http://localhost:1313/post/run-applet/</guid>
+      <guid>http://blog.hassaku-labs.com/post/run-applet/</guid>
       <description>&lt;p&gt;昔作って公開していたJAVAアプレットを発掘したものの、
 ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。
 例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;&lt;/p&gt;
