@@ -97,3 +97,11 @@ for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
 下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
 目標のパラメータ付近を効率的に探索している様子が分かります。
 
+
+#### 追記
+
+バンディットベースのものが出たらしい。使い方もhyperopt同様に簡単そうなので、パラメータチューニング時の候補にしたい。
+
+[Hyperband]
+(https://github.com/zygmuntz/hyperband)
+
