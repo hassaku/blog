@@ -6,7 +6,7 @@
   
   <meta charset="UTF-8">
   <title>
-    ブラウザで動作出来なくなったJavaアプレットをローカルで動かす | hassaku&#39;s blog
+    自分流論文メモのやり方 | hassaku&#39;s blog
   </title>
 
 
@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://localhost:1313/post/run-applet/"/>
+  <link rel="canonical" href="http://localhost:1313/post/paper-management/"/>
 
   
   <link rel="stylesheet" href="http://localhost:1313/css/sanitize.css">
@@ -62,31 +62,24 @@
   
   <main id="single" role="main">
     <div class="article-header">
-      <h1>ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</h1>
+      <h1>自分流論文メモのやり方</h1>
       <div class="meta">
-        Feb 26, 2017 &nbsp;
-        
-          #<a href="http://localhost:1313/tags/java">Java</a>&nbsp;
-        
-          #<a href="http://localhost:1313/tags/mac">Mac</a>&nbsp;
+        Dec 22, 2017 &nbsp;
         
       </div>
     </div>
     <article>
-      <p>昔作って公開していたJAVAアプレットを発掘したものの、
-ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。
-例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&hellip;</p>
+      <p>普段から興味ある分野について、arXivを漁っている人多いと思うのですが、やはり手っ取り早く内容を俯瞰するには、abstractが日本語になっている方が負荷が少ないと思います。日本語の概要を一瞬見て、ちゃんと読んだ方がいいかどうか判断する感じです。</p>
 
-<p>いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、
-安定して動作させることが出来ました。
-公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。</p>
+<p>自分は以下のような感じで、arxivのidを貼り付けると、自動でタイトルとか概要を取得して、隣に翻訳も表示してくれるようなスプレッドシートを用意しているのですが、便利なので公開したいと思います。ついでに、実装が公開されていればそのリンクや、簡単な感想なんかもメモするようにしています。</p>
 
-<pre><code>$ wget --no-parent -r &quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&quot;
-$ cd XXXX
-$ appletviewer XXXX/main.html
-</code></pre>
+<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRPeZS-GHkCUm6yyhMTXiWfUsbrxa0a_mmNYWygCw1oDuyU7G_v-P2Hhn7iFfT1_HeZFB8NfRJHeIfR/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false" width="800" height="500"></iframe>
 
-<p>Javaアプレット、一時期はまってたなぁ&hellip;</p>
+<p>以下から適当にコピーして頂ければ、使えるかと思います。</p>
+
+<p><a href="https://docs.google.com/spreadsheets/d/19AHvw82bFWivJtoVTohvUDs-uMuhyH0Dw0IzIpvviog">https://docs.google.com/spreadsheets/d/19AHvw82bFWivJtoVTohvUDs-uMuhyH0Dw0IzIpvviog</a></p>
+
+<p>誰かのお役に立てれば幸いです。。</p>
 
       
       
@@ -119,10 +112,10 @@ $ appletviewer XXXX/main.html
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://localhost:1313/post/pretrained-word2vec/" rel="prev">学習済みword2vecモデルを調べてみた</a></span>
+      <span class="previous">&larr; <a href="http://localhost:1313/post/hyperopt/" rel="prev">hyperoptでパラメータサーチ</a></span>
     
     
-      <span class="next"><a href="http://localhost:1313/post/class-repr/" rel="next">インスタンスを表す文字列を分かりやすくする</a> &rarr;</span>
+      <span class="next"><a href="http://localhost:1313/post/partial-auc/" rel="next">partial AUCでprecision重視の評価</a> &rarr;</span>
     
   </nav>
 

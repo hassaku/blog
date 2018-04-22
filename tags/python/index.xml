@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Python on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/python/</link>
+    <link>http://localhost:1313/tags/python/</link>
     <description>Recent content in Python on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sat, 04 Mar 2017 04:08:51 +0900</lastBuildDate>
-    <atom:link href="http://blog.hassaku-labs.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>hyperoptでパラメータサーチ</title>
-      <link>http://blog.hassaku-labs.com/post/hyperopt/</link>
+      <link>http://localhost:1313/post/hyperopt/</link>
       <pubDate>Sat, 04 Mar 2017 04:08:51 +0900</pubDate>
       
-      <guid>http://blog.hassaku-labs.com/post/hyperopt/</guid>
+      <guid>http://localhost:1313/post/hyperopt/</guid>
       <description>
 
 &lt;p&gt;機械学習におけるモデルのハイパーパラメータ探索は、その後のモデル評価を正当に行うことにも繋がる、重要な作業です。
@@ -95,21 +95,27 @@ for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
     plt.xlabel(&#39;x&#39;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/hyperopt/hyperopt.png&#34; alt=&#34;hyperopt&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/post/hyperopt/hyperopt.png&#34; alt=&#34;hyperopt&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;右に進むに連れて、パラメータ探索が進んでいく様子を表しています。
 上段の図が、目的関数と探索点の描画です。x=0の点が求めたいパラメータとなります。
 下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
 目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
+
+&lt;h4 id=&#34;追記:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;追記&lt;/h4&gt;
+
+&lt;p&gt;バンディットベースのものが出たらしい。使い方もhyperopt同様に簡単そうなので、パラメータチューニング時の候補にしたい。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/zygmuntz/hyperband&#34;&gt;Hyperband&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
     <item>
       <title>インスタンスを表す文字列を分かりやすくする</title>
-      <link>http://blog.hassaku-labs.com/post/class-repr/</link>
+      <link>http://localhost:1313/post/class-repr/</link>
       <pubDate>Sat, 04 Mar 2017 04:07:38 +0900</pubDate>
       
-      <guid>http://blog.hassaku-labs.com/post/class-repr/</guid>
+      <guid>http://localhost:1313/post/class-repr/</guid>
       <description>
 
 &lt;p&gt;ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
@@ -149,15 +155,15 @@ print(mc)  # =&amp;gt; attr2: 456, attr1: 123
     
     <item>
       <title>exception-slackerというライブラリをPyPIに登録した</title>
-      <link>http://blog.hassaku-labs.com/post/exception_slacker/</link>
+      <link>http://localhost:1313/post/exception_slacker/</link>
       <pubDate>Fri, 01 Apr 2016 00:35:40 +0900</pubDate>
       
-      <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
+      <guid>http://localhost:1313/post/exception_slacker/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
 </description>

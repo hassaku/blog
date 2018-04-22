@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>対話システム on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</link>
+    <link>http://localhost:1313/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</link>
     <description>Recent content in 対話システム on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 26 Feb 2017 02:27:30 +0900</lastBuildDate>
-    <atom:link href="http://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>学習済みword2vecモデルを調べてみた</title>
-      <link>http://blog.hassaku-labs.com/post/pretrained-word2vec/</link>
+      <link>http://localhost:1313/post/pretrained-word2vec/</link>
       <pubDate>Sun, 26 Feb 2017 02:27:30 +0900</pubDate>
       
-      <guid>http://blog.hassaku-labs.com/post/pretrained-word2vec/</guid>
+      <guid>http://localhost:1313/post/pretrained-word2vec/</guid>
       <description>
 
 &lt;p&gt;日本語の自然言語処理で分散表現を使おうと思った場合、まず頭に浮かぶのはword2vecだと思います。
@@ -92,10 +92,10 @@ gensim==1.0.0
     
     <item>
       <title>対話システムを作りたい！【準備編１】</title>
-      <link>http://blog.hassaku-labs.com/post/dialogue_system1/</link>
+      <link>http://localhost:1313/post/dialogue_system1/</link>
       <pubDate>Fri, 01 Apr 2016 02:26:21 +0900</pubDate>
       
-      <guid>http://blog.hassaku-labs.com/post/dialogue_system1/</guid>
+      <guid>http://localhost:1313/post/dialogue_system1/</guid>
       <description>
 
 &lt;p&gt;2016年はVRとか流行りそうで、仮想空間での生活を妄想してしまう今日このごろ。
@@ -270,7 +270,7 @@ In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=
 
 &lt;p&gt;この時点でも色々作って遊べますね。例えば、以前作った絵文字サジェスト用hubotでは、キーワードに近しい、絵文字キーワードを引っ張ってきて候補を表示してました。Githubとかだと、標準でも絵文字キーワードを入力すると、続きをサジェストしてくれるものの、そもそものキーワードが思いつかなかったりするので、そういうときに便利です :)&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/dialogue_system1/word2emoji.jpg&#34; alt=&#34;word2emoji.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/post/dialogue_system1/word2emoji.jpg&#34; alt=&#34;word2emoji.jpg&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
