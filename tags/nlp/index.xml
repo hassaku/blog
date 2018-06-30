@@ -91,7 +91,7 @@ gensim==1.0.0
     </item>
     
     <item>
-      <title>対話システムを作りたい！【準備編１】</title>
+      <title>対話システムを作りたい！（実際はWikipediaのデータを取得して単語ベクトルを学習するまで）</title>
       <link>http://blog.hassaku-labs.com/post/dialogue_system1/</link>
       <pubDate>Fri, 01 Apr 2016 02:26:21 +0900</pubDate>
       
