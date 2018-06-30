@@ -6,8 +6,161 @@
     <description>Recent content on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 23 Dec 2017 00:59:39 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 23 Apr 2018 00:00:00 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ターミナル上で１行の簡易グラフ</title>
+      <link>http://blog.hassaku-labs.com/post/ascii-simple-plot/</link>
+      <pubDate>Mon, 23 Apr 2018 00:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/ascii-simple-plot/</guid>
+      <description>&lt;p&gt;データ処理などしていると、処理中の状況を確認するのに、数値や文字列よりもグラフの方が適していることが多い。
+ただ、そのためだけにGUIなどを用意するのは大変だし、出来ればターミナル上で表示したい。
+というわけで、ログなど混ぜて、以下のような感じで、簡易的にグラフ描くと便利。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat simple_plot.py
+
+# coding: utf-8
+
+import numpy as np
+
+TICKS = u&#39;_▁▂▃▄▅▆▇█&#39;
+
+def ascii_plot(ints, max_range=None, min_range=0, width=40):
+    assert len(ints) &amp;gt;= width
+
+    ints = np.array(ints, dtype=int)
+    ints = ints[:int(len(ints)/width)*width]
+    ints = np.nansum(np.reshape(ints, (int(len(ints)/width), width)).T, axis=1)
+
+    if not max_range:
+        max_range = max(ints)
+    if not min_range:
+        min_range = min(ints)
+
+    step_range = max_range - min_range
+    step = (step_range / float(len(TICKS) - 1)) or 1
+    return u&#39;&#39;.join(TICKS[int(round((i - min_range) / step))] for i in ints)
+
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+   print(ascii_plot(range(10) + range(10, 0, -1), width=20))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ python simple_plot.py
+_▁▂▂▃▄▅▆▆▇█▇▆▆▅▄▃▂▂▁
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>pythonの各種使い方をオフラインで確認する方法</title>
+      <link>http://blog.hassaku-labs.com/post/python-offline-help/</link>
+      <pubDate>Tue, 20 Feb 2018 00:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/python-offline-help/</guid>
+      <description>
+
+&lt;p&gt;インターネットから隔離されていたりや書籍が持ち込みできないような環境で、プログラミングをすることがあった。
+こういうときのために、各種ライブラリの使い方などをオフラインでも確認できるようにしておくと良い。&lt;/p&gt;
+
+&lt;h2 id=&#34;各種ライブラリのヘルプ確認の仕方:98bf9ba98ae68fda7629e698d07e5dba&#34;&gt;各種ライブラリのヘルプ確認の仕方&lt;/h2&gt;
+
+&lt;p&gt;例えば、scikit-learnのkmeansクラスタリングの使い方を調べたいとき。
+一番上から順に探していく。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import sklearn
+&amp;gt; help(sklearn)
+...
+PACKAGE CONTENTS
+    ...
+    cluster (package)
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import sklearn.cluster
+&amp;gt; help(sklearn.cluster)
+...
+PACKAGE CONTENTS
+    ...
+    k_means_
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import sklearn.cluster.k_means_
+&amp;gt; help(sklearn.cluster.k_means_)
+class KMeans(sklearn.base.BaseEstimator, sklearn.base.ClusterMixin, sklearn.base.TransformerMixin)
+     |  K-Means clustering
+     |
+     |  Parameters
+...
+目的の使い方にたどり着いた
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;jupyter-notebook上でのやり方:98bf9ba98ae68fda7629e698d07e5dba&#34;&gt;jupyter notebook上でのやり方&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import pandas as pd
+&amp;gt; pd.read_csv?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下部にヘルプ用のウインドウが別途表示されるので、若干見やすい（？）&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Slackのメッセージ収集</title>
+      <link>http://blog.hassaku-labs.com/post/slack-mining/</link>
+      <pubDate>Tue, 23 Jan 2018 00:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/slack-mining/</guid>
+      <description>
+
+&lt;p&gt;Slackに投稿されたメッセージを収集する方法についてのメモ&lt;/p&gt;
+
+&lt;h2 id=&#34;データexport:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;データexport&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://xxxx.slack.com/services/export&#34;&gt;https://xxxx.slack.com/services/export&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;exportが完了すると、slack上でbotから通知くる&lt;/p&gt;
+
+&lt;h2 id=&#34;ユーザid取得:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;ユーザID取得&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最新のSlack Token取得方法は色々記事が挙がっているのでググること&lt;/p&gt;
+
+&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat show_messages.rb
+
+require &#39;json&#39;
+
+user = &amp;quot;USER_ID&amp;quot;
+year = 2016
+month = 2
+days = 29
+
+days.times do |day|
+  date = &amp;quot;%d-%2d-%02d&amp;quot; % (year, month, day + 1)
+  export_file = &amp;quot;./#{date}.json&amp;quot;
+  next unless File.exist?(export_file)
+  puts &amp;quot;\n----- #{date} -----&amp;quot;
+
+  json_data = open(export_file) do |io|
+    JSON.load(io)
+  end
+
+  json_data.each do |json|
+    puts &amp;quot;#{Time.at(json[&#39;ts&#39;].to_i)}: #{json[&#39;text&#39;].gsub(/\n+/, &#39; &#39;)}&amp;quot; if json[&amp;quot;user&amp;quot;] == user
+  end
+end
+
+$ ruby show_messages.rb
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>partial AUCでprecision重視の評価</title>

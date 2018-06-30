@@ -3,8 +3,23 @@
   
   <url>
     <loc>http://blog.hassaku-labs.com/</loc>
-    <lastmod>2017-12-23T00:59:39+09:00</lastmod>
+    <lastmod>2018-04-23T00:00:00+09:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.hassaku-labs.com/post/ascii-simple-plot/</loc>
+    <lastmod>2018-04-23T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.hassaku-labs.com/post/python-offline-help/</loc>
+    <lastmod>2018-02-20T00:00:00+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.hassaku-labs.com/post/slack-mining/</loc>
+    <lastmod>2018-01-23T00:00:00+09:00</lastmod>
   </url>
   
   <url>

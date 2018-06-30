@@ -6,8 +6,53 @@
     <description>Recent content in Python on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 04 Mar 2017 04:08:51 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 23 Apr 2018 00:00:00 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ターミナル上で１行の簡易グラフ</title>
+      <link>http://blog.hassaku-labs.com/post/ascii-simple-plot/</link>
+      <pubDate>Mon, 23 Apr 2018 00:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/ascii-simple-plot/</guid>
+      <description>&lt;p&gt;データ処理などしていると、処理中の状況を確認するのに、数値や文字列よりもグラフの方が適していることが多い。
+ただ、そのためだけにGUIなどを用意するのは大変だし、出来ればターミナル上で表示したい。
+というわけで、ログなど混ぜて、以下のような感じで、簡易的にグラフ描くと便利。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat simple_plot.py
+
+# coding: utf-8
+
+import numpy as np
+
+TICKS = u&#39;_▁▂▃▄▅▆▇█&#39;
+
+def ascii_plot(ints, max_range=None, min_range=0, width=40):
+    assert len(ints) &amp;gt;= width
+
+    ints = np.array(ints, dtype=int)
+    ints = ints[:int(len(ints)/width)*width]
+    ints = np.nansum(np.reshape(ints, (int(len(ints)/width), width)).T, axis=1)
+
+    if not max_range:
+        max_range = max(ints)
+    if not min_range:
+        min_range = min(ints)
+
+    step_range = max_range - min_range
+    step = (step_range / float(len(TICKS) - 1)) or 1
+    return u&#39;&#39;.join(TICKS[int(round((i - min_range) / step))] for i in ints)
+
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+   print(ascii_plot(range(10) + range(10, 0, -1), width=20))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ python simple_plot.py
+_▁▂▂▃▄▅▆▆▇█▇▆▆▅▄▃▂▂▁
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>hyperoptでパラメータサーチ</title>
