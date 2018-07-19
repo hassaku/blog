@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 26 Feb 2017 03:56:14 +0900</lastBuildDate>
-    <atom:link href="http://blog.hassaku-labs.com/tags/mac/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://blog.hassaku-labs.com/tags/mac/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</title>
@@ -15,21 +17,9 @@
       <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/run-applet/</guid>
-      <description>&lt;p&gt;昔作って公開していたJAVAアプレットを発掘したものの、
-ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。
-例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、
-安定して動作させることが出来ました。
-公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ wget --no-parent -r &amp;quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&amp;quot;
-$ cd XXXX
-$ appletviewer XXXX/main.html
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Javaアプレット、一時期はまってたなぁ&amp;hellip;&lt;/p&gt;
-</description>
+      <description>昔作って公開していたJAVAアプレットを発掘したものの、 ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。 例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;
+いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、 安定して動作させることが出来ました。 公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。
+$ wget --no-parent -r &amp;quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&amp;quot; $ cd XXXX $ appletviewer XXXX/main.html  Javaアプレット、一時期はまってたなぁ&amp;hellip;</description>
     </item>
     
   </channel>

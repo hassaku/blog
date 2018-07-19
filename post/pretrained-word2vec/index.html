@@ -90,7 +90,7 @@
 gensim==1.0.0
 </code></pre>
 
-<h2 id="白ヤギコーポレーションのモデル:e37dac6f2b05ab116e13b711e87f0489">白ヤギコーポレーションのモデル</h2>
+<h2 id="白ヤギコーポレーションのモデル">白ヤギコーポレーションのモデル</h2>
 
 <p><a href="http://aial.shiroyagi.co.jp/2017/02/japanese-word2vec-model-builder/">word2vecの学習済み日本語モデルを公開します</a></p>
 
@@ -102,7 +102,7 @@ gensim==1.0.0
 1046708
 </code></pre>
 
-<h2 id="東北大学-乾-岡崎研究室のモデル:e37dac6f2b05ab116e13b711e87f0489">東北大学 乾・岡崎研究室のモデル</h2>
+<h2 id="東北大学-乾-岡崎研究室のモデル">東北大学 乾・岡崎研究室のモデル</h2>
 
 <p><a href="http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/">日本語 Wikipedia エンティティベクトル</a></p>
 
@@ -114,13 +114,13 @@ gensim==1.0.0
 1005367
 </code></pre>
 
-<h4 id="gensimが1-0-0未満の場合-ただしシロヤギさんのモデルは1-0-0以上が必要のようです:e37dac6f2b05ab116e13b711e87f0489">gensimが1.0.0未満の場合（ただしシロヤギさんのモデルは1.0.0以上が必要のようです）</h4>
+<h4 id="gensimが1-0-0未満の場合-ただしシロヤギさんのモデルは1-0-0以上が必要のようです">gensimが1.0.0未満の場合（ただしシロヤギさんのモデルは1.0.0以上が必要のようです）</h4>
 
 <pre><code>&gt;&gt;&gt; from gensim.models import word2vec
 &gt;&gt;&gt; model = word2vec.Word2Vec.load_word2vec_format('./tohoku_entity_vector/entity_vector.model.bin', binary=True)
 </code></pre>
 
-<h2 id="追記-facebookの学習済みfasttextモデル:e37dac6f2b05ab116e13b711e87f0489">（追記）Facebookの学習済みFastTextモデル</h2>
+<h2 id="追記-facebookの学習済みfasttextモデル">（追記）Facebookの学習済みFastTextモデル</h2>
 
 <p>後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。
 ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。
@@ -137,7 +137,7 @@ gensim==1.0.0
 580000
 </code></pre>
 
-<h2 id="まとめ:e37dac6f2b05ab116e13b711e87f0489">まとめ</h2>
+<h2 id="まとめ">まとめ</h2>
 
 <p>同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
 ベクトルの次元数については、白ヤギさんのモデルの方が小さく、動作は軽そうです。

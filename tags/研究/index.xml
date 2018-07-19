@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>研究 on hassaku&#39;s blog</title>
+    <link>http://blog.hassaku-labs.com/tags/%E7%A0%94%E7%A9%B6/</link>
+    <description>Recent content in 研究 on hassaku&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Sun, 15 Jul 2018 00:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="http://blog.hassaku-labs.com/tags/%E7%A0%94%E7%A9%B6/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>単語ベクトルと全結合ニューラルネットワークによる単語連想記憶</title>
+      <link>http://blog.hassaku-labs.com/post/associative-word-vector/</link>
+      <pubDate>Sun, 15 Jul 2018 00:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/associative-word-vector/</guid>
+      <description>自然言語処理にニューラルネットワークを適用する事例が増えている。 ここでは、従来の部分的に再帰結合をもつようなRNN(LSTM)といった構造ではなく、 (最近はあまり流行っていない）ホップフィールドモデルのような全結合構造のニューラルネットを用いて、 エネルギーポテンシャルの窪み、引き込み領域を有するアトラクタ空間に言語知識を記憶させることを目指す。
+メリットとして、以下のようなことが挙げられる。
+ 追加学習が容易 データを大量に学習しなくても汎化性能が高い  いくつか想定している内容のうち、今回は単語ベクトルのペアを連想記憶する基本的なタスクを検証する。
+検証用コード https://github.com/hassaku/associative-word-vector/tree/blog-1
+検証内容 単語ベクトルは、Github上のREADMEに書いてあるように、東北大学 乾・岡崎研究室で公開されている学習済みのものを利用させて頂いた。
+タスクについては、以下に示すような「鳩」(que) → 「飛ぶ」(target) といった単純な知識を学習させることにする。
+que target 鳩 飛ぶ 牛 走る 鯉 泳ぐ  その後、以下のような未学習の単語(que)に対し、学習済みの知識に基づき、適切な単語(target)を想起出来るかどうかを確かめる。
+ que target カラス 飛ぶ 馬 走る 鯛 泳ぐ  期待される結果としては、「カラス」も「鳩」と同じく鳥であることから、「飛ぶ」と連想されること。 原理的には、図のような線上のアトラクタに知識を埋め込むことにより、学習済みのもの(que1)に親しい単語ベクトル(que1&amp;rsquo;)であれば、 引き込まれてtarget1を記憶させた平衡点に至ることで想起が実現される。
+今回は原理確認のため、以下のように事前に単語ベクトル間の近さ（コサイン類似度）を確認した上でタスク設定している。
+ word カラス 泳ぐ 牛 走る 飛ぶ 馬 鯉 鯛 鳩 カラス 1.000000 0.395338 0.475648 0.162681 0.493993 0.230542 0.406434 0.324465 0.670461 泳ぐ 0.395338 1.000000 0.166645 0.576415 0.</description>
+    </item>
+    
+  </channel>
+</rss>

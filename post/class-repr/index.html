@@ -79,7 +79,7 @@
 <p>そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
 分かりやすくなって便利だったりします。</p>
 
-<h2 id="reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e">reprを定義しない場合</h2>
+<h2 id="reprを定義しない場合">reprを定義しない場合</h2>
 
 <pre><code>class MyClass(object):
   def __init__(self):
@@ -90,7 +90,7 @@ mc = MyClass()
 print(mc)  # =&gt; &lt;__main__.MyClass object at 0xXXXXXXXXXX&gt;
 </code></pre>
 
-<h2 id="reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e">reprを定義する場合</h2>
+<h2 id="reprを定義する場合">reprを定義する場合</h2>
 
 <pre><code>class MyClass(object):
   def __init__(self):
