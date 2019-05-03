@@ -9,7 +9,7 @@ disqusShortname = "hassakusblog"
 tag = "tags"
 
 [params]
-  subtitle = "no reason"
+  subtitle = "３歩進んで２歩分滑り落ちてくペンギンのメモ"
   github = "https://github.com/hassaku"
   profile = "/images/profile.png"
   copyright = "Written by hassaku"
