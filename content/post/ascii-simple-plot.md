@@ -2,7 +2,7 @@
 date = "2018-04-23T00:00:00+09:00"
 description = ""
 draft = false
-tags = ["Python"]
+tags = ["python"]
 title = "ターミナル上で１行の簡易グラフ"
 +++
 
