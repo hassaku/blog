@@ -6,10 +6,247 @@
     <description>Recent content on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 15 Jul 2018 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 25 Feb 2019 10:00:00 +0900</lastBuildDate>
+    <atom:link href="http://blog.hassaku-labs.com/index.xml" rel="self" type="application/rss+xml" />
     
-	<atom:link href="http://blog.hassaku-labs.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDE使えないときの例外時デバッグ</title>
+      <link>http://blog.hassaku-labs.com/post/debug-on-remote/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/debug-on-remote/</guid>
+      <description>&lt;p&gt;IDEが使える状況であれば、簡単にデバッガーを使えると思うが、そうでない環境でデバッグしたくなることもある。
+printデバッグも辛いので、以下のような感じで例外時等にpython debuggerを起動出来ると便利。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import sys
+
+def hook(type, value, tb):
+   if hasattr(sys, &#39;ps1&#39;) or not sys.stderr.isatty():
+      sys.__excepthook__(type, value, tb)
+   else:
+      import traceback, pdb
+      traceback.print_exception(type, value, tb)
+      print()
+      pdb.pm()
+
+sys.excepthook = hook
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;というのを適当なところにdebug.pyとして置いておいて、デバッグしたいコード実行時にimportしておくだけ。
+例外が起きるとデバッガが起動し停止するので、そのときの変数の値などを表示したり調べると良い。&lt;/p&gt;
+
+&lt;p&gt;不必要に毎回デバッガ起動すると面倒なので、普段はimport行をコメントアウトしておくこと。&lt;/p&gt;
+
+&lt;p&gt;よく使うコマンドは以下のとおり。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;w
+
+&lt;ul&gt;
+&lt;li&gt;where. スタックトレースを表示する。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;u
+
+&lt;ul&gt;
+&lt;li&gt;up. スタックを一つ上に移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;d
+
+&lt;ul&gt;
+&lt;li&gt;down. スタックを一つ下に移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;l [first, last]
+
+&lt;ul&gt;
+&lt;li&gt;list. 現在のソースコード表示。fist, lastを指定可能。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;p [target]
+
+&lt;ul&gt;
+&lt;li&gt;print. 変数等を表示。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;c
+
+&lt;ul&gt;
+&lt;li&gt;continue. 次のブレークポイントに当たるまで実行&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;s
+
+&lt;ul&gt;
+&lt;li&gt;step. 現在の行を実行 (関数の中に入る）&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;n
+
+&lt;ul&gt;
+&lt;li&gt;next. 現在の行を実行 (関数の中に入らない）&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;q
+
+&lt;ul&gt;
+&lt;li&gt;quit. デバッガを終了&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
+    <item>
+      <title>word vectorのような読み込みが重たいやつをWebAPI化して軽量化</title>
+      <link>http://blog.hassaku-labs.com/post/word-vector-api/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/word-vector-api/</guid>
+      <description>&lt;p&gt;word vectorとかメモリをどデカく使うようなやつは、毎回スクリプトを起動する際に読み込みに時間がかかって辛い。
+そういうのは、極力別のプロセスにして、適当にAPIとか生やして連携するようにしておくと楽チンなので良くやるパターン。&lt;/p&gt;
+
+&lt;p&gt;以下は、単語ベクトルを返してくれるAPIを作った例。Flask使うとコードもシンプルに実現出来るので良い。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# coding: utf-8
+
+import numpy as np
+import gensim
+from flask import Flask, jsonify, request
+import json
+
+PRETRAINED_W2V_PATH = &#39;./model.bin&#39;
+
+app = Flask(__name__)
+app.config[&#39;JSON_AS_ASCII&#39;] = False
+
+model = gensim.models.KeyedVectors.load_word2vec_format(PRETRAINED_W2V_PATH, binary=True)  # 超時間かかる処理
+
+@app.route(&#39;/word_vector&#39;, methods=[&#39;GET&#39;])
+def word_vector():
+    word = request.args.get(&#39;word&#39;)
+    vector = np.array(model[word]).astype(float).tolist()
+    return jsonify({&#39;vector&#39;: vector}), 200
+
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    app.debug = True
+    app.run(host=&#39;0.0.0.0&#39;, port=8888)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下のような感じで単語ベクトルの値をjsonで返してくれる。pythonのスクリプトからはrequestsとかで簡単に取得して扱えるはず。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl &amp;quot;http://0.0.0.0:8888/word_vector?word=テスト&amp;quot;
+{
+  &amp;quot;vector&amp;quot;: [
+    0.029713749885559082,
+    -0.6024296283721924,
+    0.9723357558250427,
+    -1.1497808694839478,
+    1.3764394521713257,
+...
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;例えば、連続動作しているようなエージェントシミュレータなんかにも、似たような感じでAPI生やして、インタラクションさせることが出来る。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ターミナル上でシンプルなグリッドワールド</title>
+      <link>http://blog.hassaku-labs.com/post/grid-world/</link>
+      <pubDate>Fri, 10 Aug 2018 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/grid-world/</guid>
+      <description>&lt;p&gt;強化学習などでグリッドワールドを使いたいとき、gym-minigridとかpycolabがあるけど、色々いじる必要性もある場合、もっとシンプルなところからはじめたい。
+また、リモートのVMインスタンス上などで気軽に動かしたいので、GUIとかも無しで、ターミナル上で動かしたい。&lt;/p&gt;
+
+&lt;p&gt;以下のような感じで、cursesを使ってスクラッチで作っても別に難しいことはなかった。&lt;/p&gt;
+
+&lt;p&gt;こんな感じのやつがターミナル上で動く。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import curses
+import random
+import time
+from datetime import datetime
+
+FIELD = [&#39;#################&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#               #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;######  #########&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#               #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#################&#39;]
+
+
+def draw(screen):
+    for row, line in enumerate(FIELD):
+        for col, tile in enumerate(line):
+            screen.addch(row, col, tile)
+
+
+def main():
+    x = 10
+    y = 10
+
+    try:
+        screen = curses.initscr()
+        screen.nodelay(1)
+        curses.curs_set(0)
+
+        while(True):
+            action = random.randint(1, 5)
+            dx = 0
+            dy = 0
+            if action == 1:
+                dy += 1
+            elif action == 2:
+                dy -= 1
+            elif action == 3:
+                dx += 1
+            elif action == 4:
+                dx -= 1
+            elif action == 5:
+                pass
+            else:
+                raise NotImplementedError()
+
+            # check wall
+            if FIELD[x + dx][y + dy] != &amp;quot;#&amp;quot;:
+                x += dx
+                y += dy
+
+            screen.clear()
+            draw(screen)
+            screen.addch(x, y, &#39;+&#39;) # agent
+
+            screen.addstr(0, 20, datetime.now().strftime(&amp;quot;%Y/%m/%d %H:%M:%S&amp;quot;))
+            screen.addstr(1, 20, &#39;a:{} x:{} y:{}&#39;.format(action, x, y))
+            screen.refresh()
+
+            # quit
+            if(screen.getch() == ord(&#39;q&#39;)):
+                break
+
+            time.sleep(0.2)
+
+        curses.endwin()
+
+    except:
+        pass
+
+    finally:
+        curses.echo()
+        curses.endwin()
+
+
+if __name__ == &#39;__main__&#39;:
+    main()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;もしエージェントとインタラクションしたいと思ったら、flaskとかでapi作って状態変えるのが良いと思う。やり方はまた別の機会に。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>単語ベクトルと全結合ニューラルネットワークによる単語連想記憶</title>
@@ -17,16 +254,89 @@
       <pubDate>Sun, 15 Jul 2018 00:00:00 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/associative-word-vector/</guid>
-      <description>自然言語処理にニューラルネットワークを適用する事例が増えている。 ここでは、従来の部分的に再帰結合をもつようなRNN(LSTM)といった構造ではなく、 (最近はあまり流行っていない）ホップフィールドモデルのような全結合構造のニューラルネットを用いて、 エネルギーポテンシャルの窪み、引き込み領域を有するアトラクタ空間に言語知識を記憶させることを目指す。
-メリットとして、以下のようなことが挙げられる。
- 追加学習が容易 データを大量に学習しなくても汎化性能が高い  いくつか想定している内容のうち、今回は単語ベクトルのペアを連想記憶する基本的なタスクを検証する。
-検証用コード https://github.com/hassaku/associative-word-vector/tree/blog-1
-検証内容 単語ベクトルは、Github上のREADMEに書いてあるように、東北大学 乾・岡崎研究室で公開されている学習済みのものを利用させて頂いた。
-タスクについては、以下に示すような「鳩」(que) → 「飛ぶ」(target) といった単純な知識を学習させることにする。
-que target 鳩 飛ぶ 牛 走る 鯉 泳ぐ  その後、以下のような未学習の単語(que)に対し、学習済みの知識に基づき、適切な単語(target)を想起出来るかどうかを確かめる。
- que target カラス 飛ぶ 馬 走る 鯛 泳ぐ  期待される結果としては、「カラス」も「鳩」と同じく鳥であることから、「飛ぶ」と連想されること。 原理的には、図のような線上のアトラクタに知識を埋め込むことにより、学習済みのもの(que1)に親しい単語ベクトル(que1&amp;rsquo;)であれば、 引き込まれてtarget1を記憶させた平衡点に至ることで想起が実現される。
-今回は原理確認のため、以下のように事前に単語ベクトル間の近さ（コサイン類似度）を確認した上でタスク設定している。
- word カラス 泳ぐ 牛 走る 飛ぶ 馬 鯉 鯛 鳩 カラス 1.000000 0.395338 0.475648 0.162681 0.493993 0.230542 0.406434 0.324465 0.670461 泳ぐ 0.395338 1.000000 0.166645 0.576415 0.</description>
+      <description>
+
+&lt;p&gt;自然言語処理にニューラルネットワークを適用する事例が増えている。
+ここでは、従来の部分的に再帰結合をもつようなRNN(LSTM)といった構造ではなく、
+(最近はあまり流行っていない）ホップフィールドモデルのような全結合構造のニューラルネットを用いて、
+エネルギーポテンシャルの窪み、引き込み領域を有するアトラクタ空間に言語知識を記憶させることを目指す。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/associative-word-vector/potential.png&#34; alt=&#34;potential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;メリットとして、以下のようなことが挙げられる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;追加学習が容易&lt;/li&gt;
+&lt;li&gt;データを大量に学習しなくても汎化性能が高い&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;いくつか想定している内容のうち、今回は単語ベクトルのペアを連想記憶する基本的なタスクを検証する。&lt;/p&gt;
+
+&lt;h1 id=&#34;検証用コード:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証用コード&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/associative-word-vector/tree/blog-1&#34;&gt;https://github.com/hassaku/associative-word-vector/tree/blog-1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;検証内容:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証内容&lt;/h1&gt;
+
+&lt;p&gt;単語ベクトルは、Github上のREADMEに書いてあるように、東北大学 乾・岡崎研究室で公開されている学習済みのものを利用させて頂いた。&lt;/p&gt;
+
+&lt;p&gt;タスクについては、以下に示すような「鳩」(que) → 「飛ぶ」(target) といった単純な知識を学習させることにする。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;que target
+ 鳩   飛ぶ
+ 牛   走る
+ 鯉   泳ぐ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;その後、以下のような未学習の単語(que)に対し、学習済みの知識に基づき、適切な単語(target)を想起出来るかどうかを確かめる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;   que target
+ カラス   飛ぶ
+    馬   走る
+    鯛   泳ぐ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;期待される結果としては、「カラス」も「鳩」と同じく鳥であることから、「飛ぶ」と連想されること。
+原理的には、図のような線上のアトラクタに知識を埋め込むことにより、学習済みのもの(que1)に親しい単語ベクトル(que1&amp;rsquo;)であれば、
+引き込まれてtarget1を記憶させた平衡点に至ることで想起が実現される。&lt;/p&gt;
+
+&lt;p&gt;今回は原理確認のため、以下のように事前に単語ベクトル間の近さ（コサイン類似度）を確認した上でタスク設定している。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  word    カラス      泳ぐ        牛      走る      飛ぶ        馬        鯉        鯛        鳩
+カラス  1.000000  0.395338  0.475648  0.162681  0.493993  0.230542  0.406434  0.324465  0.670461
+  泳ぐ  0.395338  1.000000  0.166645  0.576415  0.681419  0.162183  0.277283  0.179173  0.385671
+    牛  0.475648  0.166645  1.000000  0.083026  0.149580  0.589086  0.559115  0.564100  0.565433
+  走る  0.162681  0.576415  0.083026  1.000000  0.508805  0.123983 -0.021091 -0.010774  0.193441
+  飛ぶ  0.493993  0.681419  0.149580  0.508805  1.000000  0.110546  0.133639  0.123491  0.422164
+    馬  0.230542  0.162183  0.589086  0.123983  0.110546  1.000000  0.251400  0.283276  0.281816
+    鯉  0.406434  0.277283  0.559115 -0.021091  0.133639  0.251400  1.000000  0.697661  0.617204
+    鯛  0.324465  0.179173  0.564100 -0.010774  0.123491  0.283276  0.697661  1.000000  0.533510
+    鳩  0.670461  0.385671  0.565433  0.193441  0.422164  0.281816  0.617204  0.533510  1.000000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;感覚として近そうな単語を選んだつもりでも、意外と単語ベクトルとしては離れていたりする。
+そういう場合は、意図しないアトラクタに引き寄せられてしまうため、注意が必要である。
+単語ベクトルは、文章中の使われ方を想定して学習されているため、そういうこともあるかとは思うが、
+本来は文脈によって、単語間の距離も適切に遠近するはずである。
+それについては、次回以降検証することにしたい。&lt;/p&gt;
+
+&lt;p&gt;さて、以下が実際にテストをしてみた結果である。
+queがニューラルネットに初期値として与えられる入力パターン、targetが最終的に到達した出力パターン、throughが想起の途中に接近したパターンである。
+例えば、「カラス」を初期値とした場合、学習済みの「鳩」に近づいたあと、その連想記憶先である「飛ぶ」を想起していることが分かる。
+他の「馬」「鯛」についても、同様の振る舞いを示しつつ、意図した答えを導き出している。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;open test
+que: カラス target: 飛ぶ through: [&#39;カラス&#39;, &#39;鳩&#39;, &#39;飛ぶ&#39;]
+que: 馬     target: 走る through: [&#39;馬&#39;, &#39;牛&#39;, &#39;走る&#39;]
+que: 鯛     target: 泳ぐ through: [&#39;鯛&#39;, &#39;鯉&#39;, &#39;泳ぐ&#39;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;さいごに:92074d8141b5d0b357587f68abb31ec5&#34;&gt;さいごに&lt;/h1&gt;
+
+&lt;p&gt;今回は簡単な事例であったものの、まだあまり手を付けられていないような、全結合型神経回路網を用いた言語処理の可能性を検証した。
+全結合型の特徴でもあるエネルギー的な安定状態に記憶を埋め込むことにより、人のように強力な汎化能力をもった記憶を、安定して追加学習できる。
+次回以降、実装の詳細や現実的な用途のために必要な、文脈の考慮などについて紹介していきたい。&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -35,8 +345,43 @@ que target 鳩 飛ぶ 牛 走る 鯉 泳ぐ  その後、以下のような未�
       <pubDate>Mon, 23 Apr 2018 00:00:00 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/ascii-simple-plot/</guid>
-      <description>データ処理などしていると、処理中の状況を確認するのに、数値や文字列よりもグラフの方が適していることが多い。 ただ、そのためだけにGUIなどを用意するのは大変だし、出来ればターミナル上で表示したい。 というわけで、ログなど混ぜて、以下のような感じで、簡易的にグラフ描くと便利。
-$ cat simple_plot.py # coding: utf-8 import numpy as np TICKS = u&#39;_▁▂▃▄▅▆▇█&#39; def ascii_plot(ints, max_range=None, min_range=0, width=40): assert len(ints) &amp;gt;= width ints = np.array(ints, dtype=int) ints = ints[:int(len(ints)/width)*width] ints = np.nansum(np.reshape(ints, (int(len(ints)/width), width)).T, axis=1) if not max_range: max_range = max(ints) if not min_range: min_range = min(ints) step_range = max_range - min_range step = (step_range / float(len(TICKS) - 1)) or 1 return u&#39;&#39;.join(TICKS[int(round((i - min_range) / step))] for i in ints) if __name__ == &amp;quot;__main__&amp;quot;: print(ascii_plot(range(10) + range(10, 0, -1), width=20))  $ python simple_plot.</description>
+      <description>&lt;p&gt;データ処理などしていると、処理中の状況を確認するのに、数値や文字列よりもグラフの方が適していることが多い。
+ただ、そのためだけにGUIなどを用意するのは大変だし、出来ればターミナル上で表示したい。
+というわけで、ログなど混ぜて、以下のような感じで、簡易的にグラフ描くと便利。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat simple_plot.py
+
+# coding: utf-8
+
+import numpy as np
+
+TICKS = u&#39;_▁▂▃▄▅▆▇█&#39;
+
+def ascii_plot(ints, max_range=None, min_range=0, width=40):
+    assert len(ints) &amp;gt;= width
+
+    ints = np.array(ints, dtype=int)
+    ints = ints[:int(len(ints)/width)*width]
+    ints = np.nansum(np.reshape(ints, (int(len(ints)/width), width)).T, axis=1)
+
+    if not max_range:
+        max_range = max(ints)
+    if not min_range:
+        min_range = min(ints)
+
+    step_range = max_range - min_range
+    step = (step_range / float(len(TICKS) - 1)) or 1
+    return u&#39;&#39;.join(TICKS[int(round((i - min_range) / step))] for i in ints)
+
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+   print(ascii_plot(range(10) + range(10, 0, -1), width=20))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ python simple_plot.py
+_▁▂▂▃▄▅▆▆▇█▇▆▆▅▄▃▂▂▁
+&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
     <item>
@@ -45,9 +390,52 @@ $ cat simple_plot.py # coding: utf-8 import numpy as np TICKS = u&#39;_▁▂▃
       <pubDate>Tue, 20 Feb 2018 00:00:00 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/python-offline-help/</guid>
-      <description>インターネットから隔離されていたりや書籍が持ち込みできないような環境で、プログラミングをすることがあった。 こういうときのために、各種ライブラリの使い方などをオフラインでも確認できるようにしておくと良い。
-各種ライブラリのヘルプ確認の仕方 例えば、scikit-learnのkmeansクラスタリングの使い方を調べたいとき。 一番上から順に探していく。
-&amp;gt; import sklearn &amp;gt; help(sklearn) ... PACKAGE CONTENTS ... cluster (package) ...  &amp;gt; import sklearn.cluster &amp;gt; help(sklearn.cluster) ... PACKAGE CONTENTS ... k_means_ ...  &amp;gt; import sklearn.cluster.k_means_ &amp;gt; help(sklearn.cluster.k_means_) class KMeans(sklearn.base.BaseEstimator, sklearn.base.ClusterMixin, sklearn.base.TransformerMixin) | K-Means clustering | | Parameters ... 目的の使い方にたどり着いた  jupyter notebook上でのやり方 &amp;gt; import pandas as pd &amp;gt; pd.read_csv?  下部にヘルプ用のウインドウが別途表示されるので、若干見やすい（？）</description>
+      <description>
+
+&lt;p&gt;インターネットから隔離されていたりや書籍が持ち込みできないような環境で、プログラミングをすることがあった。
+こういうときのために、各種ライブラリの使い方などをオフラインでも確認できるようにしておくと良い。&lt;/p&gt;
+
+&lt;h2 id=&#34;各種ライブラリのヘルプ確認の仕方:98bf9ba98ae68fda7629e698d07e5dba&#34;&gt;各種ライブラリのヘルプ確認の仕方&lt;/h2&gt;
+
+&lt;p&gt;例えば、scikit-learnのkmeansクラスタリングの使い方を調べたいとき。
+一番上から順に探していく。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import sklearn
+&amp;gt; help(sklearn)
+...
+PACKAGE CONTENTS
+    ...
+    cluster (package)
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import sklearn.cluster
+&amp;gt; help(sklearn.cluster)
+...
+PACKAGE CONTENTS
+    ...
+    k_means_
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import sklearn.cluster.k_means_
+&amp;gt; help(sklearn.cluster.k_means_)
+class KMeans(sklearn.base.BaseEstimator, sklearn.base.ClusterMixin, sklearn.base.TransformerMixin)
+     |  K-Means clustering
+     |
+     |  Parameters
+...
+目的の使い方にたどり着いた
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;jupyter-notebook上でのやり方:98bf9ba98ae68fda7629e698d07e5dba&#34;&gt;jupyter notebook上でのやり方&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; import pandas as pd
+&amp;gt; pd.read_csv?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下部にヘルプ用のウインドウが別途表示されるので、若干見やすい（？）&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -56,11 +444,52 @@ $ cat simple_plot.py # coding: utf-8 import numpy as np TICKS = u&#39;_▁▂▃
       <pubDate>Tue, 23 Jan 2018 00:00:00 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/slack-mining/</guid>
-      <description>Slackに投稿されたメッセージを収集する方法についてのメモ
-データexport https://xxxx.slack.com/services/export
-exportが完了すると、slack上でbotから通知くる
-ユーザID取得 $ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN  最新のSlack Token取得方法は色々記事が挙がっているのでググること
-一ヶ月のユーザの発言を収集する $ cat show_messages.rb require &#39;json&#39; user = &amp;quot;USER_ID&amp;quot; year = 2016 month = 2 days = 29 days.times do |day| date = &amp;quot;%d-%2d-%02d&amp;quot; % (year, month, day + 1) export_file = &amp;quot;./#{date}.json&amp;quot; next unless File.exist?(export_file) puts &amp;quot;\n----- #{date} -----&amp;quot; json_data = open(export_file) do |io| JSON.load(io) end json_data.each do |json| puts &amp;quot;#{Time.at(json[&#39;ts&#39;].to_i)}: #{json[&#39;text&#39;].gsub(/\n+/, &#39; &#39;)}&amp;quot; if json[&amp;quot;user&amp;quot;] == user end end $ ruby show_messages.</description>
+      <description>
+
+&lt;p&gt;Slackに投稿されたメッセージを収集する方法についてのメモ&lt;/p&gt;
+
+&lt;h2 id=&#34;データexport:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;データexport&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://xxxx.slack.com/services/export&#34;&gt;https://xxxx.slack.com/services/export&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;exportが完了すると、slack上でbotから通知くる&lt;/p&gt;
+
+&lt;h2 id=&#34;ユーザid取得:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;ユーザID取得&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最新のSlack Token取得方法は色々記事が挙がっているのでググること&lt;/p&gt;
+
+&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat show_messages.rb
+
+require &#39;json&#39;
+
+user = &amp;quot;USER_ID&amp;quot;
+year = 2016
+month = 2
+days = 29
+
+days.times do |day|
+  date = &amp;quot;%d-%2d-%02d&amp;quot; % (year, month, day + 1)
+  export_file = &amp;quot;./#{date}.json&amp;quot;
+  next unless File.exist?(export_file)
+  puts &amp;quot;\n----- #{date} -----&amp;quot;
+
+  json_data = open(export_file) do |io|
+    JSON.load(io)
+  end
+
+  json_data.each do |json|
+    puts &amp;quot;#{Time.at(json[&#39;ts&#39;].to_i)}: #{json[&#39;text&#39;].gsub(/\n+/, &#39; &#39;)}&amp;quot; if json[&amp;quot;user&amp;quot;] == user
+  end
+end
+
+$ ruby show_messages.rb
+&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
     <item>
@@ -69,9 +498,74 @@ exportが完了すると、slack上でbotから通知くる
       <pubDate>Sat, 23 Dec 2017 00:59:39 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/partial-auc/</guid>
-      <description>機械学習の判別器を評価する際、F値やAUCはよく使われていると思います。 しかしながら、実応用の分野によっては、検出出来ないこと(false negative)よりも、誤検出(false positive)の方が問題視されることがよくあります。 そういったprecision重視にしたいケースで使える指標がpartial AUCです。 一般的には、false positiveに制約をもたせて用いるようです。AUCの面積を求める際に、そのfalse positive rateの下限値以上の部分のみ使います。
-簡単に実装するため、scikit learnのaucのコードをオーバーライドして使っています。
-import numpy as np from sklearn.metrics import roc_auc_score, roc_curve, auc from sklearn.metrics.base import _average_binary_score # method overriding def roc_auc_score(y_true, y_score, average=&amp;quot;macro&amp;quot;, sample_weight=None, max_fpr=None): def _binary_roc_auc_score(y_true, y_score, sample_weight=None, max_fpr=max_fpr): fpr, tpr, tresholds = roc_curve(y_true, y_score, sample_weight=sample_weight) if max_fpr: idx = np.where(fpr &amp;lt;= max_fpr)[0] idx_last = idx.max() idx_next = idx_last + 1 xc = [fpr[idx_last], fpr[idx_next]] yc = [tpr[idx_last], tpr[idx_next]] tpr = np.</description>
+      <description>&lt;p&gt;機械学習の判別器を評価する際、F値やAUCはよく使われていると思います。
+しかしながら、実応用の分野によっては、検出出来ないこと(false negative)よりも、誤検出(false positive)の方が問題視されることがよくあります。
+そういったprecision重視にしたいケースで使える指標がpartial AUCです。
+一般的には、false positiveに制約をもたせて用いるようです。AUCの面積を求める際に、そのfalse positive rateの下限値以上の部分のみ使います。&lt;/p&gt;
+
+&lt;p&gt;簡単に実装するため、scikit learnのaucのコードをオーバーライドして使っています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import numpy as np
+from sklearn.metrics import roc_auc_score, roc_curve, auc
+from sklearn.metrics.base import _average_binary_score
+
+# method overriding
+def roc_auc_score(y_true, y_score, average=&amp;quot;macro&amp;quot;, sample_weight=None, max_fpr=None):
+    def _binary_roc_auc_score(y_true, y_score, sample_weight=None, max_fpr=max_fpr):
+        fpr, tpr, tresholds = roc_curve(y_true, y_score, sample_weight=sample_weight)
+
+        if max_fpr:
+            idx = np.where(fpr &amp;lt;= max_fpr)[0]
+
+            idx_last = idx.max()
+            idx_next = idx_last + 1
+            xc = [fpr[idx_last], fpr[idx_next]]
+            yc = [tpr[idx_last], tpr[idx_next]]
+            tpr = np.r_[tpr[idx], np.interp(max_fpr, xc, yc)]
+            fpr = np.r_[fpr[idx], max_fpr]
+            partial_roc = auc(fpr, tpr, reorder=True)
+
+            # standardize result to lie between 0.5 and 1
+            min_area = max_fpr**2/2
+            max_area = max_fpr
+            return 0.5*(1+(partial_roc-min_area)/(max_area-min_area))
+
+        return auc(fpr, tpr, reorder=True)
+
+    return _average_binary_score(_binary_roc_auc_score, y_true, y_score, average, sample_weight=sample_weight)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下のような感じで試してみると、AUCが同じスコアであっても、precisionが高い方がpAUCでは比較的高い値になることが分かります。
+よって、pAUCを指標に学習やパラメータチューニングを行えば、precision重視のものが出来上がります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import matplotlib.pylab as plt
+import numpy as np
+
+y_true = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+y_pred_each_fp = {
+    &amp;quot;many&amp;quot;: np.array([0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]),
+    &amp;quot;few&amp;quot;: np.array([1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0]),
+    &amp;quot;no&amp;quot;: np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0]),
+}
+
+
+MAX_FALSE_POSITIVE_RATE = 0.3
+
+plt.figure(figsize=(17, 5))
+for fi, (fp_type, y_pred) in enumerate(y_pred_each_fp.items()):
+    plt.subplot(1, 3, fi+1)
+    fpr, tpr, _ = roc_curve(y_true, y_pred)
+    plt.plot(fpr, tpr, color=&#39;r&#39;, lw=2)
+    plt.plot([0, 1], [0, 1], color=&#39;k&#39;, lw=1, linestyle=&#39;--&#39;)
+    plt.plot([MAX_FALSE_POSITIVE_RATE, MAX_FALSE_POSITIVE_RATE], [0, 1], color=&#39;k&#39;, lw=1, linestyle=&#39;-.&#39;)
+    plt.xlabel(&#39;false positive rate&#39;)
+    plt.ylabel(&#39;true positive rate&#39;)
+    plt.title(&amp;quot;{fp_type} false positives (auc:{auc:1.2f}  pauc:{pauc:1.2f})&amp;quot;.format(fp_type=fp_type,
+        auc=roc_auc_score(y_true, y_pred), pauc=roc_auc_score(y_true, y_pred, max_fpr=MAX_FALSE_POSITIVE_RATE)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/pauc/pauc.png&#34; alt=&#34;pauc&#34; /&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -80,11 +574,18 @@ import numpy as np from sklearn.metrics import roc_auc_score, roc_curve, auc fro
       <pubDate>Fri, 22 Dec 2017 17:17:30 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/paper-management/</guid>
-      <description>普段から興味ある分野について、arXivを漁っている人多いと思うのですが、やはり手っ取り早く内容を俯瞰するには、abstractが日本語になっている方が負荷が少ないと思います。日本語の概要を一瞬見て、ちゃんと読んだ方がいいかどうか判断する感じです。
-自分は以下のような感じで、arxivのidを貼り付けると、自動でタイトルとか概要を取得して、隣に翻訳も表示してくれるようなスプレッドシートを用意しているのですが、便利なので公開したいと思います。ついでに、実装が公開されていればそのリンクや、簡単な感想なんかもメモするようにしています。
- 以下から適当にコピーして頂ければ、使えるかと思います。
-https://docs.google.com/spreadsheets/d/19AHvw82bFWivJtoVTohvUDs-uMuhyH0Dw0IzIpvviog
-誰かのお役に立てれば幸いです。。</description>
+      <description>&lt;p&gt;普段から興味ある分野について、arXivを漁っている人多いと思うのですが、やはり手っ取り早く内容を俯瞰するには、abstractが日本語になっている方が負荷が少ないと思います。日本語の概要を一瞬見て、ちゃんと読んだ方がいいかどうか判断する感じです。&lt;/p&gt;
+
+&lt;p&gt;自分は以下のような感じで、arxivのidを貼り付けると、自動でタイトルとか概要を取得して、隣に翻訳も表示してくれるようなスプレッドシートを用意しているのですが、便利なので公開したいと思います。ついでに、実装が公開されていればそのリンクや、簡単な感想なんかもメモするようにしています。&lt;/p&gt;
+
+&lt;iframe src=&#34;https://docs.google.com/spreadsheets/d/e/2PACX-1vRPeZS-GHkCUm6yyhMTXiWfUsbrxa0a_mmNYWygCw1oDuyU7G_v-P2Hhn7iFfT1_HeZFB8NfRJHeIfR/pubhtml?gid=0&amp;amp;single=true&amp;amp;widget=true&amp;amp;headers=false&#34; width=&#34;800&#34; height=&#34;500&#34;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;以下から適当にコピーして頂ければ、使えるかと思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://docs.google.com/spreadsheets/d/19AHvw82bFWivJtoVTohvUDs-uMuhyH0Dw0IzIpvviog&#34;&gt;https://docs.google.com/spreadsheets/d/19AHvw82bFWivJtoVTohvUDs-uMuhyH0Dw0IzIpvviog&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;誰かのお役に立てれば幸いです。。&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -93,11 +594,99 @@ https://docs.google.com/spreadsheets/d/19AHvw82bFWivJtoVTohvUDs-uMuhyH0Dw0IzIpvv
       <pubDate>Sat, 04 Mar 2017 04:08:51 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/hyperopt/</guid>
-      <description>機械学習におけるモデルのハイパーパラメータ探索は、その後のモデル評価を正当に行うことにも繋がる、重要な作業です。 近年ではRandom SearchやGrid Search、GA等の各種最適化手法よりも、色々と優れた手法が提案されているらしく、 手軽に使えるようなライブラリも整備されています。 パラメータ探索技術というと、応用範囲が広く、効果が見えやすいため、手軽に使えて効率的な手法があれば、積極的に使っていきたいところです。 その中でもhyperoptというライブラリが、kaggleとかでよく使われているという話を見かけて、試しに使ってみました。
-中身については、色々Blogや論文が見つかるのですが、 Bayesian Optimization -&amp;gt; Sequential Model-based Algorithm Configuration (SMAC) -&amp;gt; Tree-structured Parzen Estimator (TPE) のように進化してきたTPEという手法が使われているようです。 Bayesian Optimizationのアプローチは、直感的にも効率良さそうなので、その進化系なら期待できます。
-Hyperopt
-簡単な使い方 以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。
-#!/usr/bin/env python # encoding: utf-8 import os import sys import matplotlib.pyplot as plt import numpy as np from hyperopt import fmin, tpe, hp, Trials # パラメータの探索範囲。指定方法は離散値や連続値などに応じて色々ある。 # https://github.com/hyperopt/hyperopt/wiki/FMin#21-parameter-expressions hyperopt_parameters = { &#39;x&#39;: hp.uniform(&#39;x&#39;, -30, 30) } # 最小化したい目的関数。正解との誤差とか。 def objective(args): return np.sin(args[&#39;x&#39;]) / args[&#39;x&#39;] # 探索中の進行状況を記録 trials = Trials() # パラメータサーチの実行 best = fmin(objective, hyperopt_parameters, algo=tpe.</description>
+      <description>
+
+&lt;p&gt;機械学習におけるモデルのハイパーパラメータ探索は、その後のモデル評価を正当に行うことにも繋がる、重要な作業です。
+近年ではRandom SearchやGrid Search、GA等の各種最適化手法よりも、色々と優れた手法が提案されているらしく、
+手軽に使えるようなライブラリも整備されています。
+パラメータ探索技術というと、応用範囲が広く、効果が見えやすいため、手軽に使えて効率的な手法があれば、積極的に使っていきたいところです。
+その中でもhyperoptというライブラリが、kaggleとかでよく使われているという話を見かけて、試しに使ってみました。&lt;/p&gt;
+
+&lt;p&gt;中身については、色々Blogや論文が見つかるのですが、
+Bayesian Optimization -&amp;gt; Sequential Model-based Algorithm Configuration (SMAC) -&amp;gt; Tree-structured Parzen Estimator (TPE)
+のように進化してきたTPEという手法が使われているようです。
+Bayesian Optimizationのアプローチは、直感的にも効率良さそうなので、その進化系なら期待できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://hyperopt.github.io/hyperopt/&#34;&gt;Hyperopt&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;簡単な使い方:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;簡単な使い方&lt;/h2&gt;
+
+&lt;p&gt;以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+from hyperopt import fmin, tpe, hp, Trials
+
+# パラメータの探索範囲。指定方法は離散値や連続値などに応じて色々ある。
+# https://github.com/hyperopt/hyperopt/wiki/FMin#21-parameter-expressions
+hyperopt_parameters = { &#39;x&#39;: hp.uniform(&#39;x&#39;, -30, 30) }
+
+# 最小化したい目的関数。正解との誤差とか。
+def objective(args):
+    return np.sin(args[&#39;x&#39;]) / args[&#39;x&#39;]
+
+# 探索中の進行状況を記録
+trials = Trials()
+
+# パラメータサーチの実行
+best = fmin(objective,  hyperopt_parameters, algo=tpe.suggest, max_evals=300, trials=trials)
+
+# 目的関数を最小にするパラメータ
+print best
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;パラメータサーチの様子を表示:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;# 上記コードの続き
+
+x_hisotry = np.ravel([t[&#39;misc&#39;][&#39;vals&#39;][&#39;x&#39;] for t in trials.trials])
+objective_history = trials.losses()
+
+fig = plt.figure(figsize=(16, 8))
+cm = plt.get_cmap(&#39;jet&#39;)
+
+PLOT_NUM = 5
+
+for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
+    cmap_cycle = [cm(1. * h/ (hist_num - 1)) for h in range(int(hist_num) - 1)]
+
+    ax = plt.subplot(2, PLOT_NUM, i + 1)
+    ax.set_color_cycle(cmap_cycle)
+    ax.plot(np.arange(-30, 30, 0.1), function(np.arange(-30, 30, 0.1)), alpha=0.2)
+    for j in range(int(hist_num)  - 1):
+        ax.plot(x_hisotry[j], objective_history[j], &#39;.&#39;)
+    ax.set_title(&#39;times: {times}&#39;.format(times=int(hist_num)))
+    ax.set_ylim([np.min(objective_history) - 0.1, np.max(objective_history) + 0.1])
+    ax.set_xlim([-30, 30])
+    if i == 0:
+        ax.set_ylabel(&#39;y&#39;)
+
+    plt.subplot(2, PLOT_NUM, PLOT_NUM + i + 1)
+    plt.hist(x_hisotry[:hist_num], bins=50)
+    if i == 0:
+        plt.ylabel(&#39;histogram of x&#39;)
+    plt.xlabel(&#39;x&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/hyperopt/hyperopt.png&#34; alt=&#34;hyperopt&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;右に進むに連れて、パラメータ探索が進んでいく様子を表しています。
+上段の図が、目的関数と探索点の描画です。x=0の点が求めたいパラメータとなります。
+下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
+目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
+
+&lt;h4 id=&#34;追記:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;追記&lt;/h4&gt;
+
+&lt;p&gt;バンディットベースのものが出たらしい。使い方もhyperopt同様に簡単そうなので、パラメータチューニング時の候補にしたい。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/zygmuntz/hyperband&#34;&gt;Hyperband&lt;/a&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -106,9 +695,41 @@ Hyperopt
       <pubDate>Sat, 04 Mar 2017 04:07:38 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/class-repr/</guid>
-      <description>ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、 標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。
-そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、 分かりやすくなって便利だったりします。
-reprを定義しない場合 class MyClass(object): def __init__(self): self.attr1 = 123 self.attr2 = 456 mc = MyClass() print(mc) # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;  reprを定義する場合 class MyClass(object): def __init__(self): self.attr1 = 123 self.attr2 = 456 def __repr__(self): return &amp;quot;, &amp;quot;.join(&amp;quot;%s: %s&amp;quot; % item for item in vars(self).items()) mc = MyClass() print(mc) # =&amp;gt; attr2: 456, attr1: 123  ちょっとしたTipsでした。</description>
+      <description>
+
+&lt;p&gt;ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
+標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。&lt;/p&gt;
+
+&lt;p&gt;そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
+分かりやすくなって便利だったりします。&lt;/p&gt;
+
+&lt;h2 id=&#34;reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義しない場合&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+mc = MyClass()
+print(mc)  # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義する場合&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+  def __repr__(self):
+    return &amp;quot;, &amp;quot;.join(&amp;quot;%s: %s&amp;quot; % item for item in vars(self).items())
+
+mc = MyClass()
+print(mc)  # =&amp;gt; attr2: 456, attr1: 123
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ちょっとしたTipsでした。&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -117,9 +738,21 @@ reprを定義しない場合 class MyClass(object): def __init__(self): self.att
       <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/run-applet/</guid>
-      <description>昔作って公開していたJAVAアプレットを発掘したものの、 ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。 例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;
-いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、 安定して動作させることが出来ました。 公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。
-$ wget --no-parent -r &amp;quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&amp;quot; $ cd XXXX $ appletviewer XXXX/main.html  Javaアプレット、一時期はまってたなぁ&amp;hellip;</description>
+      <description>&lt;p&gt;昔作って公開していたJAVAアプレットを発掘したものの、
+ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。
+例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、
+安定して動作させることが出来ました。
+公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ wget --no-parent -r &amp;quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&amp;quot;
+$ cd XXXX
+$ appletviewer XXXX/main.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Javaアプレット、一時期はまってたなぁ&amp;hellip;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -128,13 +761,79 @@ $ wget --no-parent -r &amp;quot;javaアプレットのファイル一式が入�
       <pubDate>Sun, 26 Feb 2017 02:27:30 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/pretrained-word2vec/</guid>
-      <description>日本語の自然言語処理で分散表現を使おうと思った場合、まず頭に浮かぶのはword2vecだと思います。 特に分散表現自体の精度とかには興味がなく、それを使った対話システムを作りたいだけだったりするのであれば、 データクレンジングや学習には結構時間もかかるので、学習済みの公開モデルを使わせていただくのが手っ取り早そうです。
-(単語ベクトルの準備に手間取り、モチベーション低下に繋がる悪い例：対話システムを作りたい！【準備編１】)
-調べてみると、よく出来ていそうな公開モデルを２つ見つけたので、その利用方法と気になるベクトル次元数と単語数を調べてみました。 なお、どちらもWikipedia日本語版を学習元にしているようです。
-word2vecを使うには、以下のバージョンのgensimを利用します。
-$ pip freeze | grep gensim gensim==1.0.0  白ヤギコーポレーションのモデル word2vecの学習済み日本語モデルを公開します
-&amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec &amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load(&#39;./shiroyagi/word2vec.gensim.model&#39;) &amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape (50,) &amp;gt;&amp;gt;&amp;gt; model.corpus_count 1046708  東北大学 乾・岡崎研究室のモデル 日本語 Wikipedia エンティティベクトル
-&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors &amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True) &amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape (200,) &amp;gt;&amp;gt;&amp;gt; len(model.vocab) 1005367  gensimが1.0.0未満の場合（ただしシロヤギさんのモデルは1.0.0以上が必要のようです） &amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec &amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)  （追記）Facebookの学習済みFastTextモデル 後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。 ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。 もしかすると、ボキャブラリ数に関しては、容量の観点から、不要な用語を除去するなど、うまくデータクレンジングされた結果なのかもしれません。 利用時には要調査です。</description>
+      <description>
+
+&lt;p&gt;日本語の自然言語処理で分散表現を使おうと思った場合、まず頭に浮かぶのはword2vecだと思います。
+特に分散表現自体の精度とかには興味がなく、それを使った対話システムを作りたいだけだったりするのであれば、
+データクレンジングや学習には結構時間もかかるので、学習済みの公開モデルを使わせていただくのが手っ取り早そうです。&lt;/p&gt;
+
+&lt;p&gt;(単語ベクトルの準備に手間取り、モチベーション低下に繋がる悪い例：&lt;a href=&#34;http://blog.hassaku-labs.com/post/dialogue_system1/&#34;&gt;対話システムを作りたい！【準備編１】&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;調べてみると、よく出来ていそうな公開モデルを２つ見つけたので、その利用方法と気になるベクトル次元数と単語数を調べてみました。
+なお、どちらもWikipedia日本語版を学習元にしているようです。&lt;/p&gt;
+
+&lt;p&gt;word2vecを使うには、以下のバージョンのgensimを利用します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pip freeze | grep gensim
+gensim==1.0.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;白ヤギコーポレーションのモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;白ヤギコーポレーションのモデル&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://aial.shiroyagi.co.jp/2017/02/japanese-word2vec-model-builder/&#34;&gt;word2vecの学習済み日本語モデルを公開します&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec
+&amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load(&#39;./shiroyagi/word2vec.gensim.model&#39;)
+&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
+(50,)
+&amp;gt;&amp;gt;&amp;gt; model.corpus_count
+1046708
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;東北大学-乾-岡崎研究室のモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;東北大学 乾・岡崎研究室のモデル&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/&#34;&gt;日本語 Wikipedia エンティティベクトル&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors
+&amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
+&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
+(200,)
+&amp;gt;&amp;gt;&amp;gt; len(model.vocab)
+1005367
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;gensimが1-0-0未満の場合-ただしシロヤギさんのモデルは1-0-0以上が必要のようです:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;gensimが1.0.0未満の場合（ただしシロヤギさんのモデルは1.0.0以上が必要のようです）&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec
+&amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;追記-facebookの学習済みfasttextモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;（追記）Facebookの学習済みFastTextモデル&lt;/h2&gt;
+
+&lt;p&gt;後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。
+ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。
+もしかすると、ボキャブラリ数に関しては、容量の観点から、不要な用語を除去するなど、うまくデータクレンジングされた結果なのかもしれません。
+利用時には要調査です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md&#34;&gt;Pre-trained word vectors&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors
+&amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./wiki.ja.vec&#39;)  # binは読み込めないらしい
+&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
+(300,)
+&amp;gt;&amp;gt;&amp;gt; len(model.vocab)
+580000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;まとめ:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
+ベクトルの次元数については、白ヤギさんのモデルの方が小さく、動作は軽そうです。
+一方で、東北大学のモデルの方が、単語の表現力は高そうなので、色々検証レベルでは色々と無難な気がします。
+実はもう少し高次元での処理をしたいので、更にこれをスパース（出来れば２値ベクトル）に変換するようなこと
+（こういうやつ &lt;a href=&#34;http://www.manaalfaruqui.com/papers/acl15-overcomplete.pdf&#34;&gt;Sparse Overcomplete Word Vector Representations&lt;/a&gt; ）
+をやりたいのですが、それはまた次回にでも。。&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -143,13 +842,182 @@ $ pip freeze | grep gensim gensim==1.0.0  白ヤギコーポレーションの�
       <pubDate>Fri, 01 Apr 2016 02:26:21 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/dialogue_system1/</guid>
-      <description>2016年はVRとか流行りそうで、仮想空間での生活を妄想してしまう今日このごろ。 でも、今のままだとNPCがちゃんと自然に会話してくれない気がして微妙なんですよね。。。そこで、既存技術の延長で、どれくらいの日本語対話が可能か、ちょっと自分でも作ってみたくなりました。
-自然言語処理をちゃんと勉強したことはないけれど、脳型情報処理アプローチでいくとしたら、結局はベクトル時系列データの処理なのかな？って思います。とりあえず、色々試してみましょう。
-たぶん、進め方はこんな感じ。
- 単語のベクトルデータ化（言語コーパス？） 対話データのベクトル時系列データ化（対話コーパス？） 会話時系列データにおける応答時系列データの予測学習 学習結果を用いた対話システム構築  というわけで、今回は１の言語コーパス作成について。単語を入力とし、N次元ベクトルに変換することを目標。似たような単語は近くに配置されるような変換が好ましい（分散表現だ！）。
-言語コーパスをWikipediaの記事から作成 wikipediaの日本語記事をダウンロード $ curl -O http://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz  mecabをインストール 単語の分かち書きへ変換するためのツールです。macならbrewでインストール可能。
-$ brew install mecab $ brew install mecab-ipadic  新語用辞書をインストール 最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。
-$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git $ cd mecab-ipadic-neologd/ $ ./bin/install-mecab-ipadic-neologd -n # 辞書updateも同じコマンド $ echo `mecab-config --dicdir`&amp;quot;/mecab-ipadic-neologd&amp;quot; # 実行時指定のパスを調べる /usr/local/lib/mecab/dic/mecab-ipadic-neologd  （参考）新御用辞書有無を確認 $ pip install mecab $ python In [1]: import MeCab In [2]: mecab_org = MeCab.Tagger(&amp;quot;-Owakati&amp;quot;) In [3]: mecab_new = MeCab.</description>
+      <description>
+
+&lt;p&gt;2016年はVRとか流行りそうで、仮想空間での生活を妄想してしまう今日このごろ。
+でも、今のままだとNPCがちゃんと自然に会話してくれない気がして微妙なんですよね。。。そこで、既存技術の延長で、どれくらいの日本語対話が可能か、ちょっと自分でも作ってみたくなりました。&lt;/p&gt;
+
+&lt;p&gt;自然言語処理をちゃんと勉強したことはないけれど、脳型情報処理アプローチでいくとしたら、結局はベクトル時系列データの処理なのかな？って思います。とりあえず、色々試してみましょう。&lt;/p&gt;
+
+&lt;p&gt;たぶん、進め方はこんな感じ。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;単語のベクトルデータ化（言語コーパス？）&lt;/li&gt;
+&lt;li&gt;対話データのベクトル時系列データ化（対話コーパス？）&lt;/li&gt;
+&lt;li&gt;会話時系列データにおける応答時系列データの予測学習&lt;/li&gt;
+&lt;li&gt;学習結果を用いた対話システム構築&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;というわけで、今回は１の言語コーパス作成について。単語を入力とし、N次元ベクトルに変換することを目標。似たような単語は近くに配置されるような変換が好ましい（分散表現だ！）。&lt;/p&gt;
+
+&lt;h1 id=&#34;言語コーパスをwikipediaの記事から作成:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;言語コーパスをWikipediaの記事から作成&lt;/h1&gt;
+
+&lt;h2 id=&#34;wikipediaの日本語記事をダウンロード:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;wikipediaの日本語記事をダウンロード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl -O http://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;mecabをインストール:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;mecabをインストール&lt;/h2&gt;
+
+&lt;p&gt;単語の分かち書きへ変換するためのツールです。macならbrewでインストール可能。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ brew install mecab
+$ brew install mecab-ipadic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;新語用辞書をインストール:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;新語用辞書をインストール&lt;/h3&gt;
+
+&lt;p&gt;最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
+$ cd mecab-ipadic-neologd/
+$ ./bin/install-mecab-ipadic-neologd -n   # 辞書updateも同じコマンド
+$ echo `mecab-config --dicdir`&amp;quot;/mecab-ipadic-neologd&amp;quot;  # 実行時指定のパスを調べる
+/usr/local/lib/mecab/dic/mecab-ipadic-neologd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;参考-新御用辞書有無を確認:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;（参考）新御用辞書有無を確認&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pip install mecab
+$ python
+In [1]: import MeCab
+In [2]: mecab_org = MeCab.Tagger(&amp;quot;-Owakati&amp;quot;)
+In [3]: mecab_new = MeCab.Tagger(&amp;quot;-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd&amp;quot;)
+In [4]: print mecab_org.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
+電力 自由 化 が はじまる
+In [5]: print mecab_new.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
+電力自由化 が はじまる
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;なんとなく最近ニュースとかで出てくるような単語を分かち書き出来ている（気がします）。&lt;/p&gt;
+
+&lt;h2 id=&#34;wikipediaを分かち書き:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;wikipediaを分かち書き&lt;/h2&gt;
+
+&lt;p&gt;各単語に分かち書き変換します。&lt;/p&gt;
+
+&lt;h3 id=&#34;htmlタグとかを取っ払って文章だけに変換:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;HTMLタグとかを取っ払って文章だけに変換&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ echo &#39;gem &amp;quot;wp2txt&amp;quot;&#39; &amp;gt;&amp;gt; Gemfile
+$ bundle
+$ bundle exec wp2txt --input-file jawiki-latest-pages-articles.xml.bz
+$ ls wp2txt/  # 変換結果
+$ rm jawiki-latest-pages-articles.xml.bz # 不要だから消す
+$ cat wp2txt/jawiki-latest-pages-articles-* &amp;gt; corpus.txt # 変換結果を一つのファイルに連結
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;とても時間かかります&amp;hellip;
+記号除去とかした方が良いのかどうか、今のところ謎です。&lt;/p&gt;
+
+&lt;h3 id=&#34;新語辞書使って分かち書き:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;新語辞書使って分かち書き&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ mecab -Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd corpus.txt &amp;gt; corpus_wakati.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;とても時間かかります&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=&#34;word2vecによるベクトル化:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;word2vecによるベクトル化&lt;/h2&gt;
+
+&lt;p&gt;今後pythonで実装することもあり、gensim使います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pip install gensim
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;utf-8に変換:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;utf-8に変換&lt;/h3&gt;
+
+&lt;p&gt;しないとword2vecのときに、文字コードについて怒られたので&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ iconv -c -t UTF-8 &amp;lt; corpus_wakati.txt &amp;gt; corpus_wakati_utf-8.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;学習:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;学習&lt;/h3&gt;
+
+&lt;p&gt;以下のpythonコードを実行します。次元は適当に中程度としました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vi word2vec_train.py
+# coding: utf-8
+from gensim.models import word2vec
+import sys, logging, string, codecs
+
+logging.basicConfig(format=&#39;%(asctime)s : %(levelname)s : %(message)s&#39;, level=logging.INFO)
+
+# 学習（400次元だと４コアで約３時間...）
+sentences = word2vec.Text8Corpus(&amp;quot;corpus_wakati_utf-8.txt&amp;quot;)
+model = word2vec.Word2Vec(sentences, size=400, workers=4)
+# モデルの保存
+model.save(&amp;quot;w2v_model_%d_dims&amp;quot; % dims)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;検証:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;検証&lt;/h3&gt;
+
+&lt;h4 id=&#34;モデルの読み込み:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;モデルの読み込み&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyton
+In [1]: from gensim.models import word2vec
+In [2]: model = word2vec.Word2Vec.load(&amp;quot;./word2vec_models/w2v_model_%d_dims&amp;quot; % 400)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ベクトル空間上で近い単語を探す:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;ベクトル空間上で近い単語を探す&lt;/h4&gt;
+
+&lt;p&gt;動作確認です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;In [3]: most_similar = model.most_similar(positive=[u&#39;サッカー&#39;])[0]
+In [4]: most_similar[0]
+ラグビー
+In [5]: most_similar[1]
+0.663492918015  # コサイン距離？
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ベクトル取得:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;ベクトル取得&lt;/h4&gt;
+
+&lt;p&gt;このベクトルに対して今後処理していくことになります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;In [1]: vector = model[u&#39;サッカー&#39;]
+array([  2.69545317e-01,  -1.99663490e-01,   9.52050760e-02,
+         2.16732353e-01,   1.97090670e-01,  -1.90409079e-01,
+         ...
+In [2]: vector.shape
+(400,)
+In [3]: vector.min()
+-0.71880466
+In [4]: vector.max()
+0.75658286
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ベクトルから単語を探す:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;ベクトルから単語を探す&lt;/h4&gt;
+
+&lt;p&gt;処理結果のベクトルから単語を復元する手段も確認しておきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;In [5]: vector[0:10] = 0.0  # 適当に変更
+In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=[vector], topn=3)]:
+            print cname
+サッカー
+ラグビー
+フットサル
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;おわり:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;おわり&lt;/h2&gt;
+
+&lt;p&gt;ひとまず今回はここまで。単語をベクトル化したことにより、文章をベクトル時系列データとして扱うことが出来、色々な機械学習手法が適用可能になりました。
+次回以降色々試してみたいと思います。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;おまけ:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;おまけ&lt;/h1&gt;
+
+&lt;p&gt;この時点でも色々作って遊べますね。例えば、以前作った絵文字サジェスト用hubotでは、キーワードに近しい、絵文字キーワードを引っ張ってきて候補を表示してました。Githubとかだと、標準でも絵文字キーワードを入力すると、続きをサジェストしてくれるものの、そもそものキーワードが思いつかなかったりするので、そういうときに便利です :)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/dialogue_system1/word2emoji.jpg&#34; alt=&#34;word2emoji.jpg&#34; /&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -158,9 +1026,14 @@ $ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git $ cd mecab
       <pubDate>Fri, 01 Apr 2016 00:35:40 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
-      <description>https://github.com/hassaku/exception-slacker
-importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。
-時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
+</description>
     </item>
     
   </channel>

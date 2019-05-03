@@ -45,7 +45,7 @@
     <div class="row gutters">
       <div id="site-title" class="col span_6">
         <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
-        <h2>no reason</h2>
+        <h2>３歩進んで２歩分滑り落ちてくペンギンのメモ</h2>
       </div>
       <div id="social" class="col span_6">
         <ul>
@@ -66,7 +66,7 @@
       <div class="meta">
         Jul 15, 2018 &nbsp;
         
-          #<a href="http://blog.hassaku-labs.com/tags/%E7%A0%94%E7%A9%B6">研究</a>&nbsp;
+          #<a href="http://blog.hassaku-labs.com/tags/ai">AI</a>&nbsp;
         
       </div>
     </div>
@@ -89,11 +89,11 @@
 
 <p>いくつか想定している内容のうち、今回は単語ベクトルのペアを連想記憶する基本的なタスクを検証する。</p>
 
-<h1 id="検証用コード">検証用コード</h1>
+<h1 id="検証用コード:92074d8141b5d0b357587f68abb31ec5">検証用コード</h1>
 
 <p><a href="https://github.com/hassaku/associative-word-vector/tree/blog-1">https://github.com/hassaku/associative-word-vector/tree/blog-1</a></p>
 
-<h1 id="検証内容">検証内容</h1>
+<h1 id="検証内容:92074d8141b5d0b357587f68abb31ec5">検証内容</h1>
 
 <p>単語ベクトルは、Github上のREADMEに書いてあるように、東北大学 乾・岡崎研究室で公開されている学習済みのものを利用させて頂いた。</p>
 
@@ -119,7 +119,7 @@
 
 <p>今回は原理確認のため、以下のように事前に単語ベクトル間の近さ（コサイン類似度）を確認した上でタスク設定している。</p>
 
-<pre><code>  word    カラス      泳ぐ        牛      走る      飛ぶ        馬        鯉        鯛        鳩  
+<pre><code>  word    カラス      泳ぐ        牛      走る      飛ぶ        馬        鯉        鯛        鳩
 カラス  1.000000  0.395338  0.475648  0.162681  0.493993  0.230542  0.406434  0.324465  0.670461
   泳ぐ  0.395338  1.000000  0.166645  0.576415  0.681419  0.162183  0.277283  0.179173  0.385671
     牛  0.475648  0.166645  1.000000  0.083026  0.149580  0.589086  0.559115  0.564100  0.565433
@@ -148,7 +148,7 @@ que: 馬     target: 走る through: ['馬', '牛', '走る']
 que: 鯛     target: 泳ぐ through: ['鯛', '鯉', '泳ぐ']
 </code></pre>
 
-<h1 id="さいごに">さいごに</h1>
+<h1 id="さいごに:92074d8141b5d0b357587f68abb31ec5">さいごに</h1>
 
 <p>今回は簡単な事例であったものの、まだあまり手を付けられていないような、全結合型神経回路網を用いた言語処理の可能性を検証した。
 全結合型の特徴でもあるエネルギー的な安定状態に記憶を埋め込むことにより、人のように強力な汎化能力をもった記憶を、安定して追加学習できる。
@@ -187,6 +187,8 @@ que: 鯛     target: 泳ぐ through: ['鯛', '鯉', '泳ぐ']
     
       <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/ascii-simple-plot/" rel="prev">ターミナル上で１行の簡易グラフ</a></span>
     
+    
+      <span class="next"><a href="http://blog.hassaku-labs.com/post/grid-world/" rel="next">ターミナル上でシンプルなグリッドワールド</a> &rarr;</span>
     
   </nav>
 

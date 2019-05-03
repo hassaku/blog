@@ -7,9 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Tue, 23 Jan 2018 00:00:00 +0900</lastBuildDate>
-    
-	<atom:link href="http://blog.hassaku-labs.com/tags/slack/index.xml" rel="self" type="application/rss+xml" />
-    
+    <atom:link href="http://blog.hassaku-labs.com/tags/slack/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Slackのメッセージ収集</title>
@@ -17,11 +15,52 @@
       <pubDate>Tue, 23 Jan 2018 00:00:00 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/slack-mining/</guid>
-      <description>Slackに投稿されたメッセージを収集する方法についてのメモ
-データexport https://xxxx.slack.com/services/export
-exportが完了すると、slack上でbotから通知くる
-ユーザID取得 $ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN  最新のSlack Token取得方法は色々記事が挙がっているのでググること
-一ヶ月のユーザの発言を収集する $ cat show_messages.rb require &#39;json&#39; user = &amp;quot;USER_ID&amp;quot; year = 2016 month = 2 days = 29 days.times do |day| date = &amp;quot;%d-%2d-%02d&amp;quot; % (year, month, day + 1) export_file = &amp;quot;./#{date}.json&amp;quot; next unless File.exist?(export_file) puts &amp;quot;\n----- #{date} -----&amp;quot; json_data = open(export_file) do |io| JSON.load(io) end json_data.each do |json| puts &amp;quot;#{Time.at(json[&#39;ts&#39;].to_i)}: #{json[&#39;text&#39;].gsub(/\n+/, &#39; &#39;)}&amp;quot; if json[&amp;quot;user&amp;quot;] == user end end $ ruby show_messages.</description>
+      <description>
+
+&lt;p&gt;Slackに投稿されたメッセージを収集する方法についてのメモ&lt;/p&gt;
+
+&lt;h2 id=&#34;データexport:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;データexport&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://xxxx.slack.com/services/export&#34;&gt;https://xxxx.slack.com/services/export&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;exportが完了すると、slack上でbotから通知くる&lt;/p&gt;
+
+&lt;h2 id=&#34;ユーザid取得:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;ユーザID取得&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最新のSlack Token取得方法は色々記事が挙がっているのでググること&lt;/p&gt;
+
+&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat show_messages.rb
+
+require &#39;json&#39;
+
+user = &amp;quot;USER_ID&amp;quot;
+year = 2016
+month = 2
+days = 29
+
+days.times do |day|
+  date = &amp;quot;%d-%2d-%02d&amp;quot; % (year, month, day + 1)
+  export_file = &amp;quot;./#{date}.json&amp;quot;
+  next unless File.exist?(export_file)
+  puts &amp;quot;\n----- #{date} -----&amp;quot;
+
+  json_data = open(export_file) do |io|
+    JSON.load(io)
+  end
+
+  json_data.each do |json|
+    puts &amp;quot;#{Time.at(json[&#39;ts&#39;].to_i)}: #{json[&#39;text&#39;].gsub(/\n+/, &#39; &#39;)}&amp;quot; if json[&amp;quot;user&amp;quot;] == user
+  end
+end
+
+$ ruby show_messages.rb
+&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
   </channel>

@@ -6,10 +6,247 @@
     <description>Recent content in Python on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 23 Apr 2018 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 25 Feb 2019 10:00:00 +0900</lastBuildDate>
+    <atom:link href="http://blog.hassaku-labs.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
-	<atom:link href="http://blog.hassaku-labs.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDE使えないときの例外時デバッグ</title>
+      <link>http://blog.hassaku-labs.com/post/debug-on-remote/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/debug-on-remote/</guid>
+      <description>&lt;p&gt;IDEが使える状況であれば、簡単にデバッガーを使えると思うが、そうでない環境でデバッグしたくなることもある。
+printデバッグも辛いので、以下のような感じで例外時等にpython debuggerを起動出来ると便利。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import sys
+
+def hook(type, value, tb):
+   if hasattr(sys, &#39;ps1&#39;) or not sys.stderr.isatty():
+      sys.__excepthook__(type, value, tb)
+   else:
+      import traceback, pdb
+      traceback.print_exception(type, value, tb)
+      print()
+      pdb.pm()
+
+sys.excepthook = hook
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;というのを適当なところにdebug.pyとして置いておいて、デバッグしたいコード実行時にimportしておくだけ。
+例外が起きるとデバッガが起動し停止するので、そのときの変数の値などを表示したり調べると良い。&lt;/p&gt;
+
+&lt;p&gt;不必要に毎回デバッガ起動すると面倒なので、普段はimport行をコメントアウトしておくこと。&lt;/p&gt;
+
+&lt;p&gt;よく使うコマンドは以下のとおり。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;w
+
+&lt;ul&gt;
+&lt;li&gt;where. スタックトレースを表示する。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;u
+
+&lt;ul&gt;
+&lt;li&gt;up. スタックを一つ上に移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;d
+
+&lt;ul&gt;
+&lt;li&gt;down. スタックを一つ下に移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;l [first, last]
+
+&lt;ul&gt;
+&lt;li&gt;list. 現在のソースコード表示。fist, lastを指定可能。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;p [target]
+
+&lt;ul&gt;
+&lt;li&gt;print. 変数等を表示。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;c
+
+&lt;ul&gt;
+&lt;li&gt;continue. 次のブレークポイントに当たるまで実行&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;s
+
+&lt;ul&gt;
+&lt;li&gt;step. 現在の行を実行 (関数の中に入る）&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;n
+
+&lt;ul&gt;
+&lt;li&gt;next. 現在の行を実行 (関数の中に入らない）&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;q
+
+&lt;ul&gt;
+&lt;li&gt;quit. デバッガを終了&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
+    <item>
+      <title>word vectorのような読み込みが重たいやつをWebAPI化して軽量化</title>
+      <link>http://blog.hassaku-labs.com/post/word-vector-api/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/word-vector-api/</guid>
+      <description>&lt;p&gt;word vectorとかメモリをどデカく使うようなやつは、毎回スクリプトを起動する際に読み込みに時間がかかって辛い。
+そういうのは、極力別のプロセスにして、適当にAPIとか生やして連携するようにしておくと楽チンなので良くやるパターン。&lt;/p&gt;
+
+&lt;p&gt;以下は、単語ベクトルを返してくれるAPIを作った例。Flask使うとコードもシンプルに実現出来るので良い。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# coding: utf-8
+
+import numpy as np
+import gensim
+from flask import Flask, jsonify, request
+import json
+
+PRETRAINED_W2V_PATH = &#39;./model.bin&#39;
+
+app = Flask(__name__)
+app.config[&#39;JSON_AS_ASCII&#39;] = False
+
+model = gensim.models.KeyedVectors.load_word2vec_format(PRETRAINED_W2V_PATH, binary=True)  # 超時間かかる処理
+
+@app.route(&#39;/word_vector&#39;, methods=[&#39;GET&#39;])
+def word_vector():
+    word = request.args.get(&#39;word&#39;)
+    vector = np.array(model[word]).astype(float).tolist()
+    return jsonify({&#39;vector&#39;: vector}), 200
+
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    app.debug = True
+    app.run(host=&#39;0.0.0.0&#39;, port=8888)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下のような感じで単語ベクトルの値をjsonで返してくれる。pythonのスクリプトからはrequestsとかで簡単に取得して扱えるはず。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl &amp;quot;http://0.0.0.0:8888/word_vector?word=テスト&amp;quot;
+{
+  &amp;quot;vector&amp;quot;: [
+    0.029713749885559082,
+    -0.6024296283721924,
+    0.9723357558250427,
+    -1.1497808694839478,
+    1.3764394521713257,
+...
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;例えば、連続動作しているようなエージェントシミュレータなんかにも、似たような感じでAPI生やして、インタラクションさせることが出来る。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ターミナル上でシンプルなグリッドワールド</title>
+      <link>http://blog.hassaku-labs.com/post/grid-world/</link>
+      <pubDate>Fri, 10 Aug 2018 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/grid-world/</guid>
+      <description>&lt;p&gt;強化学習などでグリッドワールドを使いたいとき、gym-minigridとかpycolabがあるけど、色々いじる必要性もある場合、もっとシンプルなところからはじめたい。
+また、リモートのVMインスタンス上などで気軽に動かしたいので、GUIとかも無しで、ターミナル上で動かしたい。&lt;/p&gt;
+
+&lt;p&gt;以下のような感じで、cursesを使ってスクラッチで作っても別に難しいことはなかった。&lt;/p&gt;
+
+&lt;p&gt;こんな感じのやつがターミナル上で動く。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import curses
+import random
+import time
+from datetime import datetime
+
+FIELD = [&#39;#################&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#               #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;######  #########&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#               #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#################&#39;]
+
+
+def draw(screen):
+    for row, line in enumerate(FIELD):
+        for col, tile in enumerate(line):
+            screen.addch(row, col, tile)
+
+
+def main():
+    x = 10
+    y = 10
+
+    try:
+        screen = curses.initscr()
+        screen.nodelay(1)
+        curses.curs_set(0)
+
+        while(True):
+            action = random.randint(1, 5)
+            dx = 0
+            dy = 0
+            if action == 1:
+                dy += 1
+            elif action == 2:
+                dy -= 1
+            elif action == 3:
+                dx += 1
+            elif action == 4:
+                dx -= 1
+            elif action == 5:
+                pass
+            else:
+                raise NotImplementedError()
+
+            # check wall
+            if FIELD[x + dx][y + dy] != &amp;quot;#&amp;quot;:
+                x += dx
+                y += dy
+
+            screen.clear()
+            draw(screen)
+            screen.addch(x, y, &#39;+&#39;) # agent
+
+            screen.addstr(0, 20, datetime.now().strftime(&amp;quot;%Y/%m/%d %H:%M:%S&amp;quot;))
+            screen.addstr(1, 20, &#39;a:{} x:{} y:{}&#39;.format(action, x, y))
+            screen.refresh()
+
+            # quit
+            if(screen.getch() == ord(&#39;q&#39;)):
+                break
+
+            time.sleep(0.2)
+
+        curses.endwin()
+
+    except:
+        pass
+
+    finally:
+        curses.echo()
+        curses.endwin()
+
+
+if __name__ == &#39;__main__&#39;:
+    main()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;もしエージェントとインタラクションしたいと思ったら、flaskとかでapi作って状態変えるのが良いと思う。やり方はまた別の機会に。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>ターミナル上で１行の簡易グラフ</title>
@@ -17,8 +254,43 @@
       <pubDate>Mon, 23 Apr 2018 00:00:00 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/ascii-simple-plot/</guid>
-      <description>データ処理などしていると、処理中の状況を確認するのに、数値や文字列よりもグラフの方が適していることが多い。 ただ、そのためだけにGUIなどを用意するのは大変だし、出来ればターミナル上で表示したい。 というわけで、ログなど混ぜて、以下のような感じで、簡易的にグラフ描くと便利。
-$ cat simple_plot.py # coding: utf-8 import numpy as np TICKS = u&#39;_▁▂▃▄▅▆▇█&#39; def ascii_plot(ints, max_range=None, min_range=0, width=40): assert len(ints) &amp;gt;= width ints = np.array(ints, dtype=int) ints = ints[:int(len(ints)/width)*width] ints = np.nansum(np.reshape(ints, (int(len(ints)/width), width)).T, axis=1) if not max_range: max_range = max(ints) if not min_range: min_range = min(ints) step_range = max_range - min_range step = (step_range / float(len(TICKS) - 1)) or 1 return u&#39;&#39;.join(TICKS[int(round((i - min_range) / step))] for i in ints) if __name__ == &amp;quot;__main__&amp;quot;: print(ascii_plot(range(10) + range(10, 0, -1), width=20))  $ python simple_plot.</description>
+      <description>&lt;p&gt;データ処理などしていると、処理中の状況を確認するのに、数値や文字列よりもグラフの方が適していることが多い。
+ただ、そのためだけにGUIなどを用意するのは大変だし、出来ればターミナル上で表示したい。
+というわけで、ログなど混ぜて、以下のような感じで、簡易的にグラフ描くと便利。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat simple_plot.py
+
+# coding: utf-8
+
+import numpy as np
+
+TICKS = u&#39;_▁▂▃▄▅▆▇█&#39;
+
+def ascii_plot(ints, max_range=None, min_range=0, width=40):
+    assert len(ints) &amp;gt;= width
+
+    ints = np.array(ints, dtype=int)
+    ints = ints[:int(len(ints)/width)*width]
+    ints = np.nansum(np.reshape(ints, (int(len(ints)/width), width)).T, axis=1)
+
+    if not max_range:
+        max_range = max(ints)
+    if not min_range:
+        min_range = min(ints)
+
+    step_range = max_range - min_range
+    step = (step_range / float(len(TICKS) - 1)) or 1
+    return u&#39;&#39;.join(TICKS[int(round((i - min_range) / step))] for i in ints)
+
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+   print(ascii_plot(range(10) + range(10, 0, -1), width=20))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ python simple_plot.py
+_▁▂▂▃▄▅▆▆▇█▇▆▆▅▄▃▂▂▁
+&lt;/code&gt;&lt;/pre&gt;
+</description>
     </item>
     
     <item>
@@ -27,11 +299,99 @@ $ cat simple_plot.py # coding: utf-8 import numpy as np TICKS = u&#39;_▁▂▃
       <pubDate>Sat, 04 Mar 2017 04:08:51 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/hyperopt/</guid>
-      <description>機械学習におけるモデルのハイパーパラメータ探索は、その後のモデル評価を正当に行うことにも繋がる、重要な作業です。 近年ではRandom SearchやGrid Search、GA等の各種最適化手法よりも、色々と優れた手法が提案されているらしく、 手軽に使えるようなライブラリも整備されています。 パラメータ探索技術というと、応用範囲が広く、効果が見えやすいため、手軽に使えて効率的な手法があれば、積極的に使っていきたいところです。 その中でもhyperoptというライブラリが、kaggleとかでよく使われているという話を見かけて、試しに使ってみました。
-中身については、色々Blogや論文が見つかるのですが、 Bayesian Optimization -&amp;gt; Sequential Model-based Algorithm Configuration (SMAC) -&amp;gt; Tree-structured Parzen Estimator (TPE) のように進化してきたTPEという手法が使われているようです。 Bayesian Optimizationのアプローチは、直感的にも効率良さそうなので、その進化系なら期待できます。
-Hyperopt
-簡単な使い方 以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。
-#!/usr/bin/env python # encoding: utf-8 import os import sys import matplotlib.pyplot as plt import numpy as np from hyperopt import fmin, tpe, hp, Trials # パラメータの探索範囲。指定方法は離散値や連続値などに応じて色々ある。 # https://github.com/hyperopt/hyperopt/wiki/FMin#21-parameter-expressions hyperopt_parameters = { &#39;x&#39;: hp.uniform(&#39;x&#39;, -30, 30) } # 最小化したい目的関数。正解との誤差とか。 def objective(args): return np.sin(args[&#39;x&#39;]) / args[&#39;x&#39;] # 探索中の進行状況を記録 trials = Trials() # パラメータサーチの実行 best = fmin(objective, hyperopt_parameters, algo=tpe.</description>
+      <description>
+
+&lt;p&gt;機械学習におけるモデルのハイパーパラメータ探索は、その後のモデル評価を正当に行うことにも繋がる、重要な作業です。
+近年ではRandom SearchやGrid Search、GA等の各種最適化手法よりも、色々と優れた手法が提案されているらしく、
+手軽に使えるようなライブラリも整備されています。
+パラメータ探索技術というと、応用範囲が広く、効果が見えやすいため、手軽に使えて効率的な手法があれば、積極的に使っていきたいところです。
+その中でもhyperoptというライブラリが、kaggleとかでよく使われているという話を見かけて、試しに使ってみました。&lt;/p&gt;
+
+&lt;p&gt;中身については、色々Blogや論文が見つかるのですが、
+Bayesian Optimization -&amp;gt; Sequential Model-based Algorithm Configuration (SMAC) -&amp;gt; Tree-structured Parzen Estimator (TPE)
+のように進化してきたTPEという手法が使われているようです。
+Bayesian Optimizationのアプローチは、直感的にも効率良さそうなので、その進化系なら期待できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://hyperopt.github.io/hyperopt/&#34;&gt;Hyperopt&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;簡単な使い方:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;簡単な使い方&lt;/h2&gt;
+
+&lt;p&gt;以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+from hyperopt import fmin, tpe, hp, Trials
+
+# パラメータの探索範囲。指定方法は離散値や連続値などに応じて色々ある。
+# https://github.com/hyperopt/hyperopt/wiki/FMin#21-parameter-expressions
+hyperopt_parameters = { &#39;x&#39;: hp.uniform(&#39;x&#39;, -30, 30) }
+
+# 最小化したい目的関数。正解との誤差とか。
+def objective(args):
+    return np.sin(args[&#39;x&#39;]) / args[&#39;x&#39;]
+
+# 探索中の進行状況を記録
+trials = Trials()
+
+# パラメータサーチの実行
+best = fmin(objective,  hyperopt_parameters, algo=tpe.suggest, max_evals=300, trials=trials)
+
+# 目的関数を最小にするパラメータ
+print best
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;パラメータサーチの様子を表示:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;# 上記コードの続き
+
+x_hisotry = np.ravel([t[&#39;misc&#39;][&#39;vals&#39;][&#39;x&#39;] for t in trials.trials])
+objective_history = trials.losses()
+
+fig = plt.figure(figsize=(16, 8))
+cm = plt.get_cmap(&#39;jet&#39;)
+
+PLOT_NUM = 5
+
+for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
+    cmap_cycle = [cm(1. * h/ (hist_num - 1)) for h in range(int(hist_num) - 1)]
+
+    ax = plt.subplot(2, PLOT_NUM, i + 1)
+    ax.set_color_cycle(cmap_cycle)
+    ax.plot(np.arange(-30, 30, 0.1), function(np.arange(-30, 30, 0.1)), alpha=0.2)
+    for j in range(int(hist_num)  - 1):
+        ax.plot(x_hisotry[j], objective_history[j], &#39;.&#39;)
+    ax.set_title(&#39;times: {times}&#39;.format(times=int(hist_num)))
+    ax.set_ylim([np.min(objective_history) - 0.1, np.max(objective_history) + 0.1])
+    ax.set_xlim([-30, 30])
+    if i == 0:
+        ax.set_ylabel(&#39;y&#39;)
+
+    plt.subplot(2, PLOT_NUM, PLOT_NUM + i + 1)
+    plt.hist(x_hisotry[:hist_num], bins=50)
+    if i == 0:
+        plt.ylabel(&#39;histogram of x&#39;)
+    plt.xlabel(&#39;x&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/hyperopt/hyperopt.png&#34; alt=&#34;hyperopt&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;右に進むに連れて、パラメータ探索が進んでいく様子を表しています。
+上段の図が、目的関数と探索点の描画です。x=0の点が求めたいパラメータとなります。
+下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
+目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
+
+&lt;h4 id=&#34;追記:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;追記&lt;/h4&gt;
+
+&lt;p&gt;バンディットベースのものが出たらしい。使い方もhyperopt同様に簡単そうなので、パラメータチューニング時の候補にしたい。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/zygmuntz/hyperband&#34;&gt;Hyperband&lt;/a&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -40,9 +400,41 @@ Hyperopt
       <pubDate>Sat, 04 Mar 2017 04:07:38 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/class-repr/</guid>
-      <description>ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、 標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。
-そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、 分かりやすくなって便利だったりします。
-reprを定義しない場合 class MyClass(object): def __init__(self): self.attr1 = 123 self.attr2 = 456 mc = MyClass() print(mc) # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;  reprを定義する場合 class MyClass(object): def __init__(self): self.attr1 = 123 self.attr2 = 456 def __repr__(self): return &amp;quot;, &amp;quot;.join(&amp;quot;%s: %s&amp;quot; % item for item in vars(self).items()) mc = MyClass() print(mc) # =&amp;gt; attr2: 456, attr1: 123  ちょっとしたTipsでした。</description>
+      <description>
+
+&lt;p&gt;ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
+標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。&lt;/p&gt;
+
+&lt;p&gt;そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
+分かりやすくなって便利だったりします。&lt;/p&gt;
+
+&lt;h2 id=&#34;reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義しない場合&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+mc = MyClass()
+print(mc)  # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義する場合&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyClass(object):
+  def __init__(self):
+    self.attr1 = 123
+    self.attr2 = 456
+
+  def __repr__(self):
+    return &amp;quot;, &amp;quot;.join(&amp;quot;%s: %s&amp;quot; % item for item in vars(self).items())
+
+mc = MyClass()
+print(mc)  # =&amp;gt; attr2: 456, attr1: 123
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ちょっとしたTipsでした。&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -51,9 +443,14 @@ reprを定義しない場合 class MyClass(object): def __init__(self): self.att
       <pubDate>Fri, 01 Apr 2016 00:35:40 +0900</pubDate>
       
       <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
-      <description>https://github.com/hassaku/exception-slacker
-importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。
-時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
+</description>
     </item>
     
   </channel>

@@ -45,7 +45,7 @@
     <div class="row gutters">
       <div id="site-title" class="col span_6">
         <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
-        <h2>no reason</h2>
+        <h2>３歩進んで２歩分滑り落ちてくペンギンのメモ</h2>
       </div>
       <div id="social" class="col span_6">
         <ul>
@@ -77,20 +77,20 @@
 
 <p>Slackに投稿されたメッセージを収集する方法についてのメモ</p>
 
-<h2 id="データexport">データexport</h2>
+<h2 id="データexport:dab3dd72a9f7b423459ecf8af70c80de">データexport</h2>
 
 <p><a href="https://xxxx.slack.com/services/export">https://xxxx.slack.com/services/export</a></p>
 
 <p>exportが完了すると、slack上でbotから通知くる</p>
 
-<h2 id="ユーザid取得">ユーザID取得</h2>
+<h2 id="ユーザid取得:dab3dd72a9f7b423459ecf8af70c80de">ユーザID取得</h2>
 
 <pre><code>$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN
 </code></pre>
 
 <p>最新のSlack Token取得方法は色々記事が挙がっているのでググること</p>
 
-<h2 id="一ヶ月のユーザの発言を収集する">一ヶ月のユーザの発言を収集する</h2>
+<h2 id="一ヶ月のユーザの発言を収集する:dab3dd72a9f7b423459ecf8af70c80de">一ヶ月のユーザの発言を収集する</h2>
 
 <pre><code>$ cat show_messages.rb
 

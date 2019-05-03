@@ -45,7 +45,7 @@
     <div class="row gutters">
       <div id="site-title" class="col span_6">
         <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
-        <h2>no reason</h2>
+        <h2>３歩進んで２歩分滑り落ちてくペンギンのメモ</h2>
       </div>
       <div id="social" class="col span_6">
         <ul>
@@ -91,14 +91,14 @@
 
 <p>というわけで、今回は１の言語コーパス作成について。単語を入力とし、N次元ベクトルに変換することを目標。似たような単語は近くに配置されるような変換が好ましい（分散表現だ！）。</p>
 
-<h1 id="言語コーパスをwikipediaの記事から作成">言語コーパスをWikipediaの記事から作成</h1>
+<h1 id="言語コーパスをwikipediaの記事から作成:9f533d3f859ab3c9a17cb0f76df4e5f1">言語コーパスをWikipediaの記事から作成</h1>
 
-<h2 id="wikipediaの日本語記事をダウンロード">wikipediaの日本語記事をダウンロード</h2>
+<h2 id="wikipediaの日本語記事をダウンロード:9f533d3f859ab3c9a17cb0f76df4e5f1">wikipediaの日本語記事をダウンロード</h2>
 
 <pre><code>$ curl -O http://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz
 </code></pre>
 
-<h2 id="mecabをインストール">mecabをインストール</h2>
+<h2 id="mecabをインストール:9f533d3f859ab3c9a17cb0f76df4e5f1">mecabをインストール</h2>
 
 <p>単語の分かち書きへ変換するためのツールです。macならbrewでインストール可能。</p>
 
@@ -106,7 +106,7 @@
 $ brew install mecab-ipadic
 </code></pre>
 
-<h3 id="新語用辞書をインストール">新語用辞書をインストール</h3>
+<h3 id="新語用辞書をインストール:9f533d3f859ab3c9a17cb0f76df4e5f1">新語用辞書をインストール</h3>
 
 <p>最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。</p>
 
@@ -117,7 +117,7 @@ $ echo `mecab-config --dicdir`&quot;/mecab-ipadic-neologd&quot;  # 実行時指�
 /usr/local/lib/mecab/dic/mecab-ipadic-neologd
 </code></pre>
 
-<h3 id="参考-新御用辞書有無を確認">（参考）新御用辞書有無を確認</h3>
+<h3 id="参考-新御用辞書有無を確認:9f533d3f859ab3c9a17cb0f76df4e5f1">（参考）新御用辞書有無を確認</h3>
 
 <pre><code>$ pip install mecab
 $ python
@@ -132,11 +132,11 @@ In [5]: print mecab_new.parse(&quot;電力自由化がはじまる&quot;)
 
 <p>なんとなく最近ニュースとかで出てくるような単語を分かち書き出来ている（気がします）。</p>
 
-<h2 id="wikipediaを分かち書き">wikipediaを分かち書き</h2>
+<h2 id="wikipediaを分かち書き:9f533d3f859ab3c9a17cb0f76df4e5f1">wikipediaを分かち書き</h2>
 
 <p>各単語に分かち書き変換します。</p>
 
-<h3 id="htmlタグとかを取っ払って文章だけに変換">HTMLタグとかを取っ払って文章だけに変換</h3>
+<h3 id="htmlタグとかを取っ払って文章だけに変換:9f533d3f859ab3c9a17cb0f76df4e5f1">HTMLタグとかを取っ払って文章だけに変換</h3>
 
 <pre><code>$ echo 'gem &quot;wp2txt&quot;' &gt;&gt; Gemfile
 $ bundle
@@ -149,28 +149,28 @@ $ cat wp2txt/jawiki-latest-pages-articles-* &gt; corpus.txt # 変換結果を一
 <p>とても時間かかります&hellip;
 記号除去とかした方が良いのかどうか、今のところ謎です。</p>
 
-<h3 id="新語辞書使って分かち書き">新語辞書使って分かち書き</h3>
+<h3 id="新語辞書使って分かち書き:9f533d3f859ab3c9a17cb0f76df4e5f1">新語辞書使って分かち書き</h3>
 
 <pre><code>$ mecab -Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd corpus.txt &gt; corpus_wakati.txt
 </code></pre>
 
 <p>とても時間かかります&hellip;</p>
 
-<h2 id="word2vecによるベクトル化">word2vecによるベクトル化</h2>
+<h2 id="word2vecによるベクトル化:9f533d3f859ab3c9a17cb0f76df4e5f1">word2vecによるベクトル化</h2>
 
 <p>今後pythonで実装することもあり、gensim使います。</p>
 
 <pre><code>$ pip install gensim
 </code></pre>
 
-<h3 id="utf-8に変換">utf-8に変換</h3>
+<h3 id="utf-8に変換:9f533d3f859ab3c9a17cb0f76df4e5f1">utf-8に変換</h3>
 
 <p>しないとword2vecのときに、文字コードについて怒られたので&hellip;</p>
 
 <pre><code>$ iconv -c -t UTF-8 &lt; corpus_wakati.txt &gt; corpus_wakati_utf-8.txt
 </code></pre>
 
-<h3 id="学習">学習</h3>
+<h3 id="学習:9f533d3f859ab3c9a17cb0f76df4e5f1">学習</h3>
 
 <p>以下のpythonコードを実行します。次元は適当に中程度としました。</p>
 
@@ -188,16 +188,16 @@ model = word2vec.Word2Vec(sentences, size=400, workers=4)
 model.save(&quot;w2v_model_%d_dims&quot; % dims)
 </code></pre>
 
-<h3 id="検証">検証</h3>
+<h3 id="検証:9f533d3f859ab3c9a17cb0f76df4e5f1">検証</h3>
 
-<h4 id="モデルの読み込み">モデルの読み込み</h4>
+<h4 id="モデルの読み込み:9f533d3f859ab3c9a17cb0f76df4e5f1">モデルの読み込み</h4>
 
 <pre><code>$ pyton
 In [1]: from gensim.models import word2vec
 In [2]: model = word2vec.Word2Vec.load(&quot;./word2vec_models/w2v_model_%d_dims&quot; % 400)
 </code></pre>
 
-<h4 id="ベクトル空間上で近い単語を探す">ベクトル空間上で近い単語を探す</h4>
+<h4 id="ベクトル空間上で近い単語を探す:9f533d3f859ab3c9a17cb0f76df4e5f1">ベクトル空間上で近い単語を探す</h4>
 
 <p>動作確認です。</p>
 
@@ -208,7 +208,7 @@ In [5]: most_similar[1]
 0.663492918015  # コサイン距離？
 </code></pre>
 
-<h4 id="ベクトル取得">ベクトル取得</h4>
+<h4 id="ベクトル取得:9f533d3f859ab3c9a17cb0f76df4e5f1">ベクトル取得</h4>
 
 <p>このベクトルに対して今後処理していくことになります。</p>
 
@@ -224,7 +224,7 @@ In [4]: vector.max()
 0.75658286
 </code></pre>
 
-<h4 id="ベクトルから単語を探す">ベクトルから単語を探す</h4>
+<h4 id="ベクトルから単語を探す:9f533d3f859ab3c9a17cb0f76df4e5f1">ベクトルから単語を探す</h4>
 
 <p>処理結果のベクトルから単語を復元する手段も確認しておきます。</p>
 
@@ -236,14 +236,14 @@ In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=
 フットサル
 </code></pre>
 
-<h2 id="おわり">おわり</h2>
+<h2 id="おわり:9f533d3f859ab3c9a17cb0f76df4e5f1">おわり</h2>
 
 <p>ひとまず今回はここまで。単語をベクトル化したことにより、文章をベクトル時系列データとして扱うことが出来、色々な機械学習手法が適用可能になりました。
 次回以降色々試してみたいと思います。</p>
 
 <hr />
 
-<h1 id="おまけ">おまけ</h1>
+<h1 id="おまけ:9f533d3f859ab3c9a17cb0f76df4e5f1">おまけ</h1>
 
 <p>この時点でも色々作って遊べますね。例えば、以前作った絵文字サジェスト用hubotでは、キーワードに近しい、絵文字キーワードを引っ張ってきて候補を表示してました。Githubとかだと、標準でも絵文字キーワードを入力すると、続きをサジェストしてくれるものの、そもそものキーワードが思いつかなかったりするので、そういうときに便利です :)</p>
 
