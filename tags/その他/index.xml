@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>その他 on hassaku&#39;s blog</title>
+    <link>http://localhost:1313/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</link>
+    <description>Recent content in その他 on hassaku&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 25 Sep 2018 10:46:02 +0900</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E3%81%9D%E3%81%AE%E4%BB%96/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>機械学習技術を使った実際の研究開発プロジェクトについて</title>
+      <link>http://localhost:1313/post/machine-learning-project/</link>
+      <pubDate>Tue, 25 Sep 2018 10:46:02 +0900</pubDate>
+      
+      <guid>http://localhost:1313/post/machine-learning-project/</guid>
+      <description>&lt;p&gt;よくあるケースを書いてみる
+- パラメータチューニングばかりやってる
+- データクレンジングしてない
+- 解こうとしている問題のコスパが悪い（見当違い）
+- BlackBox（チューニングと同じ？）
+- 仮説が無い&lt;/p&gt;
+
+&lt;p&gt;勉強会 or ブログで書きたいこと
+- MLプロジェクト（研究寄り）のマネージメント
+ - 課題分析と改善のワークフロー
+勉強会とかの前にブログで整理するか
+&lt;a href=&#34;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&#34;&gt;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;外注できそうな部分はどこか&lt;/p&gt;
+
+&lt;p&gt;何が大事か（問題設定が８割）&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://docs.google.com/presentation/d/1XFHgIneGWNX_4TX0yIH9U8GVl57ZsjxrFUGe0Vcm3_s/edit#slide=id.g3058fa4b74_0_72&#34;&gt;https://docs.google.com/presentation/d/1XFHgIneGWNX_4TX0yIH9U8GVl57ZsjxrFUGe0Vcm3_s/edit#slide=id.g3058fa4b74_0_72&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

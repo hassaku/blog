@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ai on hassaku&#39;s blog</title>
+    <link>http://blog.hassaku-labs.com/tags/ai/</link>
+    <description>Recent content in Ai on hassaku&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 10 Aug 2018 10:00:00 +0900</lastBuildDate>
+    <atom:link href="http://blog.hassaku-labs.com/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ターミナル上でシンプルなグリッドワールド</title>
+      <link>http://blog.hassaku-labs.com/post/grid-world/</link>
+      <pubDate>Fri, 10 Aug 2018 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/grid-world/</guid>
+      <description>&lt;p&gt;強化学習などでグリッドワールドを使いたいとき、gym-minigridとかpycolabがあるけど、色々いじる必要性もある場合、もっとシンプルなところからはじめたい。
+また、リモートのVMインスタンス上などで気軽に動かしたいので、GUIとかも無しで、ターミナル上で動かしたい。&lt;/p&gt;
+
+&lt;p&gt;以下のような感じで、cursesを使ってスクラッチで作っても別に難しいことはなかった。&lt;/p&gt;
+
+&lt;p&gt;こんな感じのやつがターミナル上で動く。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import curses
+import random
+import time
+from datetime import datetime
+
+FIELD = [&#39;#################&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#               #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;######  #########&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#               #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#       #       #&#39;,
+         &#39;#################&#39;]
+
+
+def draw(screen):
+    for row, line in enumerate(FIELD):
+        for col, tile in enumerate(line):
+            screen.addch(row, col, tile)
+
+
+def main():
+    x = 10
+    y = 10
+
+    try:
+        screen = curses.initscr()
+        screen.nodelay(1)
+        curses.curs_set(0)
+
+        while(True):
+            action = random.randint(1, 5)
+            dx = 0
+            dy = 0
+            if action == 1:
+                dy += 1
+            elif action == 2:
+                dy -= 1
+            elif action == 3:
+                dx += 1
+            elif action == 4:
+                dx -= 1
+            elif action == 5:
+                pass
+            else:
+                raise NotImplementedError()
+
+            # check wall
+            if FIELD[x + dx][y + dy] != &amp;quot;#&amp;quot;:
+                x += dx
+                y += dy
+
+            screen.clear()
+            draw(screen)
+            screen.addch(x, y, &#39;+&#39;) # agent
+
+            screen.addstr(0, 20, datetime.now().strftime(&amp;quot;%Y/%m/%d %H:%M:%S&amp;quot;))
+            screen.addstr(1, 20, &#39;a:{} x:{} y:{}&#39;.format(action, x, y))
+            screen.refresh()
+
+            # quit
+            if(screen.getch() == ord(&#39;q&#39;)):
+                break
+
+            time.sleep(0.2)
+
+        curses.endwin()
+
+    except:
+        pass
+
+    finally:
+        curses.echo()
+        curses.endwin()
+
+
+if __name__ == &#39;__main__&#39;:
+    main()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;もしエージェントとインタラクションしたいと思ったら、flaskとかでapi作って状態変えるのが良いと思う。やり方はまた別の機会に。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>単語ベクトルと全結合ニューラルネットワークによる単語連想記憶</title>
+      <link>http://blog.hassaku-labs.com/post/associative-word-vector/</link>
+      <pubDate>Sun, 15 Jul 2018 00:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/associative-word-vector/</guid>
+      <description>
+
+&lt;p&gt;自然言語処理にニューラルネットワークを適用する事例が増えている。
+ここでは、従来の部分的に再帰結合をもつようなRNN(LSTM)といった構造ではなく、
+(最近はあまり流行っていない）ホップフィールドモデルのような全結合構造のニューラルネットを用いて、
+エネルギーポテンシャルの窪み、引き込み領域を有するアトラクタ空間に言語知識を記憶させることを目指す。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/associative-word-vector/potential.png&#34; alt=&#34;potential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;メリットとして、以下のようなことが挙げられる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;追加学習が容易&lt;/li&gt;
+&lt;li&gt;データを大量に学習しなくても汎化性能が高い&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;いくつか想定している内容のうち、今回は単語ベクトルのペアを連想記憶する基本的なタスクを検証する。&lt;/p&gt;
+
+&lt;h1 id=&#34;検証用コード:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証用コード&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/associative-word-vector/tree/blog-1&#34;&gt;https://github.com/hassaku/associative-word-vector/tree/blog-1&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;検証内容:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証内容&lt;/h1&gt;
+
+&lt;p&gt;単語ベクトルは、Github上のREADMEに書いてあるように、東北大学 乾・岡崎研究室で公開されている学習済みのものを利用させて頂いた。&lt;/p&gt;
+
+&lt;p&gt;タスクについては、以下に示すような「鳩」(que) → 「飛ぶ」(target) といった単純な知識を学習させることにする。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;que target
+ 鳩   飛ぶ
+ 牛   走る
+ 鯉   泳ぐ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;その後、以下のような未学習の単語(que)に対し、学習済みの知識に基づき、適切な単語(target)を想起出来るかどうかを確かめる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;   que target
+ カラス   飛ぶ
+    馬   走る
+    鯛   泳ぐ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;期待される結果としては、「カラス」も「鳩」と同じく鳥であることから、「飛ぶ」と連想されること。
+原理的には、図のような線上のアトラクタに知識を埋め込むことにより、学習済みのもの(que1)に親しい単語ベクトル(que1&amp;rsquo;)であれば、
+引き込まれてtarget1を記憶させた平衡点に至ることで想起が実現される。&lt;/p&gt;
+
+&lt;p&gt;今回は原理確認のため、以下のように事前に単語ベクトル間の近さ（コサイン類似度）を確認した上でタスク設定している。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  word    カラス      泳ぐ        牛      走る      飛ぶ        馬        鯉        鯛        鳩
+カラス  1.000000  0.395338  0.475648  0.162681  0.493993  0.230542  0.406434  0.324465  0.670461
+  泳ぐ  0.395338  1.000000  0.166645  0.576415  0.681419  0.162183  0.277283  0.179173  0.385671
+    牛  0.475648  0.166645  1.000000  0.083026  0.149580  0.589086  0.559115  0.564100  0.565433
+  走る  0.162681  0.576415  0.083026  1.000000  0.508805  0.123983 -0.021091 -0.010774  0.193441
+  飛ぶ  0.493993  0.681419  0.149580  0.508805  1.000000  0.110546  0.133639  0.123491  0.422164
+    馬  0.230542  0.162183  0.589086  0.123983  0.110546  1.000000  0.251400  0.283276  0.281816
+    鯉  0.406434  0.277283  0.559115 -0.021091  0.133639  0.251400  1.000000  0.697661  0.617204
+    鯛  0.324465  0.179173  0.564100 -0.010774  0.123491  0.283276  0.697661  1.000000  0.533510
+    鳩  0.670461  0.385671  0.565433  0.193441  0.422164  0.281816  0.617204  0.533510  1.000000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;感覚として近そうな単語を選んだつもりでも、意外と単語ベクトルとしては離れていたりする。
+そういう場合は、意図しないアトラクタに引き寄せられてしまうため、注意が必要である。
+単語ベクトルは、文章中の使われ方を想定して学習されているため、そういうこともあるかとは思うが、
+本来は文脈によって、単語間の距離も適切に遠近するはずである。
+それについては、次回以降検証することにしたい。&lt;/p&gt;
+
+&lt;p&gt;さて、以下が実際にテストをしてみた結果である。
+queがニューラルネットに初期値として与えられる入力パターン、targetが最終的に到達した出力パターン、throughが想起の途中に接近したパターンである。
+例えば、「カラス」を初期値とした場合、学習済みの「鳩」に近づいたあと、その連想記憶先である「飛ぶ」を想起していることが分かる。
+他の「馬」「鯛」についても、同様の振る舞いを示しつつ、意図した答えを導き出している。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;open test
+que: カラス target: 飛ぶ through: [&#39;カラス&#39;, &#39;鳩&#39;, &#39;飛ぶ&#39;]
+que: 馬     target: 走る through: [&#39;馬&#39;, &#39;牛&#39;, &#39;走る&#39;]
+que: 鯛     target: 泳ぐ through: [&#39;鯛&#39;, &#39;鯉&#39;, &#39;泳ぐ&#39;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;さいごに:92074d8141b5d0b357587f68abb31ec5&#34;&gt;さいごに&lt;/h1&gt;
+
+&lt;p&gt;今回は簡単な事例であったものの、まだあまり手を付けられていないような、全結合型神経回路網を用いた言語処理の可能性を検証した。
+全結合型の特徴でもあるエネルギー的な安定状態に記憶を埋め込むことにより、人のように強力な汎化能力をもった記憶を、安定して追加学習できる。
+次回以降、実装の詳細や現実的な用途のために必要な、文脈の考慮などについて紹介していきたい。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
