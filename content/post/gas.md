@@ -461,3 +461,22 @@ function doPost(e) {
   return null;
 }
 ```
+
+# OKになった行を隠す
+
+```
+function main(){
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("対象のシート名");
+  var maxRows = sheet.getMaxRows();
+
+  sheet.showRows(1, maxRows);
+  var data = sheet.getRange('AF:AF').getValues();  // AF列にOKと記入されている想定
+
+  for(var i=0; i< data.length; i++){
+    if(data[i][0] == 'OK'){
+      sheet.hideRows(i+1);  // 行を隠す
+    }
+  }
+}
+```
+
