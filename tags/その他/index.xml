@@ -6,13 +6,13 @@
     <description>Recent content in その他 on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 25 Sep 2018 10:46:02 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 03 May 2019 10:00:00 +0900</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/%E3%81%9D%E3%81%AE%E4%BB%96/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>機械学習技術を使った実際の研究開発プロジェクトについて</title>
       <link>http://localhost:1313/post/machine-learning-project/</link>
-      <pubDate>Tue, 25 Sep 2018 10:46:02 +0900</pubDate>
+      <pubDate>Fri, 03 May 2019 10:00:00 +0900</pubDate>
       
       <guid>http://localhost:1313/post/machine-learning-project/</guid>
       <description>&lt;p&gt;よくあるケースを書いてみる
@@ -32,7 +32,21 @@
 
 &lt;p&gt;何が大事か（問題設定が８割）&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://docs.google.com/presentation/d/1XFHgIneGWNX_4TX0yIH9U8GVl57ZsjxrFUGe0Vcm3_s/edit#slide=id.g3058fa4b74_0_72&#34;&gt;https://docs.google.com/presentation/d/1XFHgIneGWNX_4TX0yIH9U8GVl57ZsjxrFUGe0Vcm3_s/edit#slide=id.g3058fa4b74_0_72&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;手法について&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://docs.google.com/presentation/d/1XFHgIneGWNX_4TX0yIH9U8GVl57ZsjxrFUGe0Vcm3_s/edit#slide=id.g3058fa4b74_0_72&#34;&gt;https://docs.google.com/presentation/d/1XFHgIneGWNX_4TX0yIH9U8GVl57ZsjxrFUGe0Vcm3_s/edit#slide=id.g3058fa4b74_0_72&lt;/a&gt;
+- データが充分揃っていて、教師付き学習として理想的な状況であれば、Deep Learningとか特徴エンジニアリングで良い&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;特権付き機械学習
+
+&lt;ul&gt;
+&lt;li&gt;オフライン検出では特権情報を得られて、オンライン検出では得られないなどのケース&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;ロバスト最適化&lt;/li&gt;
+&lt;li&gt;Semi-superised or positive unlabeled&lt;/li&gt;
+&lt;li&gt;共変量シフト&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

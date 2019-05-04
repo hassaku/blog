@@ -6,8 +6,17 @@
     <description>Recent content in Ai on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Fri, 10 Aug 2018 10:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 03 May 2019 10:00:00 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>人工知能実現のための要素技術アイデア</title>
+      <link>http://blog.hassaku-labs.com/post/ai-ideas/</link>
+      <pubDate>Fri, 03 May 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/ai-ideas/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>ターミナル上でシンプルなグリッドワールド</title>

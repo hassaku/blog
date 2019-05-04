@@ -6,8 +6,618 @@
     <description>Recent content in Posts on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 25 Feb 2019 10:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 03 May 2019 10:00:00 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>データ分析コンペとかによくやる作業</title>
+      <link>http://blog.hassaku-labs.com/post/data-comp-memo/</link>
+      <pubDate>Fri, 03 May 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/data-comp-memo/</guid>
+      <description>
+
+&lt;h1 id=&#34;大きいデータの読み込み:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;大きいデータの読み込み&lt;/h1&gt;
+
+&lt;p&gt;daskを使って並列処理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import dask.dataframe as ddf
+import dask.multiprocessing
+
+df = ddf.read_csv(&#39;train_data.csv&#39;)
+df = df.compute(get=dask.multiprocessing.get)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;eda:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;EDA&lt;/h1&gt;
+
+&lt;p&gt;データに関する簡単な統計情報確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import pandas_profiling as pdp
+pdp.ProfileReport(df)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;データの相関を確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import seaborn as sns
+sns.pairplot(df, hue=&amp;quot;target&amp;quot;, diag_kind=&amp;quot;kde&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;前処理:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;前処理&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;欠損値の補完&lt;/li&gt;
+&lt;li&gt;外れ値の削除&lt;/li&gt;
+&lt;li&gt;カテゴリ変数の扱い
+
+&lt;ul&gt;
+&lt;li&gt;one hot encoding （次元増える系）&lt;/li&gt;
+&lt;li&gt;どれかひとつだけ1になるようなスパースなベクトル表現&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;  city_dummies = pd.get_dummies(df[&amp;quot;city&amp;quot;], prefix=&amp;quot;city&amp;quot;)
+  df.drop([&amp;quot;city&amp;quot;], axis=1, inplca=True)
+  df = df.join(city_dummies)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;count encoding （次元増えない系）
+
+&lt;ul&gt;
+&lt;li&gt;カテゴリ変数の出現回数（あるいは率）を値とするような表現&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;  df[&#39;count_city&#39;] = df.groupby(&#39;city&#39;)[&#39;target&#39;].transform(&#39;count&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;並列処理&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;  import numpy as np
+  import pandas as pd
+  #import multiprocessing as mp  # impossible to use lambda with pickle
+  import pathos.multiprocessing as mp  # dill is used inside instead of pickle.
+
+  def split_parallel(df, num_split, map_func):
+      with mp.Pool(num_split) as p:
+          df_split = np.array_split(df, num_split*2)
+          result = p.map(map_func, df_split)
+      return pd.concat(result)
+
+  NUM_PARALLELS = 3
+  df[&amp;quot;new_col&amp;quot;] = split_parallel(df, NUM_PARALLELS, lambda x: x[&amp;quot;col1&amp;quot;] + x[&amp;quot;col2&amp;quot;])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;cv:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;CV&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;from sklearn.model_selection import StratifiedKFold
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=123)
+X_train = np.zeros(20, 5)
+y_train = np.zeros(20)
+
+for train_idx, valid_idx in cv.split(X_train, y_train):
+    print(train_idx, valid_idx)
+    ...
+    losses.append(loss)
+
+cv_loss = np.mean(losses)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;結果のアンサンブル:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;結果のアンサンブル&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;res1 = pd.read_csv(&#39;../method1/submission.csv&#39;)
+res2 = pd.read_csv(&#39;../method2/submission.csv&#39;)
+res3 = pd.read_csv(&#39;../method3/submission.csv&#39;)
+
+b1 = res1.copy()
+col = res1.columns
+
+col = col.tolist()
+col.remove(&#39;id&#39;)
+for i in col:
+    b1[i] = (2 * res1[i]  + 2 * res2[i] + 4 * res3[i]) / 6.0
+
+b1.to_csv(&#39;submission.csv&#39;, index=False)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;jupyter-notebook上でcsvの確認とダウンロード:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;Jupyter Notebook上でCSVの確認とダウンロード&lt;/h1&gt;
+
+&lt;p&gt;実行するとディレクトリ内のファイル一覧が表示されて、クリックすればダウンロード出来るはず&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from IPython.display import FileLinks
+FileLinks(DATA_DIR)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>人工知能実現のための要素技術アイデア</title>
+      <link>http://blog.hassaku-labs.com/post/ai-ideas/</link>
+      <pubDate>Fri, 03 May 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/ai-ideas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GASで作る日常ツールあれこれ</title>
+      <link>http://blog.hassaku-labs.com/post/gas/</link>
+      <pubDate>Wed, 01 May 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/gas/</guid>
+      <description>
+
+&lt;h1 id=&#34;基本-google-apps-scriptの作り方:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】Google Apps Scriptの作り方&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;スプレッドシート作成&lt;/li&gt;
+&lt;li&gt;ツール - スクリプトエディタ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;基本-webapi化の共通事項:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】WebAPI化の共通事項&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;doPostという関数&lt;/li&gt;
+&lt;li&gt;公開 &amp;gt; webアプリケーションとして導入 を選び公開&lt;/li&gt;
+&lt;li&gt;コードを修正した場合、バージョン に 新規作成 を選択する必要がある。&lt;/li&gt;
+&lt;li&gt;アクセス出来るユーザは全員（匿名）にしておくこと&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;基本-簡単なデータストア先として活用:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】簡単なデータストア先として活用&lt;/h1&gt;
+
+&lt;p&gt;WiFi接続のセンサモジュールとか、ちょっとしたものからデータを記録していきたいときに利用&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var sheet = SpreadsheetApp.openById(URLのところに表示されるID).getSheetByName(シート名);
+
+function doPost(e) {
+  var array = [e.parameter.timestamp, e.parameter.sensor_id, e.parameter.value];
+  sheet.appendRow(array);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl -X POST -F &amp;quot;timestamp=`date &amp;quot;+%Y%m%d %H:%M:%S&amp;quot;`&amp;quot; -F &#39;sensor_id=1234&#39; -F &#39;value=5678&#39; 公開時に表示されるURL
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;スプレッドシートにデータが追記されていくので、それをCSV化してデータ分析するなり、簡単に可視化するなり。&lt;/p&gt;
+
+&lt;h1 id=&#34;基本-slack通知の共通部分:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】Slack通知の共通部分&lt;/h1&gt;
+
+&lt;p&gt;以下の各事例でも頻繁に使われてる&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/*
+リソース - ライブラリから以下を追加
+- SlackApp: M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
+- Underscore: MGwgKN2Th03tJ5OdmlzB8KPxhMjh3Sh48
+- Moment: MHMchiX6c1bwSqGM1PZiW_PxhMjh3Sh48
+*/
+
+var _ = Underscore.load();
+var TOKEN = &amp;quot;SLACK_TOKEN&amp;quot;;
+
+var slackApp = SlackApp.create(TOKEN);
+
+function getChannelId(name) {
+  // チャンネル名から通知に必要なIDを取得
+  var channel = _.findWhere(slackApp.channelsList().channels, {name: name});
+  if (_.isEmpty(channel)) {
+    throw new Error(name + &amp;quot; is not found&amp;quot;);
+  }
+  return channel.id
+}
+
+function postMessage(channel_name, message) {
+  // 任意のメッセージを通知
+  var channelId = getChannelId(slackApp, channel_name);
+
+  slackApp.chatPostMessage(channelId, message, {
+    username : &amp;quot;bot&amp;quot;,
+    icon_emoji : &amp;quot;:mega:&amp;quot;
+  });
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;googleドキュメント-スライド定期複製:ade2431a67148677c334b673f0d1d121&#34;&gt;Googleドキュメント・スライド定期複製&lt;/h1&gt;
+
+&lt;p&gt;定例ミーティングなどで、毎回人手で過去分議事録をコピーして、事前メモ用ドキュメントを作成しているケースがあったので自動化した。
+コピー元は、前回分とかではなく、毎回決まったテンプレートとかを指定しても良い。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function createCopy(fileId, fileName) {
+  // 最新の日付を付けたコピーを作成
+  var date = new Date();
+  date.setDate(date.getDate());
+  var formattedDate = Utilities.formatDate(date, &amp;quot;JST&amp;quot;, &amp;quot;yyyyMMdd&amp;quot;);
+  var f = DriveApp.getFileById(fileId);
+
+  f = f.makeCopy(formattedDate + &amp;quot;_&amp;quot; + fileName);
+  return f.getUrl();
+}
+
+function latestFileId(folderId, fileName) {
+  // 前回分のファイルを取得
+  var folder = DriveApp.getFolderById(folderId);
+  var contents = folder.getFiles();
+
+  var latest = 0;
+  var latestFileId = 0;
+
+  while(contents.hasNext()) {
+    var file = contents.next();
+    var name = file.getName();
+
+    if (!name.match(new RegExp(&amp;quot;^.*_&amp;quot; + fileName +&amp;quot;$&amp;quot;))) {
+      continue;
+    }
+
+    // 20190501_XXXXX みたいな名称を想定
+    var updatedAt = parseInt(name.slice(0, 10), 10);
+    var fileId = file.getId()
+
+    if(latest &amp;lt; updatedAt) {
+      latest = updatedAt;
+      latestFileId = fileId;
+    }
+  }
+  return latestFileId;
+};
+
+function main() {
+  var channel_name = &amp;quot;通知したいSlackチャンネル名&amp;quot;;
+  var fileName = &amp;quot;XXXXX&amp;quot;;
+  var folderId = &amp;quot;Google Driveで対象ファイルが配置されているフォルダのURLに含まれるID&amp;quot;;
+
+  var fileId = latestFileId(folderId, fileName);
+  var url = createCopy(fileId, fileName);
+  postMessage(channel_name, &amp;quot;XXXXXのアジェンダを作成しました。 -&amp;gt; &amp;quot; + url);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;編集 - 現在のプロジェクトのトリガーからmain指定すれば、定期実行させることが出来る&lt;/p&gt;
+
+&lt;h1 id=&#34;ドライブ更新通知:ade2431a67148677c334b673f0d1d121&#34;&gt;ドライブ更新通知&lt;/h1&gt;
+
+&lt;p&gt;ドライブにファイルが追加されたりしたときにSlack通知&lt;/p&gt;
+
+&lt;p&gt;予めconfigというシートにfolder_id, slack_channel, messageの列を作っておき、
+- floder_id
+  - Google Driveの対象フォルダのURLに含まれるID
+- slack_channel
+  - 通知したいSlackチャンネル名
+- message
+  - 通知時のメッセージ
+を定義しておくこと。複数可。&lt;/p&gt;
+
+&lt;p&gt;また、トリガは１分ごと実行に設定。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var INTERVAL_MINUTES = 1;  // １分以内に更新されたやつを対象とする
+
+function checkFolder(folderId, channelName, message) {
+  var folder = DriveApp.getFolderById(folderId);
+  var now = Moment.moment();
+  var updates = [];
+
+  var files = folder.getFiles();
+  while (files.hasNext()) {
+    var file = files.next();
+    var updatedAt = Moment.moment(file.getLastUpdated());
+    var elapsedMinutes = (now - updatedAt) / 1000 / 60
+
+    if (elapsedMinutes &amp;lt; INTERVAL_MINUTES) {
+      updates.push(file.getName());
+    }
+  }
+
+  var folders = folder.getFolders();
+  while (folders.hasNext()) {
+    var folder = folders.next();
+    var updatedAt = Moment.moment(folder.getLastUpdated());
+    var elapsedMinutes = (now - updatedAt) / 1000 / 60
+
+    if (elapsedMinutes &amp;lt; INTERVAL_MINUTES) {
+      updates.push(folder.getName());
+    }
+  }
+
+  if (_.isEmpty(updates)) {
+    return;
+  }
+
+  message = updates.join(&#39;, &#39;) + &amp;quot; was updated at https://drive.google.com/drive/u/0/folders/&amp;quot; + folderId + &#39;\n&#39; + message
+  postMessage(message, channelName)
+}
+
+function main() {
+  var sheet = SpreadsheetApp.getActive().getSheetByName(&#39;config&#39;);
+  var rows = sheet.getDataRange().getValues();
+
+  _.each(rows, function(row, i){
+    if (i==0) return;  // skip header
+    var folderId = row[0];
+    var channelName = row[1];
+    var message = row[2];
+    checkFolder(folderId, channelName, message);
+  });
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;slack新規チャンネル通知:ade2431a67148677c334b673f0d1d121&#34;&gt;Slack新規チャンネル通知&lt;/h1&gt;
+
+&lt;p&gt;チャンネルが乱立し始めた頃、新しくチャンネルが出来たら通知して欲しいとの要望から作成した。
+予めconfigという空シートを作成しておくこと。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var CHANNEL_NAME = &amp;quot;lobby&amp;quot;;
+var SHEET_NAME = &amp;quot;config&amp;quot;;
+var ADDITIONAL_MESSAGE = &amp;quot;新しく作成されたチャンネルがあります。 &amp;quot;
+
+function main() {
+  var slackApp = SlackApp.create(TOKEN);
+  var currentChannels = _.pluck(slackApp.channelsList().channels, &#39;name&#39;);
+  var newChannels = [];
+
+  var message = &#39;&#39;;
+  var sheet = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
+  var rows = _.map(sheet.getDataRange().getValues(), function(elm){ return elm.toString(); });
+
+  _.each(currentChannels, function(channel, i) {
+    if (!_.include(rows, channel)) {
+      message += &amp;quot; #&amp;quot; + channel;
+      newChannels.push(channel);
+    }
+  });
+
+  _.each(newChannels, function(channel, i) {
+    sheet.getRange(&#39;A&#39; + (currentChannels.length - newChannels.length + i + 1)).setValue(channel);
+  });
+
+  if (message) postMessage(slackApp, ADDITIONAL_MESSAGE + message);
+
+  _.each(currentChannels, function(channel, i) {
+    sheet.getRange(&#39;A&#39; + (i+1)).setValue(channel);
+  });
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;環境センサ通知ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;環境センサ通知ボット&lt;/h1&gt;
+
+&lt;p&gt;オフィスに人が増えてきて、場所によっては酸素が薄いみたいな話がチラホラ聞こえてきた。
+なので、そのへんに転がってた（？）Netatmoをばら撒いて、二酸化炭素濃度が上がってきたら通知するようにした。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var CHANNEL_NAME = &amp;quot;lobby&amp;quot;;
+var THRESHOLD = 2000; // 通知しきい値
+var STATION_NAME = &amp;quot;entrance&amp;quot;;  // Netatmoにつけた名称
+
+function getToken() {
+  var url = &#39;https://api.netatmo.net/oauth2/token&#39;;
+  var options = {
+    &#39;method&#39;: &#39;post&#39;,
+    &#39;payload&#39;: {
+      &#39;grant_type&#39;: &#39;password&#39;,  // パスワードフローでOAuthトークンを取得
+      &#39;username&#39;: &#39;hoge@fuga.com&#39;,
+      &#39;password&#39; : &#39;XXXXXXX&#39;,
+      &#39;client_id&#39;: &#39;XXXXXXX&#39;,  // このへんの情報はNetatmoの設定ページから取得できる
+      &#39;client_secret&#39;: &#39;XXXXXXX&#39;
+     }
+  };
+  var json = UrlFetchApp.fetch(url, options).getContentText();
+  var jsonData = JSON.parse(json);
+  var token = jsonData[&amp;quot;access_token&amp;quot;];
+  return token;
+}
+
+function getCo2() {
+  var url = &amp;quot;https://api.netatmo.com/api/getstationsdata&amp;quot;;
+  var options = {
+    &amp;quot;headers&amp;quot; : {
+      &amp;quot;Authorization&amp;quot; : &amp;quot;Bearer &amp;quot; + getToken()
+    }
+  };
+  var json = UrlFetchApp.fetch(url, options);
+  var jsonData = JSON.parse(json);
+  var co2 = undefined
+  jsonData[&amp;quot;body&amp;quot;][&amp;quot;devices&amp;quot;].some(function(device, i) {
+    if(device[&amp;quot;station_name&amp;quot;] === STATION_NAME) {
+      co2 = parseInt(device[&amp;quot;dashboard_data&amp;quot;][&amp;quot;CO2&amp;quot;], 10); // Netatmoは二酸化炭素以外にも気温、湿度とか色々取れるはず
+    }
+  });
+  if(!co2) {
+    throw new Error(&amp;quot;CO2が取得できませんでした&amp;quot;);
+  }
+  return co2;
+}
+
+function main() {
+  var co2 = getCo2();
+  if(co2 &amp;gt; THRESHOLD) {
+    postMessage(CHANNEL_NAME, &amp;quot;オフィスの二酸化炭素濃度:&amp;quot; + co2 + &amp;quot;が閾値:&amp;quot; + THRESHOLD + &amp;quot;を上回りました。換気をするか、呼吸を控えてください。&amp;quot;);
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;slack簡易対話ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;Slack簡易対話ボット&lt;/h1&gt;
+
+&lt;p&gt;自分用のチャンネルがあって、そこに訪問する人に対して、簡易的に応答するボットを用意している。&lt;/p&gt;
+
+&lt;p&gt;予め「responses」というシートに「発話内容」と「応答内容」の２列で色々と定義しておくこと。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var MAIN_CHANNEL_NAME = &amp;quot;my_room&amp;quot;;
+var SUB_CHANNEL_NAME = &amp;quot;bot_room&amp;quot;;
+
+function convertTime(unixtime) {
+  var date = Moment.moment(new Date(unixtime*1000));
+  return date.format(&amp;quot;YYYY-MM-DD_HH:mm:ss&amp;quot;);
+}
+
+function doPost(e) {
+  if(e.parameter.userName === &amp;quot;slackbot&amp;quot;) {
+    return null; // 無限ループ防止
+  }
+
+  if (prop.verifyToken != e.parameter.token) {
+    throw new Error(&amp;quot;invalid token.&amp;quot;);
+  }
+
+  if(e.parameter.channel_name === MAIN_CHANNEL_NAME) {
+    var userName = e.parameter.user_name;
+    sheet = SpreadsheetApp.getActive().getSheetByName(userName);
+
+    if(!sheet) {
+      sheet = SpreadsheetApp.getActive().insertSheet(userName);
+
+      // 初めて投稿してくれた人へのメッセージ
+      slackApp.chatPostMessage(e.parameter.channel_id, &amp;quot;ようこそ。&amp;quot; + e.parameter.user_name + &amp;quot;さん&amp;quot;, {
+        username : &amp;quot;bot&amp;quot;,
+        icon_emoji : &amp;quot;:penguin:&amp;quot;
+      });
+    }
+
+    // 投稿内容に応じたレスポンスを返す
+    response = findResponse(e.parameter.text);
+    if(response) {
+      slackApp.chatPostMessage(e.parameter.channel_id, response, {
+        username : &amp;quot;bot&amp;quot;,
+        icon_emoji : &amp;quot;:penguin:&amp;quot;
+      });
+    } else {
+      // 特にレスポンス内容が見つからなければ、SUB_CHANNEL_NAMEに投稿するだけ
+      postMessage(SUB_CHANNEL_NAME, e.parameter.text);
+    }
+
+    // 後々の応答例用意のためにも、訪問者の投稿は保存（問題なさそうなチャンネルかどうかは要注意）。
+    //sheet.appendRow([convertTime(e.parameter.timestamp), e.parameter.text, response]);
+
+  } else {
+    // SUB_CHANNEL_NAMEに投稿した内容をMAIN_CHANNEL_NAMEに投稿。元の投稿者からはあたかもbotが応答したように見える（かも）
+    postMessage(MAIN_CHANNEL_NAME, e.parameter.text);
+  }
+
+  return null;
+}
+
+function findResponse(utterance) {
+  // &amp;quot;responses&amp;quot;シートに定義された対話例の中から、発言を含むものを探し、あれば応答する。なければundefinedで応答しない。
+  var response = getResponses().reduce(function(cache, row) { return cache || ((utterance.indexOf(row.utterance) != -1) &amp;amp;&amp;amp; row.response); }, false) || undefined;
+  return response;
+}
+
+function getResponses() {
+  var sheet = SpreadsheetApp.getActive().getSheetByName(&amp;quot;responses&amp;quot;);
+  var data = sheet.getDataRange().getValues();
+  return data.map(function(row) { return {utterance: row[0], response: row[1]}; }); // １列目が発話内容、２列目が応答内容
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;googleカレンダー予定簡易確認ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;Googleカレンダー予定簡易確認ボット&lt;/h1&gt;
+
+&lt;p&gt;協力会社の方など、社員用カレンダーを見れないが、（カレンダーで管理されている）会議室の予約をしたいという要望があった。
+そのため、Slack上のスラッシュコマンドで空きの確認及び予約の作成を出来るようにした。&lt;/p&gt;
+
+&lt;p&gt;使い方&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1. 予約済み時間の確認
+/room small list 2019/03/17
+
+2. 予約の登録
+/room small create 2019/03/17 09:00 09:30 Aさんと1on1
+
+小会議室：small
+大会議室：large
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://api.slack.com/apps&#34;&gt;https://api.slack.com/apps&lt;/a&gt;  にて、Create New Appすることにより、スラッシュコマンドで呼び出すBotを作る。
+Botから呼び出し、カレンダーの管理をするGASは以下のとおり。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function doPost(e) {
+  if (prop.verifyToken != e.parameter.token) {
+    throw new Error(&amp;quot;invalid token.&amp;quot;);
+  }
+
+  var commands = e.parameter.text.split(&amp;quot; &amp;quot;);
+  var roomType = commands[0];
+  var command = commands[1];
+  var targetDate = commands[2];
+
+  if(roomType == &amp;quot;large&amp;quot;) {
+    var cal = CalendarApp.getCalendarById(&amp;quot;大会議室のカレンダーID (Googleカレンダーの詳細ページに記載されているはず)&amp;quot;);
+  } else if(roomType == &amp;quot;small&amp;quot;) {
+    var cal = CalendarApp.getCalendarById(&amp;quot;小会議室のカレンダーID&amp;quot;);
+  }
+
+  if(command == &amp;quot;list&amp;quot;) {
+    // 予約の確認
+    var text = &#39;[予約済み]\n&#39;;
+    var date = new Date(targetDate);　
+    var events = cal.getEventsForDay(date);
+    for each (var event in events) {
+      var start = event.getStartTime();
+      var end = event.getEndTime();
+      text += &amp;quot;開始時刻: &amp;quot; + start.getHours() + &amp;quot;:&amp;quot; + start.getMinutes() + &amp;quot; 終了時刻: &amp;quot; + end.getHours() + &amp;quot;:&amp;quot; + end.getMinutes() + &#39;\n&#39;;
+    }
+  } else if (command == &amp;quot;create&amp;quot;) {
+    // 予約の作成
+    var text = &#39;予約を作成しました&#39;;
+    var targetStart = commands[3];
+    var targetEnd = commands[4];
+    var eventName = commands[5];
+    var start = new Date(targetDate + &amp;quot; &amp;quot; + targetStart);　
+    var end = new Date(targetDate + &amp;quot; &amp;quot; + targetEnd);　
+    cal.createEvent(eventName, start, end, {description: &#39;Created By Bot&#39;});
+  }
+
+  var res = {response_type: &amp;quot;in_channel&amp;quot;, text: text};
+  return ContentService.createTextOutput(JSON.stringify(res)).setMimeType(ContentService.MimeType.JSON);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;チャンネル常時翻訳:ade2431a67148677c334b673f0d1d121&#34;&gt;チャンネル常時翻訳&lt;/h1&gt;
+
+&lt;p&gt;英語常用の社員も増えてきたし、言語由来の壁が出来ないように、雑談用のチャンネルは常時機械翻訳するようにした。
+翻訳精度はまだ怪しいが、雰囲気の共有くらいは出来る（はず）。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var JA_CHANNEL_NAME = &amp;quot;lobby_ja&amp;quot;;
+var TRANS_JA_CHANNEL_NAME = &amp;quot;lobby_ja_trans&amp;quot;;
+
+var EN_CHANNEL_NAME = &amp;quot;lobby_en&amp;quot;;
+var TRANS_EN_CHANNEL_NAME = &amp;quot;lobby_en_trans&amp;quot;;
+
+function doPost(e) {
+  if(e.parameter.user_name === &amp;quot;slackbot&amp;quot;) {
+    return null; // 無限ループ防止
+  }
+
+  if(e.parameter.channel_name === JA_CHANNEL_NAME) {
+    var translation = LanguageApp.translate(e.parameter.text, &#39;ja&#39;, &#39;en&#39;);
+    postMessage(TRANS_JA_CHANNEL_NAME, e.parameter.user_name, translation);
+
+  } else if(e.parameter.channel_name === EN_CHANNEL_NAME) {
+    var translation = LanguageApp.translate(e.parameter.text, &#39;en&#39;, &#39;ja&#39;);
+    postMessage(TRANS_EN_CHANNEL_NAME, e.parameter.user_name, translation);
+  }
+
+  return null;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;okになった行を隠す:ade2431a67148677c334b673f0d1d121&#34;&gt;OKになった行を隠す&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;function main(){
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(&amp;quot;対象のシート名&amp;quot;);
+  var maxRows = sheet.getMaxRows();
+
+  sheet.showRows(1, maxRows);
+  var data = sheet.getRange(&#39;AF:AF&#39;).getValues();  // AF列にOKと記入されている想定
+
+  for(var i=0; i&amp;lt; data.length; i++){
+    if(data[i][0] == &#39;OK&#39;){
+      sheet.hideRows(i+1);  // 行を隠す
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>IDE使えないときの例外時デバッグ</title>
@@ -752,287 +1362,6 @@ $ appletviewer XXXX/main.html
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Javaアプレット、一時期はまってたなぁ&amp;hellip;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>学習済みword2vecモデルを調べてみた</title>
-      <link>http://blog.hassaku-labs.com/post/pretrained-word2vec/</link>
-      <pubDate>Sun, 26 Feb 2017 02:27:30 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/pretrained-word2vec/</guid>
-      <description>
-
-&lt;p&gt;日本語の自然言語処理で分散表現を使おうと思った場合、まず頭に浮かぶのはword2vecだと思います。
-特に分散表現自体の精度とかには興味がなく、それを使った対話システムを作りたいだけだったりするのであれば、
-データクレンジングや学習には結構時間もかかるので、学習済みの公開モデルを使わせていただくのが手っ取り早そうです。&lt;/p&gt;
-
-&lt;p&gt;(単語ベクトルの準備に手間取り、モチベーション低下に繋がる悪い例：&lt;a href=&#34;http://blog.hassaku-labs.com/post/dialogue_system1/&#34;&gt;対話システムを作りたい！【準備編１】&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;調べてみると、よく出来ていそうな公開モデルを２つ見つけたので、その利用方法と気になるベクトル次元数と単語数を調べてみました。
-なお、どちらもWikipedia日本語版を学習元にしているようです。&lt;/p&gt;
-
-&lt;p&gt;word2vecを使うには、以下のバージョンのgensimを利用します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ pip freeze | grep gensim
-gensim==1.0.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;白ヤギコーポレーションのモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;白ヤギコーポレーションのモデル&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://aial.shiroyagi.co.jp/2017/02/japanese-word2vec-model-builder/&#34;&gt;word2vecの学習済み日本語モデルを公開します&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec
-&amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load(&#39;./shiroyagi/word2vec.gensim.model&#39;)
-&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
-(50,)
-&amp;gt;&amp;gt;&amp;gt; model.corpus_count
-1046708
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;東北大学-乾-岡崎研究室のモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;東北大学 乾・岡崎研究室のモデル&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/&#34;&gt;日本語 Wikipedia エンティティベクトル&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors
-&amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
-&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
-(200,)
-&amp;gt;&amp;gt;&amp;gt; len(model.vocab)
-1005367
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;gensimが1-0-0未満の場合-ただしシロヤギさんのモデルは1-0-0以上が必要のようです:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;gensimが1.0.0未満の場合（ただしシロヤギさんのモデルは1.0.0以上が必要のようです）&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import word2vec
-&amp;gt;&amp;gt;&amp;gt; model = word2vec.Word2Vec.load_word2vec_format(&#39;./tohoku_entity_vector/entity_vector.model.bin&#39;, binary=True)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;追記-facebookの学習済みfasttextモデル:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;（追記）Facebookの学習済みFastTextモデル&lt;/h2&gt;
-
-&lt;p&gt;後日、FacebookのFastTextのレポジトリでも、日本語Wikipediaの分散表現モデルが公開されているのを見つけました。
-ボキャブラリ数は少ないみたいですが、ベクトルの次元数が一番大きいです。
-もしかすると、ボキャブラリ数に関しては、容量の観点から、不要な用語を除去するなど、うまくデータクレンジングされた結果なのかもしれません。
-利用時には要調査です。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md&#34;&gt;Pre-trained word vectors&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; from gensim.models import KeyedVectors
-&amp;gt;&amp;gt;&amp;gt; model = KeyedVectors.load_word2vec_format(&#39;./wiki.ja.vec&#39;)  # binは読み込めないらしい
-&amp;gt;&amp;gt;&amp;gt; model[u&#39;ニュース&#39;].shape
-(300,)
-&amp;gt;&amp;gt;&amp;gt; len(model.vocab)
-580000
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;まとめ:e37dac6f2b05ab116e13b711e87f0489&#34;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;同じ日本語Wikipediaを学習しているので、ボキャブラリの数は大体同じく約100万程度と十分そうな感じです。
-ベクトルの次元数については、白ヤギさんのモデルの方が小さく、動作は軽そうです。
-一方で、東北大学のモデルの方が、単語の表現力は高そうなので、色々検証レベルでは色々と無難な気がします。
-実はもう少し高次元での処理をしたいので、更にこれをスパース（出来れば２値ベクトル）に変換するようなこと
-（こういうやつ &lt;a href=&#34;http://www.manaalfaruqui.com/papers/acl15-overcomplete.pdf&#34;&gt;Sparse Overcomplete Word Vector Representations&lt;/a&gt; ）
-をやりたいのですが、それはまた次回にでも。。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>対話システムを作りたい！（実際はWikipediaのデータを取得して単語ベクトルを学習するまで）</title>
-      <link>http://blog.hassaku-labs.com/post/dialogue_system1/</link>
-      <pubDate>Fri, 01 Apr 2016 02:26:21 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/dialogue_system1/</guid>
-      <description>
-
-&lt;p&gt;2016年はVRとか流行りそうで、仮想空間での生活を妄想してしまう今日このごろ。
-でも、今のままだとNPCがちゃんと自然に会話してくれない気がして微妙なんですよね。。。そこで、既存技術の延長で、どれくらいの日本語対話が可能か、ちょっと自分でも作ってみたくなりました。&lt;/p&gt;
-
-&lt;p&gt;自然言語処理をちゃんと勉強したことはないけれど、脳型情報処理アプローチでいくとしたら、結局はベクトル時系列データの処理なのかな？って思います。とりあえず、色々試してみましょう。&lt;/p&gt;
-
-&lt;p&gt;たぶん、進め方はこんな感じ。&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;単語のベクトルデータ化（言語コーパス？）&lt;/li&gt;
-&lt;li&gt;対話データのベクトル時系列データ化（対話コーパス？）&lt;/li&gt;
-&lt;li&gt;会話時系列データにおける応答時系列データの予測学習&lt;/li&gt;
-&lt;li&gt;学習結果を用いた対話システム構築&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;というわけで、今回は１の言語コーパス作成について。単語を入力とし、N次元ベクトルに変換することを目標。似たような単語は近くに配置されるような変換が好ましい（分散表現だ！）。&lt;/p&gt;
-
-&lt;h1 id=&#34;言語コーパスをwikipediaの記事から作成:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;言語コーパスをWikipediaの記事から作成&lt;/h1&gt;
-
-&lt;h2 id=&#34;wikipediaの日本語記事をダウンロード:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;wikipediaの日本語記事をダウンロード&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;$ curl -O http://dumps.wikimedia.org/jawiki/latest/jawiki-latest-pages-articles.xml.bz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;mecabをインストール:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;mecabをインストール&lt;/h2&gt;
-
-&lt;p&gt;単語の分かち書きへ変換するためのツールです。macならbrewでインストール可能。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ brew install mecab
-$ brew install mecab-ipadic
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;新語用辞書をインストール:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;新語用辞書をインストール&lt;/h3&gt;
-
-&lt;p&gt;最近の単語は、brewでインストールされた辞書には含まれていないので、新語に対応した辞書に更新します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ git clone --depth 1 git@github.com:neologd/mecab-ipadic-neologd.git
-$ cd mecab-ipadic-neologd/
-$ ./bin/install-mecab-ipadic-neologd -n   # 辞書updateも同じコマンド
-$ echo `mecab-config --dicdir`&amp;quot;/mecab-ipadic-neologd&amp;quot;  # 実行時指定のパスを調べる
-/usr/local/lib/mecab/dic/mecab-ipadic-neologd
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;参考-新御用辞書有無を確認:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;（参考）新御用辞書有無を確認&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ pip install mecab
-$ python
-In [1]: import MeCab
-In [2]: mecab_org = MeCab.Tagger(&amp;quot;-Owakati&amp;quot;)
-In [3]: mecab_new = MeCab.Tagger(&amp;quot;-Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd&amp;quot;)
-In [4]: print mecab_org.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
-電力 自由 化 が はじまる
-In [5]: print mecab_new.parse(&amp;quot;電力自由化がはじまる&amp;quot;)
-電力自由化 が はじまる
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;なんとなく最近ニュースとかで出てくるような単語を分かち書き出来ている（気がします）。&lt;/p&gt;
-
-&lt;h2 id=&#34;wikipediaを分かち書き:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;wikipediaを分かち書き&lt;/h2&gt;
-
-&lt;p&gt;各単語に分かち書き変換します。&lt;/p&gt;
-
-&lt;h3 id=&#34;htmlタグとかを取っ払って文章だけに変換:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;HTMLタグとかを取っ払って文章だけに変換&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ echo &#39;gem &amp;quot;wp2txt&amp;quot;&#39; &amp;gt;&amp;gt; Gemfile
-$ bundle
-$ bundle exec wp2txt --input-file jawiki-latest-pages-articles.xml.bz
-$ ls wp2txt/  # 変換結果
-$ rm jawiki-latest-pages-articles.xml.bz # 不要だから消す
-$ cat wp2txt/jawiki-latest-pages-articles-* &amp;gt; corpus.txt # 変換結果を一つのファイルに連結
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;とても時間かかります&amp;hellip;
-記号除去とかした方が良いのかどうか、今のところ謎です。&lt;/p&gt;
-
-&lt;h3 id=&#34;新語辞書使って分かち書き:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;新語辞書使って分かち書き&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ mecab -Owakati -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd corpus.txt &amp;gt; corpus_wakati.txt
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;とても時間かかります&amp;hellip;&lt;/p&gt;
-
-&lt;h2 id=&#34;word2vecによるベクトル化:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;word2vecによるベクトル化&lt;/h2&gt;
-
-&lt;p&gt;今後pythonで実装することもあり、gensim使います。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ pip install gensim
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;utf-8に変換:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;utf-8に変換&lt;/h3&gt;
-
-&lt;p&gt;しないとword2vecのときに、文字コードについて怒られたので&amp;hellip;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ iconv -c -t UTF-8 &amp;lt; corpus_wakati.txt &amp;gt; corpus_wakati_utf-8.txt
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;学習:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;学習&lt;/h3&gt;
-
-&lt;p&gt;以下のpythonコードを実行します。次元は適当に中程度としました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vi word2vec_train.py
-# coding: utf-8
-from gensim.models import word2vec
-import sys, logging, string, codecs
-
-logging.basicConfig(format=&#39;%(asctime)s : %(levelname)s : %(message)s&#39;, level=logging.INFO)
-
-# 学習（400次元だと４コアで約３時間...）
-sentences = word2vec.Text8Corpus(&amp;quot;corpus_wakati_utf-8.txt&amp;quot;)
-model = word2vec.Word2Vec(sentences, size=400, workers=4)
-# モデルの保存
-model.save(&amp;quot;w2v_model_%d_dims&amp;quot; % dims)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;検証:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;検証&lt;/h3&gt;
-
-&lt;h4 id=&#34;モデルの読み込み:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;モデルの読み込み&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;$ pyton
-In [1]: from gensim.models import word2vec
-In [2]: model = word2vec.Word2Vec.load(&amp;quot;./word2vec_models/w2v_model_%d_dims&amp;quot; % 400)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;ベクトル空間上で近い単語を探す:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;ベクトル空間上で近い単語を探す&lt;/h4&gt;
-
-&lt;p&gt;動作確認です。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;In [3]: most_similar = model.most_similar(positive=[u&#39;サッカー&#39;])[0]
-In [4]: most_similar[0]
-ラグビー
-In [5]: most_similar[1]
-0.663492918015  # コサイン距離？
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;ベクトル取得:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;ベクトル取得&lt;/h4&gt;
-
-&lt;p&gt;このベクトルに対して今後処理していくことになります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;In [1]: vector = model[u&#39;サッカー&#39;]
-array([  2.69545317e-01,  -1.99663490e-01,   9.52050760e-02,
-         2.16732353e-01,   1.97090670e-01,  -1.90409079e-01,
-         ...
-In [2]: vector.shape
-(400,)
-In [3]: vector.min()
--0.71880466
-In [4]: vector.max()
-0.75658286
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;ベクトルから単語を探す:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;ベクトルから単語を探す&lt;/h4&gt;
-
-&lt;p&gt;処理結果のベクトルから単語を復元する手段も確認しておきます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;In [5]: vector[0:10] = 0.0  # 適当に変更
-In [6]: for cname in [candidate[0] for candidate in model.most_similar(positive=[vector], topn=3)]:
-            print cname
-サッカー
-ラグビー
-フットサル
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;おわり:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;おわり&lt;/h2&gt;
-
-&lt;p&gt;ひとまず今回はここまで。単語をベクトル化したことにより、文章をベクトル時系列データとして扱うことが出来、色々な機械学習手法が適用可能になりました。
-次回以降色々試してみたいと思います。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&#34;おまけ:9f533d3f859ab3c9a17cb0f76df4e5f1&#34;&gt;おまけ&lt;/h1&gt;
-
-&lt;p&gt;この時点でも色々作って遊べますね。例えば、以前作った絵文字サジェスト用hubotでは、キーワードに近しい、絵文字キーワードを引っ張ってきて候補を表示してました。Githubとかだと、標準でも絵文字キーワードを入力すると、続きをサジェストしてくれるものの、そもそものキーワードが思いつかなかったりするので、そういうときに便利です :)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/dialogue_system1/word2emoji.jpg&#34; alt=&#34;word2emoji.jpg&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>exception-slackerというライブラリをPyPIに登録した</title>
-      <link>http://blog.hassaku-labs.com/post/exception_slacker/</link>
-      <pubDate>Fri, 01 Apr 2016 00:35:40 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/exception_slacker/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/exception-slacker&#34;&gt;https://github.com/hassaku/exception-slacker&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;importして、Slackのtokenや投稿チャンネルなどを環境変数でセットしておけば、例外が発生した際に、以下のような感じでSlackへ投稿します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/exception_slacker/exception_slacker.png&#34; alt=&#34;exception_slacker&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;時間のかかるプロセスなどを実行している時に、いちいちコンソールをチェックする手間が省けるので、個人的に便利だと思って公開しました。&lt;/p&gt;
 </description>
     </item>
     

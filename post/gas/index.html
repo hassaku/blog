@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    GASで作る日常ツールあれこれ | hassaku&#39;s blog
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.hassaku-labs.com/post/gas/"/>
+
+  
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/responsive.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/highlight_monokai.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/theme.css">
+  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/custom.css">
+  
+  
+  <link href="http://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="http://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
+
+  
+  <script type="text/javascript">var switchTo5x=true;</script>
+  <script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+  <script type="text/javascript">stLight.options({publisher: "2b9fffc6-b3fe-4988-a0ef-4f9dcce98eaa", doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
+        <h2>３歩進んで２歩分滑り落ちてくペンギンのメモ</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          <li><a href="https://github.com/hassaku" target="_blank">GitHub</a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>GASで作る日常ツールあれこれ</h1>
+      <div class="meta">
+        May 1, 2019 &nbsp;
+        
+          #<a href="http://blog.hassaku-labs.com/tags/google-apps-script">google apps script</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<h1 id="基本-google-apps-scriptの作り方:ade2431a67148677c334b673f0d1d121">【基本】Google Apps Scriptの作り方</h1>
+
+<ul>
+<li>スプレッドシート作成</li>
+<li>ツール - スクリプトエディタ</li>
+</ul>
+
+<h1 id="基本-webapi化の共通事項:ade2431a67148677c334b673f0d1d121">【基本】WebAPI化の共通事項</h1>
+
+<ul>
+<li>doPostという関数</li>
+<li>公開 &gt; webアプリケーションとして導入 を選び公開</li>
+<li>コードを修正した場合、バージョン に 新規作成 を選択する必要がある。</li>
+<li>アクセス出来るユーザは全員（匿名）にしておくこと</li>
+</ul>
+
+<h1 id="基本-簡単なデータストア先として活用:ade2431a67148677c334b673f0d1d121">【基本】簡単なデータストア先として活用</h1>
+
+<p>WiFi接続のセンサモジュールとか、ちょっとしたものからデータを記録していきたいときに利用</p>
+
+<pre><code>var sheet = SpreadsheetApp.openById(URLのところに表示されるID).getSheetByName(シート名);
+
+function doPost(e) {
+  var array = [e.parameter.timestamp, e.parameter.sensor_id, e.parameter.value];
+  sheet.appendRow(array);
+}
+</code></pre>
+
+<pre><code>$ curl -X POST -F &quot;timestamp=`date &quot;+%Y%m%d %H:%M:%S&quot;`&quot; -F 'sensor_id=1234' -F 'value=5678' 公開時に表示されるURL
+</code></pre>
+
+<p>スプレッドシートにデータが追記されていくので、それをCSV化してデータ分析するなり、簡単に可視化するなり。</p>
+
+<h1 id="基本-slack通知の共通部分:ade2431a67148677c334b673f0d1d121">【基本】Slack通知の共通部分</h1>
+
+<p>以下の各事例でも頻繁に使われてる</p>
+
+<pre><code>/*
+リソース - ライブラリから以下を追加
+- SlackApp: M3W5Ut3Q39AaIwLquryEPMwV62A3znfOO
+- Underscore: MGwgKN2Th03tJ5OdmlzB8KPxhMjh3Sh48
+- Moment: MHMchiX6c1bwSqGM1PZiW_PxhMjh3Sh48
+*/
+
+var _ = Underscore.load();
+var TOKEN = &quot;SLACK_TOKEN&quot;;
+
+var slackApp = SlackApp.create(TOKEN);
+
+function getChannelId(name) {
+  // チャンネル名から通知に必要なIDを取得
+  var channel = _.findWhere(slackApp.channelsList().channels, {name: name});
+  if (_.isEmpty(channel)) {
+    throw new Error(name + &quot; is not found&quot;);
+  }
+  return channel.id
+}
+
+function postMessage(channel_name, message) {
+  // 任意のメッセージを通知
+  var channelId = getChannelId(slackApp, channel_name);
+
+  slackApp.chatPostMessage(channelId, message, {
+    username : &quot;bot&quot;,
+    icon_emoji : &quot;:mega:&quot;
+  });
+}
+
+</code></pre>
+
+<h1 id="googleドキュメント-スライド定期複製:ade2431a67148677c334b673f0d1d121">Googleドキュメント・スライド定期複製</h1>
+
+<p>定例ミーティングなどで、毎回人手で過去分議事録をコピーして、事前メモ用ドキュメントを作成しているケースがあったので自動化した。
+コピー元は、前回分とかではなく、毎回決まったテンプレートとかを指定しても良い。</p>
+
+<pre><code>function createCopy(fileId, fileName) {
+  // 最新の日付を付けたコピーを作成
+  var date = new Date();
+  date.setDate(date.getDate());
+  var formattedDate = Utilities.formatDate(date, &quot;JST&quot;, &quot;yyyyMMdd&quot;);
+  var f = DriveApp.getFileById(fileId);
+
+  f = f.makeCopy(formattedDate + &quot;_&quot; + fileName);
+  return f.getUrl();
+}
+
+function latestFileId(folderId, fileName) {
+  // 前回分のファイルを取得
+  var folder = DriveApp.getFolderById(folderId);
+  var contents = folder.getFiles();
+
+  var latest = 0;
+  var latestFileId = 0;
+
+  while(contents.hasNext()) {
+    var file = contents.next();
+    var name = file.getName();
+
+    if (!name.match(new RegExp(&quot;^.*_&quot; + fileName +&quot;$&quot;))) {
+      continue;
+    }
+
+    // 20190501_XXXXX みたいな名称を想定
+    var updatedAt = parseInt(name.slice(0, 10), 10);
+    var fileId = file.getId()
+
+    if(latest &lt; updatedAt) {
+      latest = updatedAt;
+      latestFileId = fileId;
+    }
+  }
+  return latestFileId;
+};
+
+function main() {
+  var channel_name = &quot;通知したいSlackチャンネル名&quot;;
+  var fileName = &quot;XXXXX&quot;;
+  var folderId = &quot;Google Driveで対象ファイルが配置されているフォルダのURLに含まれるID&quot;;
+
+  var fileId = latestFileId(folderId, fileName);
+  var url = createCopy(fileId, fileName);
+  postMessage(channel_name, &quot;XXXXXのアジェンダを作成しました。 -&gt; &quot; + url);
+}
+</code></pre>
+
+<p>編集 - 現在のプロジェクトのトリガーからmain指定すれば、定期実行させることが出来る</p>
+
+<h1 id="ドライブ更新通知:ade2431a67148677c334b673f0d1d121">ドライブ更新通知</h1>
+
+<p>ドライブにファイルが追加されたりしたときにSlack通知</p>
+
+<p>予めconfigというシートにfolder_id, slack_channel, messageの列を作っておき、
+- floder_id
+  - Google Driveの対象フォルダのURLに含まれるID
+- slack_channel
+  - 通知したいSlackチャンネル名
+- message
+  - 通知時のメッセージ
+を定義しておくこと。複数可。</p>
+
+<p>また、トリガは１分ごと実行に設定。</p>
+
+<pre><code>var INTERVAL_MINUTES = 1;  // １分以内に更新されたやつを対象とする
+
+function checkFolder(folderId, channelName, message) {
+  var folder = DriveApp.getFolderById(folderId);
+  var now = Moment.moment();
+  var updates = [];
+
+  var files = folder.getFiles();
+  while (files.hasNext()) {
+    var file = files.next();
+    var updatedAt = Moment.moment(file.getLastUpdated());
+    var elapsedMinutes = (now - updatedAt) / 1000 / 60
+
+    if (elapsedMinutes &lt; INTERVAL_MINUTES) {
+      updates.push(file.getName());
+    }
+  }
+
+  var folders = folder.getFolders();
+  while (folders.hasNext()) {
+    var folder = folders.next();
+    var updatedAt = Moment.moment(folder.getLastUpdated());
+    var elapsedMinutes = (now - updatedAt) / 1000 / 60
+
+    if (elapsedMinutes &lt; INTERVAL_MINUTES) {
+      updates.push(folder.getName());
+    }
+  }
+
+  if (_.isEmpty(updates)) {
+    return;
+  }
+
+  message = updates.join(', ') + &quot; was updated at https://drive.google.com/drive/u/0/folders/&quot; + folderId + '\n' + message
+  postMessage(message, channelName)
+}
+
+function main() {
+  var sheet = SpreadsheetApp.getActive().getSheetByName('config');
+  var rows = sheet.getDataRange().getValues();
+
+  _.each(rows, function(row, i){
+    if (i==0) return;  // skip header
+    var folderId = row[0];
+    var channelName = row[1];
+    var message = row[2];
+    checkFolder(folderId, channelName, message);
+  });
+}
+</code></pre>
+
+<h1 id="slack新規チャンネル通知:ade2431a67148677c334b673f0d1d121">Slack新規チャンネル通知</h1>
+
+<p>チャンネルが乱立し始めた頃、新しくチャンネルが出来たら通知して欲しいとの要望から作成した。
+予めconfigという空シートを作成しておくこと。</p>
+
+<pre><code>var CHANNEL_NAME = &quot;lobby&quot;;
+var SHEET_NAME = &quot;config&quot;;
+var ADDITIONAL_MESSAGE = &quot;新しく作成されたチャンネルがあります。 &quot;
+
+function main() {
+  var slackApp = SlackApp.create(TOKEN);
+  var currentChannels = _.pluck(slackApp.channelsList().channels, 'name');
+  var newChannels = [];
+
+  var message = '';
+  var sheet = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
+  var rows = _.map(sheet.getDataRange().getValues(), function(elm){ return elm.toString(); });
+
+  _.each(currentChannels, function(channel, i) {
+    if (!_.include(rows, channel)) {
+      message += &quot; #&quot; + channel;
+      newChannels.push(channel);
+    }
+  });
+
+  _.each(newChannels, function(channel, i) {
+    sheet.getRange('A' + (currentChannels.length - newChannels.length + i + 1)).setValue(channel);
+  });
+
+  if (message) postMessage(slackApp, ADDITIONAL_MESSAGE + message);
+
+  _.each(currentChannels, function(channel, i) {
+    sheet.getRange('A' + (i+1)).setValue(channel);
+  });
+}
+</code></pre>
+
+<h1 id="環境センサ通知ボット:ade2431a67148677c334b673f0d1d121">環境センサ通知ボット</h1>
+
+<p>オフィスに人が増えてきて、場所によっては酸素が薄いみたいな話がチラホラ聞こえてきた。
+なので、そのへんに転がってた（？）Netatmoをばら撒いて、二酸化炭素濃度が上がってきたら通知するようにした。</p>
+
+<pre><code>var CHANNEL_NAME = &quot;lobby&quot;;
+var THRESHOLD = 2000; // 通知しきい値
+var STATION_NAME = &quot;entrance&quot;;  // Netatmoにつけた名称
+
+function getToken() {
+  var url = 'https://api.netatmo.net/oauth2/token';
+  var options = {
+    'method': 'post',
+    'payload': {
+      'grant_type': 'password',  // パスワードフローでOAuthトークンを取得
+      'username': 'hoge@fuga.com',
+      'password' : 'XXXXXXX',
+      'client_id': 'XXXXXXX',  // このへんの情報はNetatmoの設定ページから取得できる
+      'client_secret': 'XXXXXXX'
+     }
+  };
+  var json = UrlFetchApp.fetch(url, options).getContentText();
+  var jsonData = JSON.parse(json);
+  var token = jsonData[&quot;access_token&quot;];
+  return token;
+}
+
+function getCo2() {
+  var url = &quot;https://api.netatmo.com/api/getstationsdata&quot;;
+  var options = {
+    &quot;headers&quot; : {
+      &quot;Authorization&quot; : &quot;Bearer &quot; + getToken()
+    }
+  };
+  var json = UrlFetchApp.fetch(url, options);
+  var jsonData = JSON.parse(json);
+  var co2 = undefined
+  jsonData[&quot;body&quot;][&quot;devices&quot;].some(function(device, i) {
+    if(device[&quot;station_name&quot;] === STATION_NAME) {
+      co2 = parseInt(device[&quot;dashboard_data&quot;][&quot;CO2&quot;], 10); // Netatmoは二酸化炭素以外にも気温、湿度とか色々取れるはず
+    }
+  });
+  if(!co2) {
+    throw new Error(&quot;CO2が取得できませんでした&quot;);
+  }
+  return co2;
+}
+
+function main() {
+  var co2 = getCo2();
+  if(co2 &gt; THRESHOLD) {
+    postMessage(CHANNEL_NAME, &quot;オフィスの二酸化炭素濃度:&quot; + co2 + &quot;が閾値:&quot; + THRESHOLD + &quot;を上回りました。換気をするか、呼吸を控えてください。&quot;);
+  }
+}
+</code></pre>
+
+<h1 id="slack簡易対話ボット:ade2431a67148677c334b673f0d1d121">Slack簡易対話ボット</h1>
+
+<p>自分用のチャンネルがあって、そこに訪問する人に対して、簡易的に応答するボットを用意している。</p>
+
+<p>予め「responses」というシートに「発話内容」と「応答内容」の２列で色々と定義しておくこと。</p>
+
+<pre><code>var MAIN_CHANNEL_NAME = &quot;my_room&quot;;
+var SUB_CHANNEL_NAME = &quot;bot_room&quot;;
+
+function convertTime(unixtime) {
+  var date = Moment.moment(new Date(unixtime*1000));
+  return date.format(&quot;YYYY-MM-DD_HH:mm:ss&quot;);
+}
+
+function doPost(e) {
+  if(e.parameter.userName === &quot;slackbot&quot;) {
+    return null; // 無限ループ防止
+  }
+
+  if (prop.verifyToken != e.parameter.token) {
+    throw new Error(&quot;invalid token.&quot;);
+  }
+
+  if(e.parameter.channel_name === MAIN_CHANNEL_NAME) {
+    var userName = e.parameter.user_name;
+    sheet = SpreadsheetApp.getActive().getSheetByName(userName);
+
+    if(!sheet) {
+      sheet = SpreadsheetApp.getActive().insertSheet(userName);
+
+      // 初めて投稿してくれた人へのメッセージ
+      slackApp.chatPostMessage(e.parameter.channel_id, &quot;ようこそ。&quot; + e.parameter.user_name + &quot;さん&quot;, {
+        username : &quot;bot&quot;,
+        icon_emoji : &quot;:penguin:&quot;
+      });
+    }
+
+    // 投稿内容に応じたレスポンスを返す
+    response = findResponse(e.parameter.text);
+    if(response) {
+      slackApp.chatPostMessage(e.parameter.channel_id, response, {
+        username : &quot;bot&quot;,
+        icon_emoji : &quot;:penguin:&quot;
+      });
+    } else {
+      // 特にレスポンス内容が見つからなければ、SUB_CHANNEL_NAMEに投稿するだけ
+      postMessage(SUB_CHANNEL_NAME, e.parameter.text);
+    }
+
+    // 後々の応答例用意のためにも、訪問者の投稿は保存（問題なさそうなチャンネルかどうかは要注意）。
+    //sheet.appendRow([convertTime(e.parameter.timestamp), e.parameter.text, response]);
+
+  } else {
+    // SUB_CHANNEL_NAMEに投稿した内容をMAIN_CHANNEL_NAMEに投稿。元の投稿者からはあたかもbotが応答したように見える（かも）
+    postMessage(MAIN_CHANNEL_NAME, e.parameter.text);
+  }
+
+  return null;
+}
+
+function findResponse(utterance) {
+  // &quot;responses&quot;シートに定義された対話例の中から、発言を含むものを探し、あれば応答する。なければundefinedで応答しない。
+  var response = getResponses().reduce(function(cache, row) { return cache || ((utterance.indexOf(row.utterance) != -1) &amp;&amp; row.response); }, false) || undefined;
+  return response;
+}
+
+function getResponses() {
+  var sheet = SpreadsheetApp.getActive().getSheetByName(&quot;responses&quot;);
+  var data = sheet.getDataRange().getValues();
+  return data.map(function(row) { return {utterance: row[0], response: row[1]}; }); // １列目が発話内容、２列目が応答内容
+}
+</code></pre>
+
+<h1 id="googleカレンダー予定簡易確認ボット:ade2431a67148677c334b673f0d1d121">Googleカレンダー予定簡易確認ボット</h1>
+
+<p>協力会社の方など、社員用カレンダーを見れないが、（カレンダーで管理されている）会議室の予約をしたいという要望があった。
+そのため、Slack上のスラッシュコマンドで空きの確認及び予約の作成を出来るようにした。</p>
+
+<p>使い方</p>
+
+<pre><code>1. 予約済み時間の確認
+/room small list 2019/03/17
+
+2. 予約の登録
+/room small create 2019/03/17 09:00 09:30 Aさんと1on1
+
+小会議室：small
+大会議室：large
+</code></pre>
+
+<p><a href="https://api.slack.com/apps">https://api.slack.com/apps</a>  にて、Create New Appすることにより、スラッシュコマンドで呼び出すBotを作る。
+Botから呼び出し、カレンダーの管理をするGASは以下のとおり。</p>
+
+<pre><code>function doPost(e) {
+  if (prop.verifyToken != e.parameter.token) {
+    throw new Error(&quot;invalid token.&quot;);
+  }
+
+  var commands = e.parameter.text.split(&quot; &quot;);
+  var roomType = commands[0];
+  var command = commands[1];
+  var targetDate = commands[2];
+
+  if(roomType == &quot;large&quot;) {
+    var cal = CalendarApp.getCalendarById(&quot;大会議室のカレンダーID (Googleカレンダーの詳細ページに記載されているはず)&quot;);
+  } else if(roomType == &quot;small&quot;) {
+    var cal = CalendarApp.getCalendarById(&quot;小会議室のカレンダーID&quot;);
+  }
+
+  if(command == &quot;list&quot;) {
+    // 予約の確認
+    var text = '[予約済み]\n';
+    var date = new Date(targetDate);　
+    var events = cal.getEventsForDay(date);
+    for each (var event in events) {
+      var start = event.getStartTime();
+      var end = event.getEndTime();
+      text += &quot;開始時刻: &quot; + start.getHours() + &quot;:&quot; + start.getMinutes() + &quot; 終了時刻: &quot; + end.getHours() + &quot;:&quot; + end.getMinutes() + '\n';
+    }
+  } else if (command == &quot;create&quot;) {
+    // 予約の作成
+    var text = '予約を作成しました';
+    var targetStart = commands[3];
+    var targetEnd = commands[4];
+    var eventName = commands[5];
+    var start = new Date(targetDate + &quot; &quot; + targetStart);　
+    var end = new Date(targetDate + &quot; &quot; + targetEnd);　
+    cal.createEvent(eventName, start, end, {description: 'Created By Bot'});
+  }
+
+  var res = {response_type: &quot;in_channel&quot;, text: text};
+  return ContentService.createTextOutput(JSON.stringify(res)).setMimeType(ContentService.MimeType.JSON);
+}
+</code></pre>
+
+<h1 id="チャンネル常時翻訳:ade2431a67148677c334b673f0d1d121">チャンネル常時翻訳</h1>
+
+<p>英語常用の社員も増えてきたし、言語由来の壁が出来ないように、雑談用のチャンネルは常時機械翻訳するようにした。
+翻訳精度はまだ怪しいが、雰囲気の共有くらいは出来る（はず）。</p>
+
+<pre><code>var JA_CHANNEL_NAME = &quot;lobby_ja&quot;;
+var TRANS_JA_CHANNEL_NAME = &quot;lobby_ja_trans&quot;;
+
+var EN_CHANNEL_NAME = &quot;lobby_en&quot;;
+var TRANS_EN_CHANNEL_NAME = &quot;lobby_en_trans&quot;;
+
+function doPost(e) {
+  if(e.parameter.user_name === &quot;slackbot&quot;) {
+    return null; // 無限ループ防止
+  }
+
+  if(e.parameter.channel_name === JA_CHANNEL_NAME) {
+    var translation = LanguageApp.translate(e.parameter.text, 'ja', 'en');
+    postMessage(TRANS_JA_CHANNEL_NAME, e.parameter.user_name, translation);
+
+  } else if(e.parameter.channel_name === EN_CHANNEL_NAME) {
+    var translation = LanguageApp.translate(e.parameter.text, 'en', 'ja');
+    postMessage(TRANS_EN_CHANNEL_NAME, e.parameter.user_name, translation);
+  }
+
+  return null;
+}
+</code></pre>
+
+<h1 id="okになった行を隠す:ade2431a67148677c334b673f0d1d121">OKになった行を隠す</h1>
+
+<pre><code>function main(){
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(&quot;対象のシート名&quot;);
+  var maxRows = sheet.getMaxRows();
+
+  sheet.showRows(1, maxRows);
+  var data = sheet.getRange('AF:AF').getValues();  // AF列にOKと記入されている想定
+
+  for(var i=0; i&lt; data.length; i++){
+    if(data[i][0] == 'OK'){
+      sheet.hideRows(i+1);  // 行を隠す
+    }
+  }
+}
+</code></pre>
+
+      
+      
+      <div id="share-this" class="col span_10">
+        <span class='st_twitter_large' displayText='Tweet'></span>
+        <span class='st_facebook_large' displayText='Facebook'></span>
+        <span class='st_googleplus_large' displayText='Google +'></span>
+        <span class='st_pocket_large' displayText='Pocket'></span>
+        <span class='st_sharethis_large' displayText='ShareThis'></span>
+        <span class='st_email_large' displayText='Email'></span>  
+      </div>
+    </article>
+    
+ <aside><div id="disqus_thread"></div></aside> 
+
+<script type="text/javascript">
+     
+    var disqus_shortname = 'hassakusblog';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+  
+  <nav class="pagination">
+    
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/debug-on-remote/" rel="prev">IDE使えないときの例外時デバッグ</a></span>
+    
+    
+      <span class="next"><a href="http://blog.hassaku-labs.com/post/data-comp-memo/" rel="next">データ分析コンペとかによくやる作業</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      <img src="http://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
+      Written by hassaku
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="http://blog.hassaku-labs.com/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-31136981-6', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+

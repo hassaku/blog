@@ -6,7 +6,7 @@
   
   <meta charset="UTF-8">
   <title>
-    IDE使えないときの例外時デバッグ | hassaku&#39;s blog
+    データ分析コンペとかによくやる作業 | hassaku&#39;s blog
   </title>
 
 
@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.hassaku-labs.com/post/debug-on-remote/"/>
+  <link rel="canonical" href="http://blog.hassaku-labs.com/post/data-comp-memo/"/>
 
   
   <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
@@ -62,86 +62,130 @@
   
   <main id="single" role="main">
     <div class="article-header">
-      <h1>IDE使えないときの例外時デバッグ</h1>
+      <h1>データ分析コンペとかによくやる作業</h1>
       <div class="meta">
-        Feb 25, 2019 &nbsp;
+        May 3, 2019 &nbsp;
         
           #<a href="http://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
         
       </div>
     </div>
     <article>
-      <p>IDEが使える状況であれば、簡単にデバッガーを使えると思うが、そうでない環境でデバッグしたくなることもある。
-printデバッグも辛いので、以下のような感じで例外時等にpython debuggerを起動出来ると便利。</p>
+      
 
-<pre><code>import sys
+<h1 id="大きいデータの読み込み:61f9dc3dc817dd778c88b7321db80ab0">大きいデータの読み込み</h1>
 
-def hook(type, value, tb):
-   if hasattr(sys, 'ps1') or not sys.stderr.isatty():
-      sys.__excepthook__(type, value, tb)
-   else:
-      import traceback, pdb
-      traceback.print_exception(type, value, tb)
-      print()
-      pdb.pm()
+<p>daskを使って並列処理</p>
 
-sys.excepthook = hook
+<pre><code>import dask.dataframe as ddf
+import dask.multiprocessing
+
+df = ddf.read_csv('train_data.csv')
+df = df.compute(get=dask.multiprocessing.get)
 </code></pre>
 
-<p>というのを適当なところにdebug.pyとして置いておいて、デバッグしたいコード実行時にimportしておくだけ。
-例外が起きるとデバッガが起動し停止するので、そのときの変数の値などを表示したり調べると良い。</p>
+<h1 id="eda:61f9dc3dc817dd778c88b7321db80ab0">EDA</h1>
 
-<p>不必要に毎回デバッガ起動すると面倒なので、普段はimport行をコメントアウトしておくこと。</p>
+<p>データに関する簡単な統計情報確認</p>
 
-<p>よく使うコマンドは以下のとおり。</p>
+<pre><code>import pandas_profiling as pdp
+pdp.ProfileReport(df)
+</code></pre>
 
-<ul>
-<li>w
+<p>データの相関を確認</p>
 
-<ul>
-<li>where. スタックトレースを表示する。</li>
-</ul></li>
-<li>u
+<pre><code>import seaborn as sns
+sns.pairplot(df, hue=&quot;target&quot;, diag_kind=&quot;kde&quot;)
+</code></pre>
 
-<ul>
-<li>up. スタックを一つ上に移動</li>
-</ul></li>
-<li>d
+<h1 id="前処理:61f9dc3dc817dd778c88b7321db80ab0">前処理</h1>
 
 <ul>
-<li>down. スタックを一つ下に移動</li>
-</ul></li>
-<li>l [first, last]
+<li>欠損値の補完</li>
+<li>外れ値の削除</li>
+<li>カテゴリ変数の扱い
 
 <ul>
-<li>list. 現在のソースコード表示。fist, lastを指定可能。</li>
-</ul></li>
-<li>p [target]
-
-<ul>
-<li>print. 変数等を表示。</li>
-</ul></li>
-<li>c
-
-<ul>
-<li>continue. 次のブレークポイントに当たるまで実行</li>
-</ul></li>
-<li>s
-
-<ul>
-<li>step. 現在の行を実行 (関数の中に入る）</li>
-</ul></li>
-<li>n
-
-<ul>
-<li>next. 現在の行を実行 (関数の中に入らない）</li>
-</ul></li>
-<li>q
-
-<ul>
-<li>quit. デバッガを終了</li>
+<li>one hot encoding （次元増える系）</li>
+<li>どれかひとつだけ1になるようなスパースなベクトル表現</li>
 </ul></li>
 </ul>
+
+<pre><code>  city_dummies = pd.get_dummies(df[&quot;city&quot;], prefix=&quot;city&quot;)
+  df.drop([&quot;city&quot;], axis=1, inplca=True)
+  df = df.join(city_dummies)
+</code></pre>
+
+<ul>
+<li>count encoding （次元増えない系）
+
+<ul>
+<li>カテゴリ変数の出現回数（あるいは率）を値とするような表現</li>
+</ul></li>
+</ul>
+
+<pre><code>  df['count_city'] = df.groupby('city')['target'].transform('count')
+</code></pre>
+
+<ul>
+<li>並列処理</li>
+</ul>
+
+<pre><code>  import numpy as np
+  import pandas as pd
+  #import multiprocessing as mp  # impossible to use lambda with pickle
+  import pathos.multiprocessing as mp  # dill is used inside instead of pickle.
+
+  def split_parallel(df, num_split, map_func):
+      with mp.Pool(num_split) as p:
+          df_split = np.array_split(df, num_split*2)
+          result = p.map(map_func, df_split)
+      return pd.concat(result)
+
+  NUM_PARALLELS = 3
+  df[&quot;new_col&quot;] = split_parallel(df, NUM_PARALLELS, lambda x: x[&quot;col1&quot;] + x[&quot;col2&quot;])
+</code></pre>
+
+<h1 id="cv:61f9dc3dc817dd778c88b7321db80ab0">CV</h1>
+
+<pre><code>from sklearn.model_selection import StratifiedKFold
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=123)
+X_train = np.zeros(20, 5)
+y_train = np.zeros(20)
+
+for train_idx, valid_idx in cv.split(X_train, y_train):
+    print(train_idx, valid_idx)
+    ...
+    losses.append(loss)
+
+cv_loss = np.mean(losses)
+</code></pre>
+
+<h1 id="結果のアンサンブル:61f9dc3dc817dd778c88b7321db80ab0">結果のアンサンブル</h1>
+
+<pre><code>res1 = pd.read_csv('../method1/submission.csv')
+res2 = pd.read_csv('../method2/submission.csv')
+res3 = pd.read_csv('../method3/submission.csv')
+
+b1 = res1.copy()
+col = res1.columns
+
+col = col.tolist()
+col.remove('id')
+for i in col:
+    b1[i] = (2 * res1[i]  + 2 * res2[i] + 4 * res3[i]) / 6.0
+
+b1.to_csv('submission.csv', index=False)
+</code></pre>
+
+<h1 id="jupyter-notebook上でcsvの確認とダウンロード:61f9dc3dc817dd778c88b7321db80ab0">Jupyter Notebook上でCSVの確認とダウンロード</h1>
+
+<p>実行するとディレクトリ内のファイル一覧が表示されて、クリックすればダウンロード出来るはず</p>
+
+<pre><code>from IPython.display import FileLinks
+FileLinks(DATA_DIR)
+</code></pre>
 
       
       
@@ -174,10 +218,10 @@ sys.excepthook = hook
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/word-vector-api/" rel="prev">word vectorのような読み込みが重たいやつをWebAPI化して軽量化</a></span>
+      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/gas/" rel="prev">GASで作る日常ツールあれこれ</a></span>
     
     
-      <span class="next"><a href="http://blog.hassaku-labs.com/post/gas/" rel="next">GASで作る日常ツールあれこれ</a> &rarr;</span>
+      <span class="next"><a href="http://blog.hassaku-labs.com/post/ai-ideas/" rel="next">人工知能実現のための要素技術アイデア</a> &rarr;</span>
     
   </nav>
 

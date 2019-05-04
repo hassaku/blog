@@ -6,8 +6,141 @@
     <description>Recent content in Python on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 25 Feb 2019 10:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 03 May 2019 10:00:00 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>データ分析コンペとかによくやる作業</title>
+      <link>http://blog.hassaku-labs.com/post/data-comp-memo/</link>
+      <pubDate>Fri, 03 May 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/data-comp-memo/</guid>
+      <description>
+
+&lt;h1 id=&#34;大きいデータの読み込み:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;大きいデータの読み込み&lt;/h1&gt;
+
+&lt;p&gt;daskを使って並列処理&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import dask.dataframe as ddf
+import dask.multiprocessing
+
+df = ddf.read_csv(&#39;train_data.csv&#39;)
+df = df.compute(get=dask.multiprocessing.get)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;eda:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;EDA&lt;/h1&gt;
+
+&lt;p&gt;データに関する簡単な統計情報確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import pandas_profiling as pdp
+pdp.ProfileReport(df)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;データの相関を確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import seaborn as sns
+sns.pairplot(df, hue=&amp;quot;target&amp;quot;, diag_kind=&amp;quot;kde&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;前処理:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;前処理&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;欠損値の補完&lt;/li&gt;
+&lt;li&gt;外れ値の削除&lt;/li&gt;
+&lt;li&gt;カテゴリ変数の扱い
+
+&lt;ul&gt;
+&lt;li&gt;one hot encoding （次元増える系）&lt;/li&gt;
+&lt;li&gt;どれかひとつだけ1になるようなスパースなベクトル表現&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;  city_dummies = pd.get_dummies(df[&amp;quot;city&amp;quot;], prefix=&amp;quot;city&amp;quot;)
+  df.drop([&amp;quot;city&amp;quot;], axis=1, inplca=True)
+  df = df.join(city_dummies)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;count encoding （次元増えない系）
+
+&lt;ul&gt;
+&lt;li&gt;カテゴリ変数の出現回数（あるいは率）を値とするような表現&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;  df[&#39;count_city&#39;] = df.groupby(&#39;city&#39;)[&#39;target&#39;].transform(&#39;count&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;並列処理&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;  import numpy as np
+  import pandas as pd
+  #import multiprocessing as mp  # impossible to use lambda with pickle
+  import pathos.multiprocessing as mp  # dill is used inside instead of pickle.
+
+  def split_parallel(df, num_split, map_func):
+      with mp.Pool(num_split) as p:
+          df_split = np.array_split(df, num_split*2)
+          result = p.map(map_func, df_split)
+      return pd.concat(result)
+
+  NUM_PARALLELS = 3
+  df[&amp;quot;new_col&amp;quot;] = split_parallel(df, NUM_PARALLELS, lambda x: x[&amp;quot;col1&amp;quot;] + x[&amp;quot;col2&amp;quot;])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;cv:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;CV&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;from sklearn.model_selection import StratifiedKFold
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=123)
+X_train = np.zeros(20, 5)
+y_train = np.zeros(20)
+
+for train_idx, valid_idx in cv.split(X_train, y_train):
+    print(train_idx, valid_idx)
+    ...
+    losses.append(loss)
+
+cv_loss = np.mean(losses)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;結果のアンサンブル:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;結果のアンサンブル&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;res1 = pd.read_csv(&#39;../method1/submission.csv&#39;)
+res2 = pd.read_csv(&#39;../method2/submission.csv&#39;)
+res3 = pd.read_csv(&#39;../method3/submission.csv&#39;)
+
+b1 = res1.copy()
+col = res1.columns
+
+col = col.tolist()
+col.remove(&#39;id&#39;)
+for i in col:
+    b1[i] = (2 * res1[i]  + 2 * res2[i] + 4 * res3[i]) / 6.0
+
+b1.to_csv(&#39;submission.csv&#39;, index=False)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;jupyter-notebook上でcsvの確認とダウンロード:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;Jupyter Notebook上でCSVの確認とダウンロード&lt;/h1&gt;
+
+&lt;p&gt;実行するとディレクトリ内のファイル一覧が表示されて、クリックすればダウンロード出来るはず&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from IPython.display import FileLinks
+FileLinks(DATA_DIR)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>人工知能実現のための要素技術アイデア</title>
+      <link>http://blog.hassaku-labs.com/post/ai-ideas/</link>
+      <pubDate>Fri, 03 May 2019 10:00:00 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/ai-ideas/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>IDE使えないときの例外時デバッグ</title>
