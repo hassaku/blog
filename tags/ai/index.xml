@@ -17,7 +17,8 @@
       <guid>http://blog.hassaku-labs.com/post/machine-learning-project/</guid>
       <description>
 
-&lt;p&gt;まずはざっくり箇条書き。多くを説明すべきところは、そのうち別の記事にするかも。&lt;/p&gt;
+&lt;p&gt;まずはざっくり箇条書き。多くを説明すべきところは、そのうち別の記事にするかも。
+あとあくまでも、ある分野での機械学習案件における知見で、世の中一般に関して確立した見方はまだ無いと思われる。&lt;/p&gt;
 
 &lt;h1 id=&#34;全体的な雰囲気:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;全体的な雰囲気&lt;/h1&gt;
 
@@ -42,12 +43,17 @@
 &lt;li&gt;仮説の検討
 
 &lt;ul&gt;
-&lt;li&gt;人がちょっと考えて解ける問題は、入出力前提が同じであれば、（たぶん）機械学習で解ける&lt;/li&gt;
+&lt;li&gt;人がちょっと考えて解ける問題は、入出力前提が同じであれば、（たぶん）機械学習で解ける
+
+&lt;ul&gt;
 &lt;li&gt;例）加速度センサーのデータを見て、走っているか歩いているかを判定する&lt;/li&gt;
 &lt;li&gt;データが十分にあればDeep Learningを試しても良いだろう&lt;/li&gt;
 &lt;li&gt;データが少なかったり、なんとなくルールが見えているような場合は、適切な特徴量エンジニアリングと判別器で解けるだろう&lt;/li&gt;
 &lt;li&gt;仮説検討時の思考過程を参考にすること&lt;/li&gt;
-&lt;li&gt;人が考えてもなんだか分からない場合&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;人が考えてもなんだか分からない場合
+
+&lt;ul&gt;
 &lt;li&gt;例）加速度センサーのデータを見て、病気かどうか判定する&lt;/li&gt;
 &lt;li&gt;他のデータを使えるか相談したり、そもそも病気ではないものを判定するタスクに置き換えられないか検討するといいかも&lt;/li&gt;
 &lt;li&gt;機械学習精度どうこうの前に、そもそも実現性の検証が必要となり、だいたいコスパ悪い
@@ -56,12 +62,18 @@
 &lt;li&gt;一方で実現できたときは、優位性が認められることになるので、挑戦することは否定しない（置かれている状況次第）&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;データセットの準備
 
 &lt;ul&gt;
-&lt;li&gt;学習用、検証用、評価用&lt;/li&gt;
+&lt;li&gt;学習用、検証用、評価用
+
+&lt;ul&gt;
 &lt;li&gt;検証用、評価用データの抽出には時間をかけて良い&lt;/li&gt;
-&lt;li&gt;データ不足や偏り&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;データ不足や偏り
+
+&lt;ul&gt;
 &lt;li&gt;モデル選択・パラメータチューニング用に評価用データを使うことがないように十分注意すること
 
 &lt;ul&gt;
@@ -74,6 +86,7 @@
 &lt;li&gt;適当に選んでいわゆるleakageがあったりすると悲惨&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;評価尺度の定義
 
 &lt;ul&gt;
@@ -84,8 +97,11 @@
 
 &lt;ul&gt;
 &lt;li&gt;適切なデータセットと評価尺度が用意できれば、ほぼ終わったも同然（？）&lt;/li&gt;
-&lt;li&gt;このあとはここまで色々頑張ってきた準備に対する、収穫の時期となるだろう&lt;/li&gt;
+&lt;li&gt;このあとはここまで色々頑張ってきた準備に対する、収穫の時期となるだろう
+
+&lt;ul&gt;
 &lt;li&gt;変な話、機械学習技術について精通した人が、機械学習未満のここまでをちゃんと設計出来ていると良いかも&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;特徴抽出の検討
 
@@ -106,10 +122,17 @@
 &lt;li&gt;評価結果の課題分析
 
 &lt;ul&gt;
-&lt;li&gt;underfitting&lt;/li&gt;
+&lt;li&gt;underfitting
+
+&lt;ul&gt;
 &lt;li&gt;表現能力を上げる。Deep Learningだったら層や素子数、その他だったら特徴量増やしたり&lt;/li&gt;
-&lt;li&gt;overfitting&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;overfitting
+
+&lt;ul&gt;
 &lt;li&gt;正則化とかデータ増やしたりとか&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;具体的にうまくいかないデータを見たり、クラスタリング・可視化してみたりして、仮説を立てることはここでも大事&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;システム統合
 
@@ -221,9 +244,12 @@
 &lt;li&gt;コンセプト
 
 &lt;ul&gt;
-&lt;li&gt;心を感じるような人工的な知能を実現すること&lt;/li&gt;
+&lt;li&gt;心を感じるような人工的な知能を実現すること
+
+&lt;ul&gt;
 &lt;li&gt;条件反射ではない、なにか考えているような印象を与えてくれる&lt;/li&gt;
 &lt;li&gt;常に学習し続けていて、変化を伴う&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;「疲れている」と伝えれば、それに共感してくれたり、自身のことを話してくれたりするイメージ&lt;/li&gt;
 &lt;li&gt;知りたいことが返ってこなくても良い。むしろ何か見えないダイナミクスを感じさせてくれる挙動が大事&lt;/li&gt;
 &lt;li&gt;知識の抽出だけではなく、知識の使い方をも自律的に発見する&lt;/li&gt;
@@ -258,18 +284,27 @@
 &lt;li&gt;常に学習し続けても破綻しない&lt;/li&gt;
 &lt;li&gt;誤差逆伝搬だと追加学習や並列学習に難があるので、Equilibrium Propagationのようなローカルな方法が望ましい&lt;/li&gt;
 &lt;li&gt;誤差を求めるための正解値みたいなものは基本的に明示されず、自身の行動を決める上で、その情報表現が適切か不適切かを指標とする&lt;/li&gt;
-&lt;li&gt;言い換えると、全ては時系列の予測学習であり、予測が出来るように学習していくことが基本的な戦略&lt;/li&gt;
+&lt;li&gt;言い換えると、全ては時系列の予測学習であり、予測が出来るように学習していくことが基本的な戦略
+
+&lt;ul&gt;
 &lt;li&gt;時系列の先が同じであれば、表現は近くなるといった、CBOWとかskip-gramのイメージにも近い&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;記憶&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;大脳皮質の役割で、まだあまり議論されていないように思える&lt;/li&gt;
-&lt;li&gt;hopfield型NNのようにアトラクタを有する力学系で実現される&lt;/li&gt;
+&lt;li&gt;hopfield型NNのようにアトラクタを有する力学系で実現される
+
+&lt;ul&gt;
 &lt;li&gt;追加学習をしても過去の記憶は壊れない。ただし、想起しづらくなることはある&lt;/li&gt;
-&lt;li&gt;AからBの予測を単に関数近似ではなく、神経力学系上の時間発展が可能とする連想記憶によって実現される&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;AからBの予測を単に関数近似ではなく、神経力学系上の時間発展が可能とする連想記憶によって実現される
+
+&lt;ul&gt;
 &lt;li&gt;これによりA-&amp;gt;B、B-&amp;gt;Cを個別に学習しておくだけで、A-&amp;gt;Cの三段論法的な表現も自動的に獲得される&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;様々な角度の連想記憶は、力学系の部分空間の切り替えによって動的に制御される&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 
