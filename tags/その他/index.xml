@@ -17,8 +17,9 @@
       <guid>http://blog.hassaku-labs.com/post/machine-learning-project/</guid>
       <description>
 
-&lt;p&gt;まずはざっくり箇条書き。多くを説明すべきところは、そのうち別の記事にするかも。
-あとあくまでも、ある分野での機械学習案件における知見で、世の中一般に関して確立した見方はまだ無いと思われる。&lt;/p&gt;
+&lt;p&gt;まずはざっくり箇条書き。もっと説明すべきところは、そのうち別の記事にするかも。&lt;/p&gt;
+
+&lt;p&gt;あと本記事内容は、ある分野での機械学習案件における知見であって、そこまで汎用的なものではないかもしれない。&lt;/p&gt;
 
 &lt;h1 id=&#34;全体的な雰囲気:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;全体的な雰囲気&lt;/h1&gt;
 
@@ -203,7 +204,7 @@
 &lt;li&gt;共変量シフト適応&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ&lt;/h1&gt;
+&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&#34;&gt;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&lt;/a&gt;&lt;/p&gt;
 
