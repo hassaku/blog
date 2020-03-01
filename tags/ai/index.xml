@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ai on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/ai/</link>
+    <link>http://blog.hassaku-labs.com/tags/ai/index.xml</link>
     <description>Recent content in Ai on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 05 May 2019 10:00:00 +0900</lastBuildDate>
+    <copyright>Written by hassaku</copyright>
     <atom:link href="http://blog.hassaku-labs.com/tags/ai/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -21,13 +21,13 @@
 
 &lt;p&gt;あと本記事内容は、ある分野での機械学習案件における知見であって、そこまで汎用的なものではないかもしれない。&lt;/p&gt;
 
-&lt;h1 id=&#34;全体的な雰囲気:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;全体的な雰囲気&lt;/h1&gt;
+&lt;h1 id=&#34;全体的な雰囲気&#34;&gt;全体的な雰囲気&lt;/h1&gt;
 
 &lt;p&gt;機械学習技術が必要になる仕事は全体の２割程度。よって、機械学習技術に精通していなくても活躍できる場面は多い。
 むしろ、AutoMLや機械学習部分を自動化するようなフレームワークやツールが増えてきており、その他８割の方が今後は重要になるとも言える。
 もちろん、その他作業を効率良く進めるためには、詳しいメンバーがいるに越したことはない。&lt;/p&gt;
 
-&lt;h1 id=&#34;だいたいの流れ:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;だいたいの流れ&lt;/h1&gt;
+&lt;h1 id=&#34;だいたいの流れ&#34;&gt;だいたいの流れ&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;解こうとしている課題の理解
@@ -149,7 +149,7 @@
 
 &lt;p&gt;各プロセスで、なにか壁にぶつかったら、必要なところまで戻り、を繰り返すのが機械学習リサーチエンジニアの主な仕事（たぶん）。&lt;/p&gt;
 
-&lt;h1 id=&#34;進捗が芳しくない状況でありそうなケース:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;進捗が芳しくない状況でありそうなケース&lt;/h1&gt;
+&lt;h1 id=&#34;進捗が芳しくない状況でありそうなケース&#34;&gt;進捗が芳しくない状況でありそうなケース&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;パラメータチューニングばかりやってる&lt;/li&gt;
@@ -161,7 +161,7 @@
 &lt;li&gt;etc&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;一時的なサポートメンバーに仕事を任せるために考えること:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一時的なサポートメンバーに仕事を任せるために考えること&lt;/h1&gt;
+&lt;h1 id=&#34;一時的なサポートメンバーに仕事を任せるために考えること&#34;&gt;一時的なサポートメンバーに仕事を任せるために考えること&lt;/h1&gt;
 
 &lt;p&gt;いま一番頭を悩ましている部分&amp;hellip;&lt;/p&gt;
 
@@ -175,7 +175,7 @@
 &lt;li&gt;手順化したようなところは自動化出来てしまったりするので悩ましかったりもする&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;進捗ミーティングとかで共有すべき内容:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;進捗ミーティングとかで共有すべき内容&lt;/h1&gt;
+&lt;h1 id=&#34;進捗ミーティングとかで共有すべき内容&#34;&gt;進捗ミーティングとかで共有すべき内容&lt;/h1&gt;
 
 &lt;p&gt;やったことではなく、出来たことの説明を優先すべき&lt;/p&gt;
 
@@ -192,7 +192,7 @@
 &lt;li&gt;残課題&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;場合によっては活きてくるアドバンスドな-手法:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;場合によっては活きてくるアドバンスドな(?)手法&lt;/h1&gt;
+&lt;h1 id=&#34;場合によっては活きてくるアドバンスドな-手法&#34;&gt;場合によっては活きてくるアドバンスドな(?)手法&lt;/h1&gt;
 
 &lt;p&gt;まずはトイタスクを用意して、原理検証することが大事&lt;/p&gt;
 
@@ -204,7 +204,7 @@
 &lt;li&gt;共変量シフト適応&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）&lt;/h1&gt;
+&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&#34;&gt;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&lt;/a&gt;&lt;/p&gt;
 
@@ -239,7 +239,7 @@
 
 &lt;p&gt;ただの夢想です。実現するには時間も考えも足りないので、忘れないうちに言語化しておきます。&lt;/p&gt;
 
-&lt;h1 id=&#34;実現したいこと:781c8ffbbe578c698fac6a5653ee4ea2&#34;&gt;実現したいこと&lt;/h1&gt;
+&lt;h1 id=&#34;実現したいこと&#34;&gt;実現したいこと&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;コンセプト
@@ -264,7 +264,7 @@
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;要素技術:781c8ffbbe578c698fac6a5653ee4ea2&#34;&gt;要素技術&lt;/h1&gt;
+&lt;h1 id=&#34;要素技術&#34;&gt;要素技術&lt;/h1&gt;
 
 &lt;p&gt;情報表現も記憶も全ては動的であり、それを制御するための力学系を有すること&lt;/p&gt;
 
@@ -338,7 +338,7 @@
 
 &lt;p&gt;こんな感じのやつがターミナル上で動く。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;import curses
 import random
@@ -453,11 +453,11 @@ if __name__ == &#39;__main__&#39;:
 
 &lt;p&gt;いくつか想定している内容のうち、今回は単語ベクトルのペアを連想記憶する基本的なタスクを検証する。&lt;/p&gt;
 
-&lt;h1 id=&#34;検証用コード:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証用コード&lt;/h1&gt;
+&lt;h1 id=&#34;検証用コード&#34;&gt;検証用コード&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/associative-word-vector/tree/blog-1&#34;&gt;https://github.com/hassaku/associative-word-vector/tree/blog-1&lt;/a&gt;&lt;/p&gt;
 
-&lt;h1 id=&#34;検証内容:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証内容&lt;/h1&gt;
+&lt;h1 id=&#34;検証内容&#34;&gt;検証内容&lt;/h1&gt;
 
 &lt;p&gt;単語ベクトルは、Github上のREADMEに書いてあるように、東北大学 乾・岡崎研究室で公開されている学習済みのものを利用させて頂いた。&lt;/p&gt;
 
@@ -512,7 +512,7 @@ que: 馬     target: 走る through: [&#39;馬&#39;, &#39;牛&#39;, &#39;走る&
 que: 鯛     target: 泳ぐ through: [&#39;鯛&#39;, &#39;鯉&#39;, &#39;泳ぐ&#39;]
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;さいごに:92074d8141b5d0b357587f68abb31ec5&#34;&gt;さいごに&lt;/h1&gt;
+&lt;h1 id=&#34;さいごに&#34;&gt;さいごに&lt;/h1&gt;
 
 &lt;p&gt;今回は簡単な事例であったものの、まだあまり手を付けられていないような、全結合型神経回路網を用いた言語処理の可能性を検証した。
 全結合型の特徴でもあるエネルギー的な安定状態に記憶を埋め込むことにより、人のように強力な汎化能力をもった記憶を、安定して追加学習できる。

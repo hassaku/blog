@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Machine Learning on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/machine-learning/</link>
+    <link>http://blog.hassaku-labs.com/tags/machine-learning/index.xml</link>
     <description>Recent content in Machine Learning on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 04 Mar 2017 04:08:51 +0900</lastBuildDate>
+    <copyright>Written by hassaku</copyright>
     <atom:link href="http://blog.hassaku-labs.com/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -30,7 +30,7 @@ Bayesian Optimizationのアプローチは、直感的にも効率良さそう�
 
 &lt;p&gt;&lt;a href=&#34;http://hyperopt.github.io/hyperopt/&#34;&gt;Hyperopt&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;簡単な使い方:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;簡単な使い方&lt;/h2&gt;
+&lt;h2 id=&#34;簡単な使い方&#34;&gt;簡単な使い方&lt;/h2&gt;
 
 &lt;p&gt;以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。&lt;/p&gt;
 
@@ -62,7 +62,7 @@ best = fmin(objective,  hyperopt_parameters, algo=tpe.suggest, max_evals=300, tr
 print best
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;パラメータサーチの様子を表示:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
+&lt;h2 id=&#34;パラメータサーチの様子を表示&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;# 上記コードの続き
 
@@ -102,7 +102,7 @@ for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
 下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
 目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
 
-&lt;h4 id=&#34;追記:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;追記&lt;/h4&gt;
+&lt;h4 id=&#34;追記&#34;&gt;追記&lt;/h4&gt;
 
 &lt;p&gt;バンディットベースのものが出たらしい。使い方もhyperopt同様に簡単そうなので、パラメータチューニング時の候補にしたい。&lt;/p&gt;
 

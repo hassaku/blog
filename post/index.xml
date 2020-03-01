@@ -2,12 +2,23 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/post/</link>
+    <link>http://blog.hassaku-labs.com/post/index.xml</link>
     <description>Recent content in Posts on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 05 May 2019 10:00:00 +0900</lastBuildDate>
+    <copyright>Written by hassaku</copyright>
+    <lastBuildDate>Sun, 01 Mar 2020 17:17:46 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Heroku上でsklearnを動かし、flaskでAPI化</title>
+      <link>http://blog.hassaku-labs.com/post/simple-ml-api-heroku/</link>
+      <pubDate>Sun, 01 Mar 2020 17:17:46 +0900</pubDate>
+      
+      <guid>http://blog.hassaku-labs.com/post/simple-ml-api-heroku/</guid>
+      <description>&lt;p&gt;WIP。ブログ更新環境の移行中テスト。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>機械学習技術を使った実際の研究開発プロジェクトについて</title>
@@ -21,13 +32,13 @@
 
 &lt;p&gt;あと本記事内容は、ある分野での機械学習案件における知見であって、そこまで汎用的なものではないかもしれない。&lt;/p&gt;
 
-&lt;h1 id=&#34;全体的な雰囲気:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;全体的な雰囲気&lt;/h1&gt;
+&lt;h1 id=&#34;全体的な雰囲気&#34;&gt;全体的な雰囲気&lt;/h1&gt;
 
 &lt;p&gt;機械学習技術が必要になる仕事は全体の２割程度。よって、機械学習技術に精通していなくても活躍できる場面は多い。
 むしろ、AutoMLや機械学習部分を自動化するようなフレームワークやツールが増えてきており、その他８割の方が今後は重要になるとも言える。
 もちろん、その他作業を効率良く進めるためには、詳しいメンバーがいるに越したことはない。&lt;/p&gt;
 
-&lt;h1 id=&#34;だいたいの流れ:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;だいたいの流れ&lt;/h1&gt;
+&lt;h1 id=&#34;だいたいの流れ&#34;&gt;だいたいの流れ&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;解こうとしている課題の理解
@@ -149,7 +160,7 @@
 
 &lt;p&gt;各プロセスで、なにか壁にぶつかったら、必要なところまで戻り、を繰り返すのが機械学習リサーチエンジニアの主な仕事（たぶん）。&lt;/p&gt;
 
-&lt;h1 id=&#34;進捗が芳しくない状況でありそうなケース:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;進捗が芳しくない状況でありそうなケース&lt;/h1&gt;
+&lt;h1 id=&#34;進捗が芳しくない状況でありそうなケース&#34;&gt;進捗が芳しくない状況でありそうなケース&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;パラメータチューニングばかりやってる&lt;/li&gt;
@@ -161,7 +172,7 @@
 &lt;li&gt;etc&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;一時的なサポートメンバーに仕事を任せるために考えること:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一時的なサポートメンバーに仕事を任せるために考えること&lt;/h1&gt;
+&lt;h1 id=&#34;一時的なサポートメンバーに仕事を任せるために考えること&#34;&gt;一時的なサポートメンバーに仕事を任せるために考えること&lt;/h1&gt;
 
 &lt;p&gt;いま一番頭を悩ましている部分&amp;hellip;&lt;/p&gt;
 
@@ -175,7 +186,7 @@
 &lt;li&gt;手順化したようなところは自動化出来てしまったりするので悩ましかったりもする&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;進捗ミーティングとかで共有すべき内容:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;進捗ミーティングとかで共有すべき内容&lt;/h1&gt;
+&lt;h1 id=&#34;進捗ミーティングとかで共有すべき内容&#34;&gt;進捗ミーティングとかで共有すべき内容&lt;/h1&gt;
 
 &lt;p&gt;やったことではなく、出来たことの説明を優先すべき&lt;/p&gt;
 
@@ -192,7 +203,7 @@
 &lt;li&gt;残課題&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;場合によっては活きてくるアドバンスドな-手法:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;場合によっては活きてくるアドバンスドな(?)手法&lt;/h1&gt;
+&lt;h1 id=&#34;場合によっては活きてくるアドバンスドな-手法&#34;&gt;場合によっては活きてくるアドバンスドな(?)手法&lt;/h1&gt;
 
 &lt;p&gt;まずはトイタスクを用意して、原理検証することが大事&lt;/p&gt;
 
@@ -204,7 +215,7 @@
 &lt;li&gt;共変量シフト適応&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）&lt;/h1&gt;
+&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&#34;&gt;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&lt;/a&gt;&lt;/p&gt;
 
@@ -237,7 +248,7 @@
       <guid>http://blog.hassaku-labs.com/post/data-comp-memo/</guid>
       <description>
 
-&lt;h1 id=&#34;大きいデータの読み込み:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;大きいデータの読み込み&lt;/h1&gt;
+&lt;h1 id=&#34;大きいデータの読み込み&#34;&gt;大きいデータの読み込み&lt;/h1&gt;
 
 &lt;p&gt;daskを使って並列処理&lt;/p&gt;
 
@@ -248,7 +259,7 @@ df = ddf.read_csv(&#39;train_data.csv&#39;)
 df = df.compute(get=dask.multiprocessing.get)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;eda:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;EDA&lt;/h1&gt;
+&lt;h1 id=&#34;eda&#34;&gt;EDA&lt;/h1&gt;
 
 &lt;p&gt;データに関する簡単な統計情報確認&lt;/p&gt;
 
@@ -262,7 +273,7 @@ pdp.ProfileReport(df)
 sns.pairplot(df, hue=&amp;quot;target&amp;quot;, diag_kind=&amp;quot;kde&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;前処理:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;前処理&lt;/h1&gt;
+&lt;h1 id=&#34;前処理&#34;&gt;前処理&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;欠損値の補完&lt;/li&gt;
@@ -271,85 +282,82 @@ sns.pairplot(df, hue=&amp;quot;target&amp;quot;, diag_kind=&amp;quot;kde&amp;quo
 
 &lt;ul&gt;
 &lt;li&gt;one hot encoding （次元増える系）&lt;/li&gt;
-&lt;li&gt;どれかひとつだけ1になるようなスパースなベクトル表現&lt;/li&gt;
+&lt;li&gt;どれかひとつだけ1になるようなスパースなベクトル表現
+&lt;code&gt;
+city_dummies = pd.get_dummies(df[&amp;quot;city&amp;quot;], prefix=&amp;quot;city&amp;quot;)
+df.drop([&amp;quot;city&amp;quot;], axis=1, inplca=True)
+df = df.join(city_dummies)
+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;count encoding （次元増えない系）&lt;/li&gt;
+&lt;li&gt;カテゴリ変数の出現回数（あるいは率）を値とするような表現
+&lt;code&gt;
+df[&#39;count_city&#39;] = df.groupby(&#39;city&#39;)[&#39;target&#39;].transform(&#39;count&#39;)
+&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;並列処理
+```
+import numpy as np
+import pandas as pd
+#import multiprocessing as mp  # impossible to use lambda with pickle
+import pathos.multiprocessing as mp  # dill is used inside instead of pickle.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;pre&gt;&lt;code&gt;  city_dummies = pd.get_dummies(df[&amp;quot;city&amp;quot;], prefix=&amp;quot;city&amp;quot;)
-  df.drop([&amp;quot;city&amp;quot;], axis=1, inplca=True)
-  df = df.join(city_dummies)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;count encoding （次元増えない系）
-
-&lt;ul&gt;
-&lt;li&gt;カテゴリ変数の出現回数（あるいは率）を値とするような表現&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;  df[&#39;count_city&#39;] = df.groupby(&#39;city&#39;)[&#39;target&#39;].transform(&#39;count&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;並列処理&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;  import numpy as np
-  import pandas as pd
-  #import multiprocessing as mp  # impossible to use lambda with pickle
-  import pathos.multiprocessing as mp  # dill is used inside instead of pickle.
-
-  def split_parallel(df, num_split, map_func):
+&lt;p&gt;def split_parallel(df, num_split, map_func):
       with mp.Pool(num_split) as p:
           df_split = np.array_split(df, num_split*2)
           result = p.map(map_func, df_split)
-      return pd.concat(result)
+      return pd.concat(result)&lt;/p&gt;
 
-  NUM_PARALLELS = 3
-  df[&amp;quot;new_col&amp;quot;] = split_parallel(df, NUM_PARALLELS, lambda x: x[&amp;quot;col1&amp;quot;] + x[&amp;quot;col2&amp;quot;])
+&lt;p&gt;NUM_PARALLELS = 3
+  df[&amp;ldquo;new_col&amp;rdquo;] = split_parallel(df, NUM_PARALLELS, lambda x: x[&amp;ldquo;col1&amp;rdquo;] + x[&amp;ldquo;col2&amp;rdquo;])&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# CV
+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;cv:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;CV&lt;/h1&gt;
+&lt;p&gt;from sklearn.model_selection import StratifiedKFold&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;from sklearn.model_selection import StratifiedKFold
-
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=123)
+&lt;p&gt;cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=123)
 X_train = np.zeros(20, 5)
-y_train = np.zeros(20)
+y_train = np.zeros(20)&lt;/p&gt;
 
-for train_idx, valid_idx in cv.split(X_train, y_train):
+&lt;p&gt;for train_idx, valid_idx in cv.split(X_train, y_train):
     print(train_idx, valid_idx)
-    ...
-    losses.append(loss)
+    &amp;hellip;
+    losses.append(loss)&lt;/p&gt;
 
-cv_loss = np.mean(losses)
+&lt;p&gt;cv_loss = np.mean(losses)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# 結果のアンサンブル
+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;結果のアンサンブル:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;結果のアンサンブル&lt;/h1&gt;
+&lt;p&gt;res1 = pd.read_csv(&amp;lsquo;../method1/submission.csv&amp;rsquo;)
+res2 = pd.read_csv(&amp;lsquo;../method2/submission.csv&amp;rsquo;)
+res3 = pd.read_csv(&amp;lsquo;../method3/submission.csv&amp;rsquo;)&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;res1 = pd.read_csv(&#39;../method1/submission.csv&#39;)
-res2 = pd.read_csv(&#39;../method2/submission.csv&#39;)
-res3 = pd.read_csv(&#39;../method3/submission.csv&#39;)
+&lt;p&gt;b1 = res1.copy()
+col = res1.columns&lt;/p&gt;
 
-b1 = res1.copy()
-col = res1.columns
-
-col = col.tolist()
-col.remove(&#39;id&#39;)
+&lt;p&gt;col = col.tolist()
+col.remove(&amp;lsquo;id&amp;rsquo;)
 for i in col:
-    b1[i] = (2 * res1[i]  + 2 * res2[i] + 4 * res3[i]) / 6.0
+    b1[i] = (2 * res1[i]  + 2 * res2[i] + 4 * res3[i]) / 6.0&lt;/p&gt;
 
-b1.to_csv(&#39;submission.csv&#39;, index=False)
+&lt;p&gt;b1.to_csv(&amp;lsquo;submission.csv&amp;rsquo;, index=False)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# Jupyter Notebook上でCSVの確認とダウンロード
+
+実行するとディレクトリ内のファイル一覧が表示されて、クリックすればダウンロード出来るはず
+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;jupyter-notebook上でcsvの確認とダウンロード:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;Jupyter Notebook上でCSVの確認とダウンロード&lt;/h1&gt;
-
-&lt;p&gt;実行するとディレクトリ内のファイル一覧が表示されて、クリックすればダウンロード出来るはず&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;from IPython.display import FileLinks
+&lt;p&gt;from IPython.display import FileLinks
 FileLinks(DATA_DIR)
-&lt;/code&gt;&lt;/pre&gt;
+```&lt;/p&gt;
 </description>
     </item>
     
@@ -363,7 +371,7 @@ FileLinks(DATA_DIR)
 
 &lt;p&gt;ただの夢想です。実現するには時間も考えも足りないので、忘れないうちに言語化しておきます。&lt;/p&gt;
 
-&lt;h1 id=&#34;実現したいこと:781c8ffbbe578c698fac6a5653ee4ea2&#34;&gt;実現したいこと&lt;/h1&gt;
+&lt;h1 id=&#34;実現したいこと&#34;&gt;実現したいこと&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;コンセプト
@@ -388,7 +396,7 @@ FileLinks(DATA_DIR)
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;要素技術:781c8ffbbe578c698fac6a5653ee4ea2&#34;&gt;要素技術&lt;/h1&gt;
+&lt;h1 id=&#34;要素技術&#34;&gt;要素技術&lt;/h1&gt;
 
 &lt;p&gt;情報表現も記憶も全ては動的であり、それを制御するための力学系を有すること&lt;/p&gt;
 
@@ -457,14 +465,14 @@ FileLinks(DATA_DIR)
       <guid>http://blog.hassaku-labs.com/post/gas/</guid>
       <description>
 
-&lt;h1 id=&#34;基本-google-apps-scriptの作り方:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】Google Apps Scriptの作り方&lt;/h1&gt;
+&lt;h1 id=&#34;基本-google-apps-scriptの作り方&#34;&gt;【基本】Google Apps Scriptの作り方&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;スプレッドシート作成&lt;/li&gt;
 &lt;li&gt;ツール - スクリプトエディタ&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;基本-webapi化の共通事項:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】WebAPI化の共通事項&lt;/h1&gt;
+&lt;h1 id=&#34;基本-webapi化の共通事項&#34;&gt;【基本】WebAPI化の共通事項&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;doPostという関数&lt;/li&gt;
@@ -473,7 +481,7 @@ FileLinks(DATA_DIR)
 &lt;li&gt;アクセス出来るユーザは全員（匿名）にしておくこと&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;基本-簡単なデータストア先として活用:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】簡単なデータストア先として活用&lt;/h1&gt;
+&lt;h1 id=&#34;基本-簡単なデータストア先として活用&#34;&gt;【基本】簡単なデータストア先として活用&lt;/h1&gt;
 
 &lt;p&gt;WiFi接続のセンサモジュールとか、ちょっとしたものからデータを記録していきたいときに利用&lt;/p&gt;
 
@@ -490,7 +498,7 @@ function doPost(e) {
 
 &lt;p&gt;スプレッドシートにデータが追記されていくので、それをCSV化してデータ分析するなり、簡単に可視化するなり。&lt;/p&gt;
 
-&lt;h1 id=&#34;基本-slack通知の共通部分:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】Slack通知の共通部分&lt;/h1&gt;
+&lt;h1 id=&#34;基本-slack通知の共通部分&#34;&gt;【基本】Slack通知の共通部分&lt;/h1&gt;
 
 &lt;p&gt;以下の各事例でも頻繁に使われてる&lt;/p&gt;
 
@@ -527,7 +535,7 @@ function postMessage(channel_name, message) {
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;googleドキュメント-スライド定期複製:ade2431a67148677c334b673f0d1d121&#34;&gt;Googleドキュメント・スライド定期複製&lt;/h1&gt;
+&lt;h1 id=&#34;googleドキュメント-スライド定期複製&#34;&gt;Googleドキュメント・スライド定期複製&lt;/h1&gt;
 
 &lt;p&gt;定例ミーティングなどで、毎回人手で過去分議事録をコピーして、事前メモ用ドキュメントを作成しているケースがあったので自動化した。
 コピー元は、前回分とかではなく、毎回決まったテンプレートとかを指定しても良い。&lt;/p&gt;
@@ -584,7 +592,7 @@ function main() {
 
 &lt;p&gt;編集 - 現在のプロジェクトのトリガーからmain指定すれば、定期実行させることが出来る&lt;/p&gt;
 
-&lt;h1 id=&#34;ドライブ更新通知:ade2431a67148677c334b673f0d1d121&#34;&gt;ドライブ更新通知&lt;/h1&gt;
+&lt;h1 id=&#34;ドライブ更新通知&#34;&gt;ドライブ更新通知&lt;/h1&gt;
 
 &lt;p&gt;ドライブにファイルが追加されたりしたときにSlack通知&lt;/p&gt;
 
@@ -650,7 +658,7 @@ function main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;slack新規チャンネル通知:ade2431a67148677c334b673f0d1d121&#34;&gt;Slack新規チャンネル通知&lt;/h1&gt;
+&lt;h1 id=&#34;slack新規チャンネル通知&#34;&gt;Slack新規チャンネル通知&lt;/h1&gt;
 
 &lt;p&gt;チャンネルが乱立し始めた頃、新しくチャンネルが出来たら通知して欲しいとの要望から作成した。
 予めconfigという空シートを作成しておくこと。&lt;/p&gt;
@@ -687,7 +695,7 @@ function main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;環境センサ通知ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;環境センサ通知ボット&lt;/h1&gt;
+&lt;h1 id=&#34;環境センサ通知ボット&#34;&gt;環境センサ通知ボット&lt;/h1&gt;
 
 &lt;p&gt;オフィスに人が増えてきて、場所によっては酸素が薄いみたいな話がチラホラ聞こえてきた。
 なので、そのへんに転がってた（？）Netatmoをばら撒いて、二酸化炭素濃度が上がってきたら通知するようにした。&lt;/p&gt;
@@ -743,7 +751,7 @@ function main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;slack簡易対話ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;Slack簡易対話ボット&lt;/h1&gt;
+&lt;h1 id=&#34;slack簡易対話ボット&#34;&gt;Slack簡易対話ボット&lt;/h1&gt;
 
 &lt;p&gt;自分用のチャンネルがあって、そこに訪問する人に対して、簡易的に応答するボットを用意している。&lt;/p&gt;
 
@@ -816,7 +824,7 @@ function getResponses() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;googleカレンダー予定簡易確認ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;Googleカレンダー予定簡易確認ボット&lt;/h1&gt;
+&lt;h1 id=&#34;googleカレンダー予定簡易確認ボット&#34;&gt;Googleカレンダー予定簡易確認ボット&lt;/h1&gt;
 
 &lt;p&gt;協力会社の方など、社員用カレンダーを見れないが、（カレンダーで管理されている）会議室の予約をしたいという要望があった。
 そのため、Slack上のスラッシュコマンドで空きの確認及び予約の作成を出来るようにした。&lt;/p&gt;
@@ -878,7 +886,7 @@ Botから呼び出し、カレンダーの管理をするGASは以下のとお�
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;チャンネル常時翻訳:ade2431a67148677c334b673f0d1d121&#34;&gt;チャンネル常時翻訳&lt;/h1&gt;
+&lt;h1 id=&#34;チャンネル常時翻訳&#34;&gt;チャンネル常時翻訳&lt;/h1&gt;
 
 &lt;p&gt;英語常用の社員も増えてきたし、言語由来の壁が出来ないように、雑談用のチャンネルは常時機械翻訳するようにした。
 翻訳精度はまだ怪しいが、雰囲気の共有くらいは出来る（はず）。&lt;/p&gt;
@@ -907,7 +915,7 @@ function doPost(e) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;okになった行を隠す:ade2431a67148677c334b673f0d1d121&#34;&gt;OKになった行を隠す&lt;/h1&gt;
+&lt;h1 id=&#34;okになった行を隠す&#34;&gt;OKになった行を隠す&lt;/h1&gt;
 
 &lt;pre&gt;&lt;code&gt;function main(){
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(&amp;quot;対象のシート名&amp;quot;);
@@ -1074,7 +1082,7 @@ if __name__ == &amp;quot;__main__&amp;quot;:
 
 &lt;p&gt;こんな感じのやつがターミナル上で動く。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;import curses
 import random
@@ -1189,11 +1197,11 @@ if __name__ == &#39;__main__&#39;:
 
 &lt;p&gt;いくつか想定している内容のうち、今回は単語ベクトルのペアを連想記憶する基本的なタスクを検証する。&lt;/p&gt;
 
-&lt;h1 id=&#34;検証用コード:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証用コード&lt;/h1&gt;
+&lt;h1 id=&#34;検証用コード&#34;&gt;検証用コード&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/hassaku/associative-word-vector/tree/blog-1&#34;&gt;https://github.com/hassaku/associative-word-vector/tree/blog-1&lt;/a&gt;&lt;/p&gt;
 
-&lt;h1 id=&#34;検証内容:92074d8141b5d0b357587f68abb31ec5&#34;&gt;検証内容&lt;/h1&gt;
+&lt;h1 id=&#34;検証内容&#34;&gt;検証内容&lt;/h1&gt;
 
 &lt;p&gt;単語ベクトルは、Github上のREADMEに書いてあるように、東北大学 乾・岡崎研究室で公開されている学習済みのものを利用させて頂いた。&lt;/p&gt;
 
@@ -1248,7 +1256,7 @@ que: 馬     target: 走る through: [&#39;馬&#39;, &#39;牛&#39;, &#39;走る&
 que: 鯛     target: 泳ぐ through: [&#39;鯛&#39;, &#39;鯉&#39;, &#39;泳ぐ&#39;]
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;さいごに:92074d8141b5d0b357587f68abb31ec5&#34;&gt;さいごに&lt;/h1&gt;
+&lt;h1 id=&#34;さいごに&#34;&gt;さいごに&lt;/h1&gt;
 
 &lt;p&gt;今回は簡単な事例であったものの、まだあまり手を付けられていないような、全結合型神経回路網を用いた言語処理の可能性を検証した。
 全結合型の特徴でもあるエネルギー的な安定状態に記憶を埋め込むことにより、人のように強力な汎化能力をもった記憶を、安定して追加学習できる。
@@ -1312,7 +1320,7 @@ _▁▂▂▃▄▅▆▆▇█▇▆▆▅▄▃▂▂▁
 &lt;p&gt;インターネットから隔離されていたりや書籍が持ち込みできないような環境で、プログラミングをすることがあった。
 こういうときのために、各種ライブラリの使い方などをオフラインでも確認できるようにしておくと良い。&lt;/p&gt;
 
-&lt;h2 id=&#34;各種ライブラリのヘルプ確認の仕方:98bf9ba98ae68fda7629e698d07e5dba&#34;&gt;各種ライブラリのヘルプ確認の仕方&lt;/h2&gt;
+&lt;h2 id=&#34;各種ライブラリのヘルプ確認の仕方&#34;&gt;各種ライブラリのヘルプ確認の仕方&lt;/h2&gt;
 
 &lt;p&gt;例えば、scikit-learnのkmeansクラスタリングの使い方を調べたいとき。
 一番上から順に探していく。&lt;/p&gt;
@@ -1345,7 +1353,7 @@ class KMeans(sklearn.base.BaseEstimator, sklearn.base.ClusterMixin, sklearn.base
 目的の使い方にたどり着いた
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;jupyter-notebook上でのやり方:98bf9ba98ae68fda7629e698d07e5dba&#34;&gt;jupyter notebook上でのやり方&lt;/h2&gt;
+&lt;h2 id=&#34;jupyter-notebook上でのやり方&#34;&gt;jupyter notebook上でのやり方&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt; import pandas as pd
 &amp;gt; pd.read_csv?
@@ -1365,20 +1373,20 @@ class KMeans(sklearn.base.BaseEstimator, sklearn.base.ClusterMixin, sklearn.base
 
 &lt;p&gt;Slackに投稿されたメッセージを収集する方法についてのメモ&lt;/p&gt;
 
-&lt;h2 id=&#34;データexport:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;データexport&lt;/h2&gt;
+&lt;h2 id=&#34;データexport&#34;&gt;データexport&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://xxxx.slack.com/services/export&#34;&gt;https://xxxx.slack.com/services/export&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;exportが完了すると、slack上でbotから通知くる&lt;/p&gt;
 
-&lt;h2 id=&#34;ユーザid取得:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;ユーザID取得&lt;/h2&gt;
+&lt;h2 id=&#34;ユーザid取得&#34;&gt;ユーザID取得&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;最新のSlack Token取得方法は色々記事が挙がっているのでググること&lt;/p&gt;
 
-&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
+&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;$ cat show_messages.rb
 
@@ -1526,7 +1534,7 @@ Bayesian Optimizationのアプローチは、直感的にも効率良さそう�
 
 &lt;p&gt;&lt;a href=&#34;http://hyperopt.github.io/hyperopt/&#34;&gt;Hyperopt&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;簡単な使い方:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;簡単な使い方&lt;/h2&gt;
+&lt;h2 id=&#34;簡単な使い方&#34;&gt;簡単な使い方&lt;/h2&gt;
 
 &lt;p&gt;以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。&lt;/p&gt;
 
@@ -1558,7 +1566,7 @@ best = fmin(objective,  hyperopt_parameters, algo=tpe.suggest, max_evals=300, tr
 print best
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;パラメータサーチの様子を表示:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
+&lt;h2 id=&#34;パラメータサーチの様子を表示&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;# 上記コードの続き
 
@@ -1598,54 +1606,11 @@ for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
 下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
 目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
 
-&lt;h4 id=&#34;追記:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;追記&lt;/h4&gt;
+&lt;h4 id=&#34;追記&#34;&gt;追記&lt;/h4&gt;
 
 &lt;p&gt;バンディットベースのものが出たらしい。使い方もhyperopt同様に簡単そうなので、パラメータチューニング時の候補にしたい。&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/zygmuntz/hyperband&#34;&gt;Hyperband&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>インスタンスを表す文字列を分かりやすくする</title>
-      <link>http://blog.hassaku-labs.com/post/class-repr/</link>
-      <pubDate>Sat, 04 Mar 2017 04:07:38 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/class-repr/</guid>
-      <description>
-
-&lt;p&gt;ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
-標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。&lt;/p&gt;
-
-&lt;p&gt;そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
-分かりやすくなって便利だったりします。&lt;/p&gt;
-
-&lt;h2 id=&#34;reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義しない場合&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyClass(object):
-  def __init__(self):
-    self.attr1 = 123
-    self.attr2 = 456
-
-mc = MyClass()
-print(mc)  # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義する場合&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;class MyClass(object):
-  def __init__(self):
-    self.attr1 = 123
-    self.attr2 = 456
-
-  def __repr__(self):
-    return &amp;quot;, &amp;quot;.join(&amp;quot;%s: %s&amp;quot; % item for item in vars(self).items())
-
-mc = MyClass()
-print(mc)  # =&amp;gt; attr2: 456, attr1: 123
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;ちょっとしたTipsでした。&lt;/p&gt;
 </description>
     </item>
     

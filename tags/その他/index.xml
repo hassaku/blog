@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>その他 on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</link>
+    <link>http://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/index.xml</link>
     <description>Recent content in その他 on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 05 May 2019 10:00:00 +0900</lastBuildDate>
+    <copyright>Written by hassaku</copyright>
     <atom:link href="http://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -21,13 +21,13 @@
 
 &lt;p&gt;あと本記事内容は、ある分野での機械学習案件における知見であって、そこまで汎用的なものではないかもしれない。&lt;/p&gt;
 
-&lt;h1 id=&#34;全体的な雰囲気:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;全体的な雰囲気&lt;/h1&gt;
+&lt;h1 id=&#34;全体的な雰囲気&#34;&gt;全体的な雰囲気&lt;/h1&gt;
 
 &lt;p&gt;機械学習技術が必要になる仕事は全体の２割程度。よって、機械学習技術に精通していなくても活躍できる場面は多い。
 むしろ、AutoMLや機械学習部分を自動化するようなフレームワークやツールが増えてきており、その他８割の方が今後は重要になるとも言える。
 もちろん、その他作業を効率良く進めるためには、詳しいメンバーがいるに越したことはない。&lt;/p&gt;
 
-&lt;h1 id=&#34;だいたいの流れ:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;だいたいの流れ&lt;/h1&gt;
+&lt;h1 id=&#34;だいたいの流れ&#34;&gt;だいたいの流れ&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;解こうとしている課題の理解
@@ -149,7 +149,7 @@
 
 &lt;p&gt;各プロセスで、なにか壁にぶつかったら、必要なところまで戻り、を繰り返すのが機械学習リサーチエンジニアの主な仕事（たぶん）。&lt;/p&gt;
 
-&lt;h1 id=&#34;進捗が芳しくない状況でありそうなケース:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;進捗が芳しくない状況でありそうなケース&lt;/h1&gt;
+&lt;h1 id=&#34;進捗が芳しくない状況でありそうなケース&#34;&gt;進捗が芳しくない状況でありそうなケース&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;パラメータチューニングばかりやってる&lt;/li&gt;
@@ -161,7 +161,7 @@
 &lt;li&gt;etc&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;一時的なサポートメンバーに仕事を任せるために考えること:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一時的なサポートメンバーに仕事を任せるために考えること&lt;/h1&gt;
+&lt;h1 id=&#34;一時的なサポートメンバーに仕事を任せるために考えること&#34;&gt;一時的なサポートメンバーに仕事を任せるために考えること&lt;/h1&gt;
 
 &lt;p&gt;いま一番頭を悩ましている部分&amp;hellip;&lt;/p&gt;
 
@@ -175,7 +175,7 @@
 &lt;li&gt;手順化したようなところは自動化出来てしまったりするので悩ましかったりもする&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;進捗ミーティングとかで共有すべき内容:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;進捗ミーティングとかで共有すべき内容&lt;/h1&gt;
+&lt;h1 id=&#34;進捗ミーティングとかで共有すべき内容&#34;&gt;進捗ミーティングとかで共有すべき内容&lt;/h1&gt;
 
 &lt;p&gt;やったことではなく、出来たことの説明を優先すべき&lt;/p&gt;
 
@@ -192,7 +192,7 @@
 &lt;li&gt;残課題&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;場合によっては活きてくるアドバンスドな-手法:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;場合によっては活きてくるアドバンスドな(?)手法&lt;/h1&gt;
+&lt;h1 id=&#34;場合によっては活きてくるアドバンスドな-手法&#34;&gt;場合によっては活きてくるアドバンスドな(?)手法&lt;/h1&gt;
 
 &lt;p&gt;まずはトイタスクを用意して、原理検証することが大事&lt;/p&gt;
 
@@ -204,7 +204,7 @@
 &lt;li&gt;共変量シフト適応&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用:d69212eb41b9ab5639c2ccaa05b1fd75&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）&lt;/h1&gt;
+&lt;h1 id=&#34;一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用&#34;&gt;一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&#34;&gt;https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641&lt;/a&gt;&lt;/p&gt;
 

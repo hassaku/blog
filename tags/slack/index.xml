@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Slack on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/slack/</link>
+    <link>http://blog.hassaku-labs.com/tags/slack/index.xml</link>
     <description>Recent content in Slack on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 23 Jan 2018 00:00:00 +0900</lastBuildDate>
+    <copyright>Written by hassaku</copyright>
     <atom:link href="http://blog.hassaku-labs.com/tags/slack/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -19,20 +19,20 @@
 
 &lt;p&gt;Slackに投稿されたメッセージを収集する方法についてのメモ&lt;/p&gt;
 
-&lt;h2 id=&#34;データexport:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;データexport&lt;/h2&gt;
+&lt;h2 id=&#34;データexport&#34;&gt;データexport&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://xxxx.slack.com/services/export&#34;&gt;https://xxxx.slack.com/services/export&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;exportが完了すると、slack上でbotから通知くる&lt;/p&gt;
 
-&lt;h2 id=&#34;ユーザid取得:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;ユーザID取得&lt;/h2&gt;
+&lt;h2 id=&#34;ユーザid取得&#34;&gt;ユーザID取得&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;最新のSlack Token取得方法は色々記事が挙がっているのでググること&lt;/p&gt;
 
-&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する:dab3dd72a9f7b423459ecf8af70c80de&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
+&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;$ cat show_messages.rb
 

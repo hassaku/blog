@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Google Apps Script on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/google-apps-script/</link>
+    <link>http://blog.hassaku-labs.com/tags/google-apps-script/index.xml</link>
     <description>Recent content in Google Apps Script on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Wed, 01 May 2019 10:00:00 +0900</lastBuildDate>
+    <copyright>Written by hassaku</copyright>
     <atom:link href="http://blog.hassaku-labs.com/tags/google-apps-script/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -17,14 +17,14 @@
       <guid>http://blog.hassaku-labs.com/post/gas/</guid>
       <description>
 
-&lt;h1 id=&#34;基本-google-apps-scriptの作り方:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】Google Apps Scriptの作り方&lt;/h1&gt;
+&lt;h1 id=&#34;基本-google-apps-scriptの作り方&#34;&gt;【基本】Google Apps Scriptの作り方&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;スプレッドシート作成&lt;/li&gt;
 &lt;li&gt;ツール - スクリプトエディタ&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;基本-webapi化の共通事項:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】WebAPI化の共通事項&lt;/h1&gt;
+&lt;h1 id=&#34;基本-webapi化の共通事項&#34;&gt;【基本】WebAPI化の共通事項&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;doPostという関数&lt;/li&gt;
@@ -33,7 +33,7 @@
 &lt;li&gt;アクセス出来るユーザは全員（匿名）にしておくこと&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;基本-簡単なデータストア先として活用:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】簡単なデータストア先として活用&lt;/h1&gt;
+&lt;h1 id=&#34;基本-簡単なデータストア先として活用&#34;&gt;【基本】簡単なデータストア先として活用&lt;/h1&gt;
 
 &lt;p&gt;WiFi接続のセンサモジュールとか、ちょっとしたものからデータを記録していきたいときに利用&lt;/p&gt;
 
@@ -50,7 +50,7 @@ function doPost(e) {
 
 &lt;p&gt;スプレッドシートにデータが追記されていくので、それをCSV化してデータ分析するなり、簡単に可視化するなり。&lt;/p&gt;
 
-&lt;h1 id=&#34;基本-slack通知の共通部分:ade2431a67148677c334b673f0d1d121&#34;&gt;【基本】Slack通知の共通部分&lt;/h1&gt;
+&lt;h1 id=&#34;基本-slack通知の共通部分&#34;&gt;【基本】Slack通知の共通部分&lt;/h1&gt;
 
 &lt;p&gt;以下の各事例でも頻繁に使われてる&lt;/p&gt;
 
@@ -87,7 +87,7 @@ function postMessage(channel_name, message) {
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;googleドキュメント-スライド定期複製:ade2431a67148677c334b673f0d1d121&#34;&gt;Googleドキュメント・スライド定期複製&lt;/h1&gt;
+&lt;h1 id=&#34;googleドキュメント-スライド定期複製&#34;&gt;Googleドキュメント・スライド定期複製&lt;/h1&gt;
 
 &lt;p&gt;定例ミーティングなどで、毎回人手で過去分議事録をコピーして、事前メモ用ドキュメントを作成しているケースがあったので自動化した。
 コピー元は、前回分とかではなく、毎回決まったテンプレートとかを指定しても良い。&lt;/p&gt;
@@ -144,7 +144,7 @@ function main() {
 
 &lt;p&gt;編集 - 現在のプロジェクトのトリガーからmain指定すれば、定期実行させることが出来る&lt;/p&gt;
 
-&lt;h1 id=&#34;ドライブ更新通知:ade2431a67148677c334b673f0d1d121&#34;&gt;ドライブ更新通知&lt;/h1&gt;
+&lt;h1 id=&#34;ドライブ更新通知&#34;&gt;ドライブ更新通知&lt;/h1&gt;
 
 &lt;p&gt;ドライブにファイルが追加されたりしたときにSlack通知&lt;/p&gt;
 
@@ -210,7 +210,7 @@ function main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;slack新規チャンネル通知:ade2431a67148677c334b673f0d1d121&#34;&gt;Slack新規チャンネル通知&lt;/h1&gt;
+&lt;h1 id=&#34;slack新規チャンネル通知&#34;&gt;Slack新規チャンネル通知&lt;/h1&gt;
 
 &lt;p&gt;チャンネルが乱立し始めた頃、新しくチャンネルが出来たら通知して欲しいとの要望から作成した。
 予めconfigという空シートを作成しておくこと。&lt;/p&gt;
@@ -247,7 +247,7 @@ function main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;環境センサ通知ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;環境センサ通知ボット&lt;/h1&gt;
+&lt;h1 id=&#34;環境センサ通知ボット&#34;&gt;環境センサ通知ボット&lt;/h1&gt;
 
 &lt;p&gt;オフィスに人が増えてきて、場所によっては酸素が薄いみたいな話がチラホラ聞こえてきた。
 なので、そのへんに転がってた（？）Netatmoをばら撒いて、二酸化炭素濃度が上がってきたら通知するようにした。&lt;/p&gt;
@@ -303,7 +303,7 @@ function main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;slack簡易対話ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;Slack簡易対話ボット&lt;/h1&gt;
+&lt;h1 id=&#34;slack簡易対話ボット&#34;&gt;Slack簡易対話ボット&lt;/h1&gt;
 
 &lt;p&gt;自分用のチャンネルがあって、そこに訪問する人に対して、簡易的に応答するボットを用意している。&lt;/p&gt;
 
@@ -376,7 +376,7 @@ function getResponses() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;googleカレンダー予定簡易確認ボット:ade2431a67148677c334b673f0d1d121&#34;&gt;Googleカレンダー予定簡易確認ボット&lt;/h1&gt;
+&lt;h1 id=&#34;googleカレンダー予定簡易確認ボット&#34;&gt;Googleカレンダー予定簡易確認ボット&lt;/h1&gt;
 
 &lt;p&gt;協力会社の方など、社員用カレンダーを見れないが、（カレンダーで管理されている）会議室の予約をしたいという要望があった。
 そのため、Slack上のスラッシュコマンドで空きの確認及び予約の作成を出来るようにした。&lt;/p&gt;
@@ -438,7 +438,7 @@ Botから呼び出し、カレンダーの管理をするGASは以下のとお�
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;チャンネル常時翻訳:ade2431a67148677c334b673f0d1d121&#34;&gt;チャンネル常時翻訳&lt;/h1&gt;
+&lt;h1 id=&#34;チャンネル常時翻訳&#34;&gt;チャンネル常時翻訳&lt;/h1&gt;
 
 &lt;p&gt;英語常用の社員も増えてきたし、言語由来の壁が出来ないように、雑談用のチャンネルは常時機械翻訳するようにした。
 翻訳精度はまだ怪しいが、雰囲気の共有くらいは出来る（はず）。&lt;/p&gt;
@@ -467,7 +467,7 @@ function doPost(e) {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;okになった行を隠す:ade2431a67148677c334b673f0d1d121&#34;&gt;OKになった行を隠す&lt;/h1&gt;
+&lt;h1 id=&#34;okになった行を隠す&#34;&gt;OKになった行を隠す&lt;/h1&gt;
 
 &lt;pre&gt;&lt;code&gt;function main(){
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(&amp;quot;対象のシート名&amp;quot;);

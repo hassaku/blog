@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Python on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/python/</link>
+    <link>http://blog.hassaku-labs.com/tags/python/index.xml</link>
     <description>Recent content in Python on hassaku&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Fri, 03 May 2019 10:00:00 +0900</lastBuildDate>
+    <copyright>Written by hassaku</copyright>
     <atom:link href="http://blog.hassaku-labs.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
@@ -17,7 +17,7 @@
       <guid>http://blog.hassaku-labs.com/post/data-comp-memo/</guid>
       <description>
 
-&lt;h1 id=&#34;大きいデータの読み込み:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;大きいデータの読み込み&lt;/h1&gt;
+&lt;h1 id=&#34;大きいデータの読み込み&#34;&gt;大きいデータの読み込み&lt;/h1&gt;
 
 &lt;p&gt;daskを使って並列処理&lt;/p&gt;
 
@@ -28,7 +28,7 @@ df = ddf.read_csv(&#39;train_data.csv&#39;)
 df = df.compute(get=dask.multiprocessing.get)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;eda:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;EDA&lt;/h1&gt;
+&lt;h1 id=&#34;eda&#34;&gt;EDA&lt;/h1&gt;
 
 &lt;p&gt;データに関する簡単な統計情報確認&lt;/p&gt;
 
@@ -42,7 +42,7 @@ pdp.ProfileReport(df)
 sns.pairplot(df, hue=&amp;quot;target&amp;quot;, diag_kind=&amp;quot;kde&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;前処理:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;前処理&lt;/h1&gt;
+&lt;h1 id=&#34;前処理&#34;&gt;前処理&lt;/h1&gt;
 
 &lt;ul&gt;
 &lt;li&gt;欠損値の補完&lt;/li&gt;
@@ -51,85 +51,82 @@ sns.pairplot(df, hue=&amp;quot;target&amp;quot;, diag_kind=&amp;quot;kde&amp;quo
 
 &lt;ul&gt;
 &lt;li&gt;one hot encoding （次元増える系）&lt;/li&gt;
-&lt;li&gt;どれかひとつだけ1になるようなスパースなベクトル表現&lt;/li&gt;
+&lt;li&gt;どれかひとつだけ1になるようなスパースなベクトル表現
+&lt;code&gt;
+city_dummies = pd.get_dummies(df[&amp;quot;city&amp;quot;], prefix=&amp;quot;city&amp;quot;)
+df.drop([&amp;quot;city&amp;quot;], axis=1, inplca=True)
+df = df.join(city_dummies)
+&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;count encoding （次元増えない系）&lt;/li&gt;
+&lt;li&gt;カテゴリ変数の出現回数（あるいは率）を値とするような表現
+&lt;code&gt;
+df[&#39;count_city&#39;] = df.groupby(&#39;city&#39;)[&#39;target&#39;].transform(&#39;count&#39;)
+&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;並列処理
+```
+import numpy as np
+import pandas as pd
+#import multiprocessing as mp  # impossible to use lambda with pickle
+import pathos.multiprocessing as mp  # dill is used inside instead of pickle.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;pre&gt;&lt;code&gt;  city_dummies = pd.get_dummies(df[&amp;quot;city&amp;quot;], prefix=&amp;quot;city&amp;quot;)
-  df.drop([&amp;quot;city&amp;quot;], axis=1, inplca=True)
-  df = df.join(city_dummies)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;count encoding （次元増えない系）
-
-&lt;ul&gt;
-&lt;li&gt;カテゴリ変数の出現回数（あるいは率）を値とするような表現&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;  df[&#39;count_city&#39;] = df.groupby(&#39;city&#39;)[&#39;target&#39;].transform(&#39;count&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;並列処理&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;  import numpy as np
-  import pandas as pd
-  #import multiprocessing as mp  # impossible to use lambda with pickle
-  import pathos.multiprocessing as mp  # dill is used inside instead of pickle.
-
-  def split_parallel(df, num_split, map_func):
+&lt;p&gt;def split_parallel(df, num_split, map_func):
       with mp.Pool(num_split) as p:
           df_split = np.array_split(df, num_split*2)
           result = p.map(map_func, df_split)
-      return pd.concat(result)
+      return pd.concat(result)&lt;/p&gt;
 
-  NUM_PARALLELS = 3
-  df[&amp;quot;new_col&amp;quot;] = split_parallel(df, NUM_PARALLELS, lambda x: x[&amp;quot;col1&amp;quot;] + x[&amp;quot;col2&amp;quot;])
+&lt;p&gt;NUM_PARALLELS = 3
+  df[&amp;ldquo;new_col&amp;rdquo;] = split_parallel(df, NUM_PARALLELS, lambda x: x[&amp;ldquo;col1&amp;rdquo;] + x[&amp;ldquo;col2&amp;rdquo;])&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# CV
+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;cv:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;CV&lt;/h1&gt;
+&lt;p&gt;from sklearn.model_selection import StratifiedKFold&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;from sklearn.model_selection import StratifiedKFold
-
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=123)
+&lt;p&gt;cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=123)
 X_train = np.zeros(20, 5)
-y_train = np.zeros(20)
+y_train = np.zeros(20)&lt;/p&gt;
 
-for train_idx, valid_idx in cv.split(X_train, y_train):
+&lt;p&gt;for train_idx, valid_idx in cv.split(X_train, y_train):
     print(train_idx, valid_idx)
-    ...
-    losses.append(loss)
+    &amp;hellip;
+    losses.append(loss)&lt;/p&gt;
 
-cv_loss = np.mean(losses)
+&lt;p&gt;cv_loss = np.mean(losses)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# 結果のアンサンブル
+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;結果のアンサンブル:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;結果のアンサンブル&lt;/h1&gt;
+&lt;p&gt;res1 = pd.read_csv(&amp;lsquo;../method1/submission.csv&amp;rsquo;)
+res2 = pd.read_csv(&amp;lsquo;../method2/submission.csv&amp;rsquo;)
+res3 = pd.read_csv(&amp;lsquo;../method3/submission.csv&amp;rsquo;)&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;res1 = pd.read_csv(&#39;../method1/submission.csv&#39;)
-res2 = pd.read_csv(&#39;../method2/submission.csv&#39;)
-res3 = pd.read_csv(&#39;../method3/submission.csv&#39;)
+&lt;p&gt;b1 = res1.copy()
+col = res1.columns&lt;/p&gt;
 
-b1 = res1.copy()
-col = res1.columns
-
-col = col.tolist()
-col.remove(&#39;id&#39;)
+&lt;p&gt;col = col.tolist()
+col.remove(&amp;lsquo;id&amp;rsquo;)
 for i in col:
-    b1[i] = (2 * res1[i]  + 2 * res2[i] + 4 * res3[i]) / 6.0
+    b1[i] = (2 * res1[i]  + 2 * res2[i] + 4 * res3[i]) / 6.0&lt;/p&gt;
 
-b1.to_csv(&#39;submission.csv&#39;, index=False)
+&lt;p&gt;b1.to_csv(&amp;lsquo;submission.csv&amp;rsquo;, index=False)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+# Jupyter Notebook上でCSVの確認とダウンロード
+
+実行するとディレクトリ内のファイル一覧が表示されて、クリックすればダウンロード出来るはず
+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h1 id=&#34;jupyter-notebook上でcsvの確認とダウンロード:61f9dc3dc817dd778c88b7321db80ab0&#34;&gt;Jupyter Notebook上でCSVの確認とダウンロード&lt;/h1&gt;
-
-&lt;p&gt;実行するとディレクトリ内のファイル一覧が表示されて、クリックすればダウンロード出来るはず&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;from IPython.display import FileLinks
+&lt;p&gt;from IPython.display import FileLinks
 FileLinks(DATA_DIR)
-&lt;/code&gt;&lt;/pre&gt;
+```&lt;/p&gt;
 </description>
     </item>
     
@@ -281,7 +278,7 @@ if __name__ == &amp;quot;__main__&amp;quot;:
 
 &lt;p&gt;こんな感じのやつがターミナル上で動く。&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://blog.hassaku-labs.com/images/post/grid-world/grid-world.gif&#34; alt=&#34;grid-world&#34; /&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;import curses
 import random
@@ -438,7 +435,7 @@ Bayesian Optimizationのアプローチは、直感的にも効率良さそう�
 
 &lt;p&gt;&lt;a href=&#34;http://hyperopt.github.io/hyperopt/&#34;&gt;Hyperopt&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;簡単な使い方:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;簡単な使い方&lt;/h2&gt;
+&lt;h2 id=&#34;簡単な使い方&#34;&gt;簡単な使い方&lt;/h2&gt;
 
 &lt;p&gt;以下のような感じで、簡単に記述出来て、手軽に取り入れられそうです。&lt;/p&gt;
 
@@ -470,7 +467,7 @@ best = fmin(objective,  hyperopt_parameters, algo=tpe.suggest, max_evals=300, tr
 print best
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;パラメータサーチの様子を表示:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
+&lt;h2 id=&#34;パラメータサーチの様子を表示&#34;&gt;パラメータサーチの様子を表示&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;# 上記コードの続き
 
@@ -510,7 +507,7 @@ for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
 下段の図が、各探索点のヒストグラムを描画しているのですが、探索が進むにつれて、
 目標のパラメータ付近を効率的に探索している様子が分かります。&lt;/p&gt;
 
-&lt;h4 id=&#34;追記:3ef796ded5fdc2a18d77f9e19d0b06e3&#34;&gt;追記&lt;/h4&gt;
+&lt;h4 id=&#34;追記&#34;&gt;追記&lt;/h4&gt;
 
 &lt;p&gt;バンディットベースのものが出たらしい。使い方もhyperopt同様に簡単そうなので、パラメータチューニング時の候補にしたい。&lt;/p&gt;
 
@@ -532,7 +529,7 @@ for i, hist_num in enumerate(np.linspace(50, 300, PLOT_NUM)):
 &lt;p&gt;そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
 分かりやすくなって便利だったりします。&lt;/p&gt;
 
-&lt;h2 id=&#34;reprを定義しない場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義しない場合&lt;/h2&gt;
+&lt;h2 id=&#34;reprを定義しない場合&#34;&gt;reprを定義しない場合&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;class MyClass(object):
   def __init__(self):
@@ -543,7 +540,7 @@ mc = MyClass()
 print(mc)  # =&amp;gt; &amp;lt;__main__.MyClass object at 0xXXXXXXXXXX&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;reprを定義する場合:9c4edd90300eaacc62e25ae2f1faec5e&#34;&gt;reprを定義する場合&lt;/h2&gt;
+&lt;h2 id=&#34;reprを定義する場合&#34;&gt;reprを定義する場合&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;class MyClass(object):
   def __init__(self):
