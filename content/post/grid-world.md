@@ -13,7 +13,7 @@ title = "ターミナル上でシンプルなグリッドワールド"
 
 こんな感じのやつがターミナル上で動く。
 
-![grid-world](/images/post/grid-world.gif)
+![grid-world](/images/post/grid-world/grid-world.gif)
 
 ```
 import curses
