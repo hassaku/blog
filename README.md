@@ -1,5 +1,11 @@
 http://blog.hassaku-labs.com/
 
+# Setup
+
+```
+$ brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/fdafeb210c41a6fe495d565f5249a134b9814cc0/Formula/hugo.rb  # hugo v0.19
+```
+
 # Write
 
 ```
