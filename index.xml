@@ -7,16 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <copyright>Written by hassaku</copyright>
-    <lastBuildDate>Sun, 01 Mar 2020 17:17:46 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 01 Jul 2020 00:00:00 +0900</lastBuildDate>
     <atom:link href="http://blog.hassaku-labs.com/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Heroku上でsklearnを動かし、flaskでAPI化</title>
-      <link>http://blog.hassaku-labs.com/post/simple-ml-api-heroku/</link>
-      <pubDate>Sun, 01 Mar 2020 17:17:46 +0900</pubDate>
+      <title>ブログ引っ越し</title>
+      <link>http://blog.hassaku-labs.com/post/move-blog/</link>
+      <pubDate>Wed, 01 Jul 2020 00:00:00 +0900</pubDate>
       
-      <guid>http://blog.hassaku-labs.com/post/simple-ml-api-heroku/</guid>
-      <description>&lt;p&gt;WIP。ブログ更新環境の移行中テスト。&lt;/p&gt;
+      <guid>http://blog.hassaku-labs.com/post/move-blog/</guid>
+      <description>&lt;p&gt;引越し先はこちら&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://hassaku-labs.hatenablog.com/&#34;&gt;https://hassaku-labs.hatenablog.com/&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
