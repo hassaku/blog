@@ -1,187 +1,107 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://blog.hassaku-labs.com/post/move-blog/</loc>
+    <loc>https://blog.hassaku-labs.com/</loc>
     <lastmod>2020-07-01T00:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/machine-learning-project/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/</loc>
+    <lastmod>2020-07-01T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/move-blog/</loc>
+    <lastmod>2020-07-01T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/ai/</loc>
     <lastmod>2019-05-05T10:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/data-comp-memo/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/</loc>
+    <lastmod>2019-05-05T10:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</loc>
+    <lastmod>2019-05-05T10:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/machine-learning-project/</loc>
+    <lastmod>2019-05-05T10:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/python/</loc>
     <lastmod>2019-05-03T10:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/ai-ideas/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/data-comp-memo/</loc>
+    <lastmod>2019-05-03T10:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/ai-ideas/</loc>
     <lastmod>2019-05-02T10:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/gas/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/gas/</loc>
     <lastmod>2019-05-01T10:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/debug-on-remote/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/google-apps-script/</loc>
+    <lastmod>2019-05-01T10:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/debug-on-remote/</loc>
     <lastmod>2019-02-25T10:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/word-vector-api/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/nlp/</loc>
     <lastmod>2019-02-25T10:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/grid-world/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/word-vector-api/</loc>
+    <lastmod>2019-02-25T10:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/grid-world/</loc>
     <lastmod>2018-08-10T10:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/associative-word-vector/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/associative-word-vector/</loc>
     <lastmod>2018-07-15T00:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/ascii-simple-plot/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/ascii-simple-plot/</loc>
     <lastmod>2018-04-23T00:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/python-offline-help/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/python-offline-help/</loc>
     <lastmod>2018-02-20T00:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/slack-mining/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/ruby/</loc>
     <lastmod>2018-01-23T00:00:00+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/partial-auc/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/slack/</loc>
+    <lastmod>2018-01-23T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/slack-mining/</loc>
+    <lastmod>2018-01-23T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/partial-auc/</loc>
     <lastmod>2017-12-23T00:59:39+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/paper-management/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/paper-management/</loc>
     <lastmod>2017-12-22T17:17:30+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/hyperopt/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/hyperopt/</loc>
     <lastmod>2017-03-04T04:08:51+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/class-repr/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/machine-learning/</loc>
+    <lastmod>2017-03-04T04:08:51+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/class-repr/</loc>
     <lastmod>2017-03-04T04:07:38+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/run-applet/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/java/</loc>
     <lastmod>2017-02-26T03:56:14+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/pretrained-word2vec/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/mac/</loc>
+    <lastmod>2017-02-26T03:56:14+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/run-applet/</loc>
+    <lastmod>2017-02-26T03:56:14+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/pretrained-word2vec/</loc>
     <lastmod>2017-02-26T02:27:30+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/dialogue_system1/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</loc>
+    <lastmod>2017-02-26T02:27:30+09:00</lastmod>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/dialogue_system1/</loc>
     <lastmod>2016-04-01T02:26:21+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/exception_slacker/</loc>
+  </url><url>
+    <loc>https://blog.hassaku-labs.com/post/exception_slacker/</loc>
     <lastmod>2016-04-01T00:35:40+09:00</lastmod>
   </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/ai/</loc>
-    <lastmod>2019-05-05T10:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/google-apps-script/</loc>
-    <lastmod>2019-05-01T10:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/java/</loc>
-    <lastmod>2017-02-26T03:56:14+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/mac/</loc>
-    <lastmod>2017-02-26T03:56:14+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/machine-learning/</loc>
-    <lastmod>2017-03-04T04:08:51+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/nlp/</loc>
-    <lastmod>2019-02-25T10:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/post/</loc>
-    <lastmod>2020-07-01T00:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/python/</loc>
-    <lastmod>2019-05-03T10:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/ruby/</loc>
-    <lastmod>2018-01-23T00:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/slack/</loc>
-    <lastmod>2018-01-23T00:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/</loc>
-    <lastmod>2020-07-01T00:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</loc>
-    <lastmod>2019-05-05T10:00:00+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</loc>
-    <lastmod>2017-02-26T02:27:30+09:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
 </urlset>

@@ -14,18 +14,18 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.hassaku-labs.com/post/machine-learning-project/"/>
+  <link rel="canonical" href="https://blog.hassaku-labs.com/post/machine-learning-project/"/>
 
   
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/responsive.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/highlight_monokai.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/theme.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/custom.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/sanitize.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/responsive.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/highlight_monokai.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/theme.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/custom.css">
   
   
-  <link href="http://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
-  <link href="http://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="https://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="https://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
 
   
   <script type="text/javascript">var switchTo5x=true;</script>
@@ -44,7 +44,7 @@
   <header role="banner">
     <div class="row gutters">
       <div id="site-title" class="col span_6">
-        <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
+        <h1><a href="https://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
         <h2>３歩進んで２歩分滑り落ちてくペンギンのメモ</h2>
       </div>
       <div id="social" class="col span_6">
@@ -66,149 +66,139 @@
       <div class="meta">
         May 5, 2019 &nbsp;
         
-          #<a href="http://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96">その他</a>&nbsp;
+          #<a href="https://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96">その他</a>&nbsp;
         
-          #<a href="http://blog.hassaku-labs.com/tags/ai">AI</a>&nbsp;
+          #<a href="https://blog.hassaku-labs.com/tags/ai">AI</a>&nbsp;
         
       </div>
     </div>
     <article>
-      
-
-<p>まずはざっくり箇条書き。もっと説明すべきところは、そのうち別の記事にするかも。</p>
-
+      <p>まずはざっくり箇条書き。もっと説明すべきところは、そのうち別の記事にするかも。</p>
 <p>あと本記事内容は、ある分野での機械学習案件における知見であって、そこまで汎用的なものではないかもしれない。</p>
-
 <h1 id="全体的な雰囲気">全体的な雰囲気</h1>
-
 <p>機械学習技術が必要になる仕事は全体の２割程度。よって、機械学習技術に精通していなくても活躍できる場面は多い。
 むしろ、AutoMLや機械学習部分を自動化するようなフレームワークやツールが増えてきており、その他８割の方が今後は重要になるとも言える。
 もちろん、その他作業を効率良く進めるためには、詳しいメンバーがいるに越したことはない。</p>
-
 <h1 id="だいたいの流れ">だいたいの流れ</h1>
-
 <ul>
 <li>解こうとしている課題の理解
-
 <ul>
 <li>本当に機械学習必要としているのかも早めに議論が必要</li>
-</ul></li>
+</ul>
+</li>
 <li>データの理解
-
 <ul>
 <li>可視化とか色々して仮説を立てる準備を整える</li>
 <li>この時点でゴミデータの存在には気づいておくことが大事</li>
-</ul></li>
+</ul>
+</li>
 <li>仮説の検討
-
 <ul>
 <li>人がちょっと考えて解ける問題は、入出力前提が同じであれば、（たぶん）機械学習で解ける
-
 <ul>
 <li>例）加速度センサーのデータを見て、走っているか歩いているかを判定する</li>
 <li>データが十分にあればDeep Learningを試しても良いだろう</li>
 <li>データが少なかったり、なんとなくルールが見えているような場合は、適切な特徴量エンジニアリングと判別器で解けるだろう</li>
 <li>仮説検討時の思考過程を参考にすること</li>
-</ul></li>
+</ul>
+</li>
 <li>人が考えてもなんだか分からない場合
-
 <ul>
 <li>例）加速度センサーのデータを見て、病気かどうか判定する</li>
 <li>他のデータを使えるか相談したり、そもそも病気ではないものを判定するタスクに置き換えられないか検討するといいかも</li>
 <li>機械学習精度どうこうの前に、そもそも実現性の検証が必要となり、だいたいコスパ悪い
-
 <ul>
 <li>一方で実現できたときは、優位性が認められることになるので、挑戦することは否定しない（置かれている状況次第）</li>
-</ul></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li>データセットの準備
-
 <ul>
 <li>学習用、検証用、評価用
-
 <ul>
 <li>検証用、評価用データの抽出には時間をかけて良い</li>
-</ul></li>
+</ul>
+</li>
 <li>データ不足や偏り
-
 <ul>
 <li>モデル選択・パラメータチューニング用に評価用データを使うことがないように十分注意すること
-
 <ul>
 <li>検証用で色々最適化した結果、評価用でも良い結果。というのが期待される進捗</li>
-</ul></li>
+</ul>
+</li>
 <li>解こうとしているタスクに対して適切かどうか、見極めがとても大事</li>
 <li>適当に進めて間違っていた場合、このあとのプロセスが全て台無しになるだろう
-
 <ul>
 <li>適当に選んでいわゆるleakageがあったりすると悲惨</li>
-</ul></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li>評価尺度の定義
-
 <ul>
 <li>ビジネス課題との整合性確認</li>
 <li>単なるF値やAUCを追い求めたら良いのか？あるいは、Precisionを重視してほしいのか等</li>
-</ul></li>
+</ul>
+</li>
 <li>評価系の構築
-
 <ul>
 <li>適切なデータセットと評価尺度が用意できれば、ほぼ終わったも同然（？）</li>
 <li>このあとはここまで色々頑張ってきた準備に対する、収穫の時期となるだろう
-
 <ul>
 <li>変な話、機械学習技術について精通した人が、機械学習未満のここまでをちゃんと設計出来ていると良いかも</li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
 <li>特徴抽出の検討
-
 <ul>
 <li>あとで色々組み合わせたり、除外したくなるので、特徴量毎に個別CSV化しておくなどしておくと良い</li>
-</ul></li>
+</ul>
+</li>
 <li>機械学習技術の検討
-
 <ul>
 <li>ルールベースやロジスティック回帰などシンプルな手法で早めにベースラインを用意</li>
 <li>楽しい ٩( &lsquo;ω&rsquo; )و ♬*</li>
-</ul></li>
+</ul>
+</li>
 <li>検討した手法の評価
-
 <ul>
 <li>並列化とか早めにして、試行錯誤をすばやくする仕組みが大事</li>
-</ul></li>
+</ul>
+</li>
 <li>評価結果の課題分析
-
 <ul>
 <li>underfitting
-
 <ul>
 <li>表現能力を上げる。Deep Learningだったら層や素子数、その他だったら特徴量増やしたり</li>
-</ul></li>
+</ul>
+</li>
 <li>overfitting
-
 <ul>
 <li>正則化とかデータ増やしたりとか</li>
-</ul></li>
+</ul>
+</li>
 <li>具体的にうまくいかないデータを見たり、クラスタリング・可視化してみたりして、仮説を立てることはここでも大事</li>
-</ul></li>
+</ul>
+</li>
 <li>システム統合
-
 <ul>
 <li>精度を犠牲にしてでも、処理速度を上げたりしないといけないかも&hellip;</li>
-</ul></li>
+</ul>
+</li>
 <li>統合後の逐次評価
-
 <ul>
 <li>未知データの出現や分布、特徴の傾向が変化するかもしれないので継続的な改善は必要</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>各プロセスで、なにか壁にぶつかったら、必要なところまで戻り、を繰り返すのが機械学習リサーチエンジニアの主な仕事（たぶん）。</p>
-
 <h1 id="進捗が芳しくない状況でありそうなケース">進捗が芳しくない状況でありそうなケース</h1>
-
 <ul>
 <li>パラメータチューニングばかりやってる</li>
 <li>データクレンジングしてない</li>
@@ -218,42 +208,33 @@
 <li>トレードオフを行ったり来たりしてる</li>
 <li>etc</li>
 </ul>
-
 <h1 id="一時的なサポートメンバーに仕事を任せるために考えること">一時的なサポートメンバーに仕事を任せるために考えること</h1>
-
 <p>いま一番頭を悩ましている部分&hellip;</p>
-
 <ul>
 <li>評価系まではきちんと作り込んでおく</li>
 <li>自走出来なそうなら、試行錯誤するための手順をある程度つけておく
-
 <ul>
 <li>任せられるタスク範囲が絞られるのでトレードオフ</li>
-</ul></li>
+</ul>
+</li>
 <li>手順化したようなところは自動化出来てしまったりするので悩ましかったりもする</li>
 </ul>
-
 <h1 id="進捗ミーティングとかで共有すべき内容">進捗ミーティングとかで共有すべき内容</h1>
-
 <p>やったことではなく、出来たことの説明を優先すべき</p>
-
 <ul>
 <li>今回解決しようとした課題</li>
 <li>今回の課題が全体に占める割合</li>
 <li>解決方法</li>
 <li>結果
-
 <ul>
 <li>検討開始からの評価結果推移</li>
 <li>課題解決を確認できそうな代表的なグラフ</li>
-</ul></li>
+</ul>
+</li>
 <li>残課題</li>
 </ul>
-
-<h1 id="場合によっては活きてくるアドバンスドな-手法">場合によっては活きてくるアドバンスドな(?)手法</h1>
-
+<h1 id="場合によっては活きてくるアドバンスドな手法">場合によっては活きてくるアドバンスドな(?)手法</h1>
 <p>まずはトイタスクを用意して、原理検証することが大事</p>
-
 <ul>
 <li>特権付き機械学習</li>
 <li>ロバスト最適化</li>
@@ -261,27 +242,24 @@
 <li>Positive-unlabeled学習</li>
 <li>共変量シフト適応</li>
 </ul>
-
-<h1 id="一般的なシステム開発プロジェクトと比べたときの難しさ-外部説明用">一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）</h1>
-
+<h1 id="一般的なシステム開発プロジェクトと比べたときの難しさ外部説明用">一般的なシステム開発プロジェクトと比べたときの難しさ（外部説明用）</h1>
 <p><a href="https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641">https://medium.com/@l2k/why-are-machine-learning-projects-so-hard-to-manage-8e9b9cf49641</a></p>
-
 <ul>
 <li>事前に難易度の見通しが付きづらい
-
 <ul>
 <li>その課題で90%の意味するところは？そもそも実現可能？70%でも十分では？</li>
-</ul></li>
+</ul>
+</li>
 <li>想定外に失敗することがある
-
 <ul>
 <li>突如としてデータの傾向が変わるなど（金融データとか）</li>
-</ul></li>
+</ul>
+</li>
 <li>十分なデータが必要
-
 <ul>
 <li>多ければ良いというわけではなく、適切なデータを集めなくてはならない</li>
-</ul></li>
+</ul>
+</li>
 <li>etc.</li>
 </ul>
 
@@ -297,29 +275,15 @@
       </div>
     </article>
     
- <aside><div id="disqus_thread"></div></aside> 
-
-<script type="text/javascript">
-     
-    var disqus_shortname = 'hassakusblog';
-
-     
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </main>
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/data-comp-memo/" rel="prev">データ分析コンペとかによくやる作業</a></span>
+      <span class="previous">&larr; <a href="https://blog.hassaku-labs.com/post/move-blog/" rel="prev">ブログ引っ越し</a></span>
     
     
-      <span class="next"><a href="http://blog.hassaku-labs.com/post/move-blog/" rel="next">ブログ引っ越し</a> &rarr;</span>
+      <span class="next"><a href="https://blog.hassaku-labs.com/post/data-comp-memo/" rel="next">データ分析コンペとかによくやる作業</a> &rarr;</span>
     
   </nav>
 
@@ -327,7 +291,7 @@
   
   <footer role="contentinfo">
     <div style="text-align:center;">
-      <img src="http://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
+      <img src="https://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
       Written by hassaku
     </div>
   </footer>
@@ -335,7 +299,7 @@
 
 </div>
 
-<script src="http://blog.hassaku-labs.com/js/highlight.pack.js"></script>
+<script src="https://blog.hassaku-labs.com/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 <script>

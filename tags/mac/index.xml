@@ -1,36 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mac on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/mac/index.xml</link>
+    <link>https://blog.hassaku-labs.com/tags/mac/</link>
     <description>Recent content in Mac on hassaku&#39;s blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>ja</language>
-    <copyright>Written by hassaku</copyright>
-    <atom:link href="http://blog.hassaku-labs.com/tags/mac/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Sun, 26 Feb 2017 03:56:14 +0900</lastBuildDate>
+    <atom:link href="https://blog.hassaku-labs.com/tags/mac/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</title>
-      <link>http://blog.hassaku-labs.com/post/run-applet/</link>
+      <link>https://blog.hassaku-labs.com/post/run-applet/</link>
       <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/run-applet/</guid>
-      <description>&lt;p&gt;昔作って公開していたJAVAアプレットを発掘したものの、
-ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。
-例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、
-安定して動作させることが出来ました。
-公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ wget --no-parent -r &amp;quot;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&amp;quot;
-$ cd XXXX
-$ appletviewer XXXX/main.html
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Javaアプレット、一時期はまってたなぁ&amp;hellip;&lt;/p&gt;
-</description>
+      <guid>https://blog.hassaku-labs.com/post/run-applet/</guid>
+      <description>&lt;p&gt;昔作って公開していたJAVAアプレットを発掘したものの、&#xA;ブラウザやJavaのセキュリティ設定をいじっても安定して表示することが出来ませんでした。&#xA;例外サイトとかに追加しても、ネットワーク切り替えなどちょっとしたきっかけで実行不能に&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;いろいろ調べた結果、Macの場合、以下のような感じでダウンロードしてから実行することで、&#xA;安定して動作させることが出来ました。&#xA;公開は諦めて、とりあえず身近な人に見せるだけなら、これで良さそうです。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ wget --no-parent -r &amp;#34;javaアプレットのファイル一式が入ったディレクトリXXXXのURL&amp;#34;&#xA;$ cd XXXX&#xA;$ appletviewer XXXX/main.html&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Javaアプレット、一時期はまってたなぁ&amp;hellip;&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,96 +1,89 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/</link>
+    <link>https://blog.hassaku-labs.com/tags/</link>
     <description>Recent content in Tags on hassaku&#39;s blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 26 Feb 2017 03:56:14 +0900</lastBuildDate>
-    
-	<atom:link href="http://blog.hassaku-labs.com/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 05 May 2019 10:00:00 +0900</lastBuildDate>
+    <atom:link href="https://blog.hassaku-labs.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Java</title>
-      <link>http://blog.hassaku-labs.com/tags/java/</link>
-      <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/java/</guid>
+      <title>AI</title>
+      <link>https://blog.hassaku-labs.com/tags/ai/</link>
+      <pubDate>Sun, 05 May 2019 10:00:00 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/ai/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>Mac</title>
-      <link>http://blog.hassaku-labs.com/tags/mac/</link>
-      <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/mac/</guid>
+      <title>その他</title>
+      <link>https://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</link>
+      <pubDate>Sun, 05 May 2019 10:00:00 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</guid>
       <description></description>
     </item>
-    
-    <item>
-      <title>Machine Learning</title>
-      <link>http://blog.hassaku-labs.com/tags/machine-learning/</link>
-      <pubDate>Sat, 04 Mar 2017 04:08:51 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/machine-learning/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Nlp</title>
-      <link>http://blog.hassaku-labs.com/tags/nlp/</link>
-      <pubDate>Sun, 26 Feb 2017 02:27:30 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/nlp/</guid>
-      <description></description>
-    </item>
-    
     <item>
       <title>Python</title>
-      <link>http://blog.hassaku-labs.com/tags/python/</link>
-      <pubDate>Mon, 23 Apr 2018 00:00:00 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/python/</guid>
+      <link>https://blog.hassaku-labs.com/tags/python/</link>
+      <pubDate>Fri, 03 May 2019 10:00:00 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/python/</guid>
       <description></description>
     </item>
-    
+    <item>
+      <title>Google Apps Script</title>
+      <link>https://blog.hassaku-labs.com/tags/google-apps-script/</link>
+      <pubDate>Wed, 01 May 2019 10:00:00 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/google-apps-script/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nlp</title>
+      <link>https://blog.hassaku-labs.com/tags/nlp/</link>
+      <pubDate>Mon, 25 Feb 2019 10:00:00 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/nlp/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Ruby</title>
-      <link>http://blog.hassaku-labs.com/tags/ruby/</link>
+      <link>https://blog.hassaku-labs.com/tags/ruby/</link>
       <pubDate>Tue, 23 Jan 2018 00:00:00 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/ruby/</guid>
+      <guid>https://blog.hassaku-labs.com/tags/ruby/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Slack</title>
-      <link>http://blog.hassaku-labs.com/tags/slack/</link>
+      <link>https://blog.hassaku-labs.com/tags/slack/</link>
       <pubDate>Tue, 23 Jan 2018 00:00:00 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/slack/</guid>
+      <guid>https://blog.hassaku-labs.com/tags/slack/</guid>
       <description></description>
     </item>
-    
+    <item>
+      <title>Machine Learning</title>
+      <link>https://blog.hassaku-labs.com/tags/machine-learning/</link>
+      <pubDate>Sat, 04 Mar 2017 04:08:51 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Java</title>
+      <link>https://blog.hassaku-labs.com/tags/java/</link>
+      <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/java/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mac</title>
+      <link>https://blog.hassaku-labs.com/tags/mac/</link>
+      <pubDate>Sun, 26 Feb 2017 03:56:14 +0900</pubDate>
+      <guid>https://blog.hassaku-labs.com/tags/mac/</guid>
+      <description></description>
+    </item>
     <item>
       <title>対話システム</title>
-      <link>http://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</link>
+      <link>https://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</link>
       <pubDate>Sun, 26 Feb 2017 02:27:30 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</guid>
+      <guid>https://blog.hassaku-labs.com/tags/%E5%AF%BE%E8%A9%B1%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/</guid>
       <description></description>
     </item>
-    
-    <item>
-      <title>研究</title>
-      <link>http://blog.hassaku-labs.com/tags/%E7%A0%94%E7%A9%B6/</link>
-      <pubDate>Sun, 15 Jul 2018 00:00:00 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/tags/%E7%A0%94%E7%A9%B6/</guid>
-      <description></description>
-    </item>
-    
   </channel>
 </rss>

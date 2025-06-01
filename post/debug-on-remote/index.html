@@ -14,18 +14,18 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.hassaku-labs.com/post/debug-on-remote/"/>
+  <link rel="canonical" href="https://blog.hassaku-labs.com/post/debug-on-remote/"/>
 
   
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/responsive.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/highlight_monokai.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/theme.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/custom.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/sanitize.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/responsive.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/highlight_monokai.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/theme.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/custom.css">
   
   
-  <link href="http://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
-  <link href="http://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="https://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="https://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
 
   
   <script type="text/javascript">var switchTo5x=true;</script>
@@ -44,7 +44,7 @@
   <header role="banner">
     <div class="row gutters">
       <div id="site-title" class="col span_6">
-        <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
+        <h1><a href="https://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
         <h2>３歩進んで２歩分滑り落ちてくペンギンのメモ</h2>
       </div>
       <div id="social" class="col span_6">
@@ -66,18 +66,17 @@
       <div class="meta">
         Feb 25, 2019 &nbsp;
         
-          #<a href="http://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
+          #<a href="https://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
         
       </div>
     </div>
     <article>
       <p>IDEが使える状況であれば、簡単にデバッガーを使えると思うが、そうでない環境でデバッグしたくなることもある。
 printデバッグも辛いので、以下のような感じで例外時等にpython debuggerを起動出来ると便利。</p>
-
-<pre><code>import sys
+<pre tabindex="0"><code>import sys
 
 def hook(type, value, tb):
-   if hasattr(sys, 'ps1') or not sys.stderr.isatty():
+   if hasattr(sys, &#39;ps1&#39;) or not sys.stderr.isatty():
       sys.__excepthook__(type, value, tb)
    else:
       import traceback, pdb
@@ -86,61 +85,56 @@ def hook(type, value, tb):
       pdb.pm()
 
 sys.excepthook = hook
-</code></pre>
-
-<p>というのを適当なところにdebug.pyとして置いておいて、デバッグしたいコード実行時にimportしておくだけ。
+</code></pre><p>というのを適当なところにdebug.pyとして置いておいて、デバッグしたいコード実行時にimportしておくだけ。
 例外が起きるとデバッガが起動し停止するので、そのときの変数の値などを表示したり調べると良い。</p>
-
 <p>不必要に毎回デバッガ起動すると面倒なので、普段はimport行をコメントアウトしておくこと。</p>
-
 <p>よく使うコマンドは以下のとおり。</p>
-
 <ul>
 <li>w
-
 <ul>
 <li>where. スタックトレースを表示する。</li>
-</ul></li>
+</ul>
+</li>
 <li>u
-
 <ul>
 <li>up. スタックを一つ上に移動</li>
-</ul></li>
+</ul>
+</li>
 <li>d
-
 <ul>
 <li>down. スタックを一つ下に移動</li>
-</ul></li>
+</ul>
+</li>
 <li>l [first, last]
-
 <ul>
 <li>list. 現在のソースコード表示。fist, lastを指定可能。</li>
-</ul></li>
+</ul>
+</li>
 <li>p [target]
-
 <ul>
 <li>print. 変数等を表示。</li>
-</ul></li>
+</ul>
+</li>
 <li>c
-
 <ul>
 <li>continue. 次のブレークポイントに当たるまで実行</li>
-</ul></li>
+</ul>
+</li>
 <li>s
-
 <ul>
 <li>step. 現在の行を実行 (関数の中に入る）</li>
-</ul></li>
+</ul>
+</li>
 <li>n
-
 <ul>
 <li>next. 現在の行を実行 (関数の中に入らない）</li>
-</ul></li>
+</ul>
+</li>
 <li>q
-
 <ul>
 <li>quit. デバッガを終了</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 
       
@@ -155,29 +149,15 @@ sys.excepthook = hook
       </div>
     </article>
     
- <aside><div id="disqus_thread"></div></aside> 
-
-<script type="text/javascript">
-     
-    var disqus_shortname = 'hassakusblog';
-
-     
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </main>
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/word-vector-api/" rel="prev">word vectorのような読み込みが重たいやつをWebAPI化して軽量化</a></span>
+      <span class="previous">&larr; <a href="https://blog.hassaku-labs.com/post/gas/" rel="prev">GASで作る日常ツールあれこれ</a></span>
     
     
-      <span class="next"><a href="http://blog.hassaku-labs.com/post/gas/" rel="next">GASで作る日常ツールあれこれ</a> &rarr;</span>
+      <span class="next"><a href="https://blog.hassaku-labs.com/post/word-vector-api/" rel="next">word vectorのような読み込みが重たいやつをWebAPI化して軽量化</a> &rarr;</span>
     
   </nav>
 
@@ -185,7 +165,7 @@ sys.excepthook = hook
   
   <footer role="contentinfo">
     <div style="text-align:center;">
-      <img src="http://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
+      <img src="https://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
       Written by hassaku
     </div>
   </footer>
@@ -193,7 +173,7 @@ sys.excepthook = hook
 
 </div>
 
-<script src="http://blog.hassaku-labs.com/js/highlight.pack.js"></script>
+<script src="https://blog.hassaku-labs.com/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 <script>

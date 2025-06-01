@@ -14,18 +14,18 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.hassaku-labs.com/post/class-repr/"/>
+  <link rel="canonical" href="https://blog.hassaku-labs.com/post/class-repr/"/>
 
   
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/sanitize.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/responsive.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/highlight_monokai.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/theme.css">
-  <link rel="stylesheet" href="http://blog.hassaku-labs.com/css/custom.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/sanitize.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/responsive.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/highlight_monokai.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/theme.css">
+  <link rel="stylesheet" href="https://blog.hassaku-labs.com/css/custom.css">
   
   
-  <link href="http://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
-  <link href="http://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="https://blog.hassaku-labs.com/index.xml" rel="alternate" type="application/rss+xml" title="hassaku&#39;s blog" />
+  <link href="https://blog.hassaku-labs.com/index.xml" rel="feed" type="application/rss+xml" title="hassaku&#39;s blog" />
 
   
   <script type="text/javascript">var switchTo5x=true;</script>
@@ -44,7 +44,7 @@
   <header role="banner">
     <div class="row gutters">
       <div id="site-title" class="col span_6">
-        <h1><a href="http://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
+        <h1><a href="https://blog.hassaku-labs.com/">hassaku&#39;s blog</a></h1>
         <h2>３歩進んで２歩分滑り落ちてくペンギンのメモ</h2>
       </div>
       <div id="social" class="col span_6">
@@ -66,45 +66,35 @@
       <div class="meta">
         Mar 4, 2017 &nbsp;
         
-          #<a href="http://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
+          #<a href="https://blog.hassaku-labs.com/tags/python">python</a>&nbsp;
         
       </div>
     </div>
     <article>
-      
-
-<p>ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
+      <p>ログとかにインスタンスの内容をダンプしたりするとき、つい適当にprintとかlogger.debugしても、
 標準では、インスタンスの内容をスマートに分かりやすく表示してくれたりはしないようです。</p>
-
 <p>そのため、デバッグをしやすくするためにも、以下のような感じで__repr__をオーバーライドしておくと、
 分かりやすくなって便利だったりします。</p>
-
 <h2 id="reprを定義しない場合">reprを定義しない場合</h2>
-
-<pre><code>class MyClass(object):
+<pre tabindex="0"><code>class MyClass(object):
   def __init__(self):
     self.attr1 = 123
     self.attr2 = 456
 
 mc = MyClass()
 print(mc)  # =&gt; &lt;__main__.MyClass object at 0xXXXXXXXXXX&gt;
-</code></pre>
-
-<h2 id="reprを定義する場合">reprを定義する場合</h2>
-
-<pre><code>class MyClass(object):
+</code></pre><h2 id="reprを定義する場合">reprを定義する場合</h2>
+<pre tabindex="0"><code>class MyClass(object):
   def __init__(self):
     self.attr1 = 123
     self.attr2 = 456
 
   def __repr__(self):
-    return &quot;, &quot;.join(&quot;%s: %s&quot; % item for item in vars(self).items())
+    return &#34;, &#34;.join(&#34;%s: %s&#34; % item for item in vars(self).items())
 
 mc = MyClass()
 print(mc)  # =&gt; attr2: 456, attr1: 123
-</code></pre>
-
-<p>ちょっとしたTipsでした。</p>
+</code></pre><p>ちょっとしたTipsでした。</p>
 
       
       
@@ -118,29 +108,15 @@ print(mc)  # =&gt; attr2: 456, attr1: 123
       </div>
     </article>
     
- <aside><div id="disqus_thread"></div></aside> 
-
-<script type="text/javascript">
-     
-    var disqus_shortname = 'hassakusblog';
-
-     
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </main>
   
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://blog.hassaku-labs.com/post/run-applet/" rel="prev">ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</a></span>
+      <span class="previous">&larr; <a href="https://blog.hassaku-labs.com/post/hyperopt/" rel="prev">hyperoptでパラメータサーチ</a></span>
     
     
-      <span class="next"><a href="http://blog.hassaku-labs.com/post/hyperopt/" rel="next">hyperoptでパラメータサーチ</a> &rarr;</span>
+      <span class="next"><a href="https://blog.hassaku-labs.com/post/run-applet/" rel="next">ブラウザで動作出来なくなったJavaアプレットをローカルで動かす</a> &rarr;</span>
     
   </nav>
 
@@ -148,7 +124,7 @@ print(mc)  # =&gt; attr2: 456, attr1: 123
   
   <footer role="contentinfo">
     <div style="text-align:center;">
-      <img src="http://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
+      <img src="https://blog.hassaku-labs.com/images/profile.png" width="64" height="64"><br>
       Written by hassaku
     </div>
   </footer>
@@ -156,7 +132,7 @@ print(mc)  # =&gt; attr2: 456, attr1: 123
 
 </div>
 
-<script src="http://blog.hassaku-labs.com/js/highlight.pack.js"></script>
+<script src="https://blog.hassaku-labs.com/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 <script>

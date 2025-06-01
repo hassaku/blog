@@ -1,67 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ruby on hassaku&#39;s blog</title>
-    <link>http://blog.hassaku-labs.com/tags/ruby/index.xml</link>
+    <link>https://blog.hassaku-labs.com/tags/ruby/</link>
     <description>Recent content in Ruby on hassaku&#39;s blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>ja</language>
-    <copyright>Written by hassaku</copyright>
-    <atom:link href="http://blog.hassaku-labs.com/tags/ruby/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Tue, 23 Jan 2018 00:00:00 +0900</lastBuildDate>
+    <atom:link href="https://blog.hassaku-labs.com/tags/ruby/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Slackのメッセージ収集</title>
-      <link>http://blog.hassaku-labs.com/post/slack-mining/</link>
+      <link>https://blog.hassaku-labs.com/post/slack-mining/</link>
       <pubDate>Tue, 23 Jan 2018 00:00:00 +0900</pubDate>
-      
-      <guid>http://blog.hassaku-labs.com/post/slack-mining/</guid>
-      <description>
-
-&lt;p&gt;Slackに投稿されたメッセージを収集する方法についてのメモ&lt;/p&gt;
-
-&lt;h2 id=&#34;データexport&#34;&gt;データexport&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://xxxx.slack.com/services/export&#34;&gt;https://xxxx.slack.com/services/export&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;exportが完了すると、slack上でbotから通知くる&lt;/p&gt;
-
-&lt;h2 id=&#34;ユーザid取得&#34;&gt;ユーザID取得&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;最新のSlack Token取得方法は色々記事が挙がっているのでググること&lt;/p&gt;
-
-&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat show_messages.rb
-
-require &#39;json&#39;
-
-user = &amp;quot;USER_ID&amp;quot;
-year = 2016
-month = 2
-days = 29
-
-days.times do |day|
-  date = &amp;quot;%d-%2d-%02d&amp;quot; % (year, month, day + 1)
-  export_file = &amp;quot;./#{date}.json&amp;quot;
-  next unless File.exist?(export_file)
-  puts &amp;quot;\n----- #{date} -----&amp;quot;
-
-  json_data = open(export_file) do |io|
-    JSON.load(io)
-  end
-
-  json_data.each do |json|
-    puts &amp;quot;#{Time.at(json[&#39;ts&#39;].to_i)}: #{json[&#39;text&#39;].gsub(/\n+/, &#39; &#39;)}&amp;quot; if json[&amp;quot;user&amp;quot;] == user
-  end
-end
-
-$ ruby show_messages.rb
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <guid>https://blog.hassaku-labs.com/post/slack-mining/</guid>
+      <description>&lt;p&gt;Slackに投稿されたメッセージを収集する方法についてのメモ&lt;/p&gt;&#xA;&lt;h2 id=&#34;データexport&#34;&gt;データexport&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://xxxx.slack.com/services/export&#34;&gt;https://xxxx.slack.com/services/export&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;exportが完了すると、slack上でbotから通知くる&lt;/p&gt;&#xA;&lt;h2 id=&#34;ユーザid取得&#34;&gt;ユーザID取得&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ curl https://slack.com/api/users.list\?token\=YOUR_SLACK_TOKEN&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最新のSlack Token取得方法は色々記事が挙がっているのでググること&lt;/p&gt;&#xA;&lt;h2 id=&#34;一ヶ月のユーザの発言を収集する&#34;&gt;一ヶ月のユーザの発言を収集する&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ cat show_messages.rb&#xA;&#xA;require &amp;#39;json&amp;#39;&#xA;&#xA;user = &amp;#34;USER_ID&amp;#34;&#xA;year = 2016&#xA;month = 2&#xA;days = 29&#xA;&#xA;days.times do |day|&#xA;  date = &amp;#34;%d-%2d-%02d&amp;#34; % (year, month, day + 1)&#xA;  export_file = &amp;#34;./#{date}.json&amp;#34;&#xA;  next unless File.exist?(export_file)&#xA;  puts &amp;#34;\n----- #{date} -----&amp;#34;&#xA;&#xA;  json_data = open(export_file) do |io|&#xA;    JSON.load(io)&#xA;  end&#xA;&#xA;  json_data.each do |json|&#xA;    puts &amp;#34;#{Time.at(json[&amp;#39;ts&amp;#39;].to_i)}: #{json[&amp;#39;text&amp;#39;].gsub(/\n+/, &amp;#39; &amp;#39;)}&amp;#34; if json[&amp;#34;user&amp;#34;] == user&#xA;  end&#xA;end&#xA;&#xA;$ ruby show_messages.rb&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
-    
   </channel>
 </rss>
