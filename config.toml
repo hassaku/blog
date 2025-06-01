@@ -1,8 +1,8 @@
-baseurl = "http://blog.hassaku-labs.com/"
+baseurl = "https://blog.hassaku-labs.com/"
 theme = "angels-ladder"
 languageCode = "ja"
 title = "hassaku's blog"
-canonifyurls = "true"
+canonifyurls = true
 publishdir = "pages"
 disqusShortname = "hassakusblog"
 [taxonomies]
